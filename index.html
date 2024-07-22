@@ -3,12 +3,15 @@
     <head>
         <meta charset="UTF-8">
         <meta http-equiv="refresh" content="1;url=frontend/index.html">
-        <title>Page Redirection</title>
     </head>
     <body>
-        If you are not redirected automatically, 
-        follow the <a href="html/index.html">link to the documentation</a>
+        <body onload="loadIndexPage()"></body>
     </body>
+    <script>
+        function loadIndexPage() {
+            window.location.href = "frontend/index.html";
+        }
+</script>
 </html>
 
 
