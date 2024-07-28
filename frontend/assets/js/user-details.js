@@ -5,12 +5,15 @@
  */
 let userDetails = localStorage.getItem("userDetails");
 let userDetailsArray = JSON.parse(userDetails);
-const userDeatilObj = {
-    name: userDetailsArray[0],
-    email: userDetailsArray[1],
-    phoneNumber: userDetailsArray[2],
-    photoURL: userDetailsArray[3],
-    accessToken: userDetailsArray[4]
+
+if(userDetailsArray.length != 0){
+    const userDeatilObj = {
+        name: userDetailsArray[0],
+        email: userDetailsArray[1],
+        phoneNumber: userDetailsArray[2],
+        photoURL: userDetailsArray[3],
+        accessToken: userDetailsArray[4]
+    }
 }
 
 //setting user-name data on the header section near profile menu "Hi, "
