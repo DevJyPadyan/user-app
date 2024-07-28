@@ -5,9 +5,9 @@
  */
 let userDetails = localStorage.getItem("userDetails");
 let userDetailsArray = JSON.parse(userDetails);
-
+let userDeatilObj = new Object();
 if(userDetailsArray.length != 0){
-    const userDeatilObj = {
+    userDeatilObj = {
         name: userDetailsArray[0],
         email: userDetailsArray[1],
         phoneNumber: userDetailsArray[2],
