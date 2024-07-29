@@ -301,9 +301,12 @@ function setDark() {
 /*====================
   09. Menu sidebar 
 ======================*/
-document
+//adding this if condition coz, in other index files this Id is not available
+if(document.getElementById("offcanvas-close") != null){
+  document
   .getElementById("offcanvas-close")
   .addEventListener("click", function () {
     var offcanvasSide = document.getElementById("offcanvasNavbar");
     offcanvasSide.classList.remove("show");
   });
+}
