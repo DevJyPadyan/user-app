@@ -159,7 +159,7 @@
                     <div class="profile-part dropdown-button order-md-2">
                         <img class="img-fluid profile-pic" src="assets/images/icons/p5.png" alt="profile">
                         <div>
-                            <h6 class="fw-normal">Hi, Mark Jecno</h6>
+                            <h6 class="fw-normal">Hi, <span id="user-name"></span></h6>
                             <h5 class="fw-medium">My Account</h5>
                         </div>
                         <div class="onhover-box onhover-sm">
@@ -181,7 +181,7 @@
                                 </li>
                             </ul>
                             <div class="bottom-btn">
-                                <a href="signin.html" class="theme-color fw-medium d-flex"><i
+                                <a id="logoutBtn" class="theme-color fw-medium d-flex"><i
                                         class="ri-login-box-line me-2"></i>Logout</a>
                             </div>
                         </div>
@@ -357,8 +357,8 @@
                             <img class="img-fluid profile-pic" src="assets/images/icons/p5.png" alt="profile">
                         </div>
                         <div class="profile-name">
-                            <h5 class="user-name">Mark Jecno</h5>
-                            <h6>mark-jecno@gmail.com</h6>
+                            <h5 class="user-name"><span id="profile-user-name"></span></h5>
+                            <h6><span id="profile-user-email"></span></h6>
                         </div>
                         <ul class="profile-list">
                             <li class="active">
@@ -404,7 +404,7 @@
                                         <i class="ri-user-3-fill"></i>
                                         <span>Name :</span>
                                     </div>
-                                    <h6>Mark Jecno</h6>
+                                    <h6><span id="profile-user-name2"></span></h6>
                                 </div>
                                 <a href="#name" class="btn theme-outline" data-bs-toggle="modal">Edit</a>
                             </li>
@@ -414,7 +414,7 @@
                                         <i class="ri-mail-fill"></i>
                                         <span>Email :</span>
                                     </div>
-                                    <h6>mark-jecno@gmail.com</h6>
+                                    <h6><span id="profile-user-email2"></span></h6>
                                 </div>
                                 <a href="#email" class="btn theme-outline" data-bs-toggle="modal">Change</a>
                             </li>
@@ -424,7 +424,7 @@
                                         <i class="ri-phone-fill"></i>
                                         <span>Phone Number :</span>
                                     </div>
-                                    <h6>+1 (692)52 - 95555</h6>
+                                    <h6><span id="profile-user-phone"></span></h6>
                                 </div>
                                 <a href="#number" class="btn theme-outline mt-0" data-bs-toggle="modal">Change</a>
                             </li>
@@ -804,7 +804,7 @@
                 </div>
                 <div class="modal-footer">
                     <a href="saved-card.html" class="btn gray-btn mt-0" data-bs-dismiss="modal">CANCEL</a>
-                    <a href="index.html" class="btn theme-btn mt-0">Log Out</a>
+                    <a id="modalLogoutBtn" class="btn theme-btn mt-0">Log Out</a>
                 </div>
             </div>
         </div>
@@ -873,6 +873,12 @@
 
     <!-- script js -->
     <script src="assets/js/script.js"></script>
+
+    <!-- user-details js -->
+    <script src="assets/js/user-details.js" defer type="module"></script>
+
+    <!-- logout js -->
+    <script src="assets/js/logout.js" defer type="module"></script>
 </body>
 
 </html>

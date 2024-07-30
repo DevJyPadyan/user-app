@@ -6,7 +6,7 @@
 let userDetails = localStorage.getItem("userDetails");
 let userDetailsArray = JSON.parse(userDetails);
 let userDeatilObj = new Object();
-if(userDetails != null){
+if (userDetails != null) {
     userDeatilObj = {
         name: userDetailsArray[0],
         email: userDetailsArray[1],
@@ -16,8 +16,43 @@ if(userDetails != null){
     }
 }
 
-//setting user-name data on the header section near profile menu "Hi, "
-document.getElementById("user-name").innerHTML = userDeatilObj.name;
-document.getElementById("user-name2").innerHTML = userDeatilObj.name;
+//setting user-name data on the header section near profile menu "Hi, " in navbar.
+document.getElementById("user-name").innerHTML = userDeatilObj.name == undefined ? "User" : userDeatilObj.name;
+if (document.getElementById("user-name2") != null) {
+    document.getElementById("user-name2").innerHTML = userDeatilObj.name == undefined ? "User" : userDeatilObj.name;
+}
+
+//setting user-details in profile.html 
+if (document.getElementById("profile-user-name") != null) {
+    document.getElementById("profile-user-name").innerHTML = userDeatilObj.name == undefined ? "User" : userDeatilObj.name;
+    document.getElementById("profile-user-name2").innerHTML = userDeatilObj.name == undefined ? "User" : userDeatilObj.name;
+    document.getElementById("profile-user-email").innerHTML = userDeatilObj.email == undefined ? "E-Mail Address" : userDeatilObj.email;
+    document.getElementById("profile-user-email2").innerHTML = userDeatilObj.email == undefined ? "E-Mail Address" : userDeatilObj.email;
+    document.getElementById("profile-user-phone").innerHTML = userDeatilObj.phone == undefined ? "-" : userDeatilObj.phone;
+}
+
+//setting user-details in my-oder.html 
+if (document.getElementById("order-user-email") != null) {
+    document.getElementById("order-user-name").innerHTML = userDeatilObj.name == undefined ? "User" : userDeatilObj.name;
+    document.getElementById("order-user-email").innerHTML = userDeatilObj.email == undefined ? "E-Mail Address" : userDeatilObj.email;
+}
+
+//setting user-details in saved-address.html 
+if (document.getElementById("saved-address-user-email") != null) {
+    document.getElementById("saved-address-user-name").innerHTML = userDeatilObj.name == undefined ? "User" : userDeatilObj.name;
+    document.getElementById("saved-address-user-email").innerHTML = userDeatilObj.email == undefined ? "E-Mail Address" : userDeatilObj.email;
+}
+
+//setting user-details in saved-card.html 
+if (document.getElementById("saved-card-user-email") != null) {
+    document.getElementById("saved-card-user-name").innerHTML = userDeatilObj.name == undefined ? "User" : userDeatilObj.name;
+    document.getElementById("saved-card-user-email").innerHTML = userDeatilObj.email == undefined ? "E-Mail Address" : userDeatilObj.email;
+}
+
+//setting user-details in setting.html 
+if (document.getElementById("setting-user-email") != null) {
+    document.getElementById("setting-user-name").innerHTML = userDeatilObj.name == undefined ? "User" : userDeatilObj.name;
+    document.getElementById("setting-user-email").innerHTML = userDeatilObj.email == undefined ? "E-Mail Address" : userDeatilObj.email;
+}
 
 export { userDeatilObj }

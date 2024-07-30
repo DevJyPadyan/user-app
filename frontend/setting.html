@@ -159,7 +159,7 @@
                     <div class="profile-part dropdown-button order-md-2">
                         <img class="img-fluid profile-pic" src="assets/images/icons/p5.png" alt="profile">
                         <div>
-                            <h6 class="fw-normal">Hi, Mark Jecno</h6>
+                            <h6 class="fw-normal">Hi, <span id="user-name"></span></h6>
                             <h5 class="fw-medium">My Account</h5>
                         </div>
                         <div class="onhover-box onhover-sm">
@@ -181,7 +181,7 @@
                                 </li>
                             </ul>
                             <div class="bottom-btn">
-                                <a href="signin.html" class="theme-color fw-medium d-flex"><i
+                                <a id="logoutBtn" class="theme-color fw-medium d-flex"><i
                                         class="ri-login-box-line me-2"></i>Logout</a>
                             </div>
                         </div>
@@ -357,8 +357,8 @@
                             <img class="img-fluid profile-pic" src="assets/images/icons/p5.png" alt="profile">
                         </div>
                         <div class="profile-name">
-                            <h5 class="user-name">Mark Jecno</h5>
-                            <h6>mark-jecno@gmail.com</h6>
+                            <h5 class="user-name"><span id="setting-user-name"></span></h5>
+                            <h6><span id="setting-user-email"></span></h6>
                         </div>
                         <ul class="profile-list">
                             <li>
@@ -711,7 +711,7 @@
                 </div>
                 <div class="modal-footer">
                     <a href="saved-card.html" class="btn gray-btn me-2 mt-0" data-bs-dismiss="modal">CANCEL</a>
-                    <a href="index.html" class="btn theme-btn mt-0">Log Out</a>
+                    <a id="modalLogoutBtn" class="btn theme-btn mt-0">Log Out</a>
                 </div>
             </div>
         </div>
@@ -798,6 +798,12 @@
 
     <!-- script js -->
     <script src="assets/js/script.js"></script>
+
+    <!-- user-details js -->
+    <script src="assets/js/user-details.js" defer type="module"></script>
+
+    <!-- logout js -->
+    <script src="assets/js/logout.js" defer type="module"></script>
 </body>
 
 </html>
