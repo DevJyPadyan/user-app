@@ -9,7 +9,7 @@
     <meta name="keywords" content="zomo">
     <meta name="author" content="zomo">
     <link rel="icon" href="assets/images/logo/favicon.png" type="image/x-icon">
-    <title>zomo Web</title>
+    <title>Perikitis Hostel</title>
     <link rel="apple-touch-icon" href="assets/images/logo/favicon.png">
     <meta name="theme-color" content="#ff8d2f">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -343,18 +343,19 @@
                                 <a href="signin.html"><span class="theme-color">login to your account</span></a>
                             </h5>
                             <div class="form-input">
-                                <input type="text" class="form-control" placeholder="Enter your name">
+                                <input type="text" class="form-control" placeholder="Enter your name" id="username">
                                 <i class="ri-user-3-line"></i>
                             </div>
                             <div class="form-input">
-                                <input type="tel" class="form-control" placeholder="Enter your number">
+                                <input type="tel" class="form-control" placeholder="Enter your number" id="phone">
                                 <i class="ri-phone-line"></i>
                             </div>
                             <div class="form-input">
-                                <input type="password" class="form-control" placeholder="Enter your password">
+                                <input type="password" class="form-control" placeholder="Enter your password" id="password">
                                 <i class="ri-lock-password-line"></i>
                             </div>
-                            <a href="otp.html" class="btn theme-btn submit-btn w-100 rounded-2">CONTINUE</a>
+                            <button type="button" id="register" class="btn theme-btn submit-btn w-100 rounded-2">Register</button>
+                            <!--<a href="otp.html" class="btn theme-btn submit-btn w-100 rounded-2">CONTINUE</a>-->
                             <p class="fw-normal content-color">
                                 By creating an account, I accept the
                                 <span class="fw-semibold">
@@ -606,7 +607,7 @@
                             <i class="ri-focus-3-line focus"></i>
                             <div>
                                 <h5>Use current-location</h5>
-                                <h6>Wellington St., Ottawa, Ontario, Canada</h6>
+                                <!--<h6>Wellington St., Ottawa, Ontario, Canada</h6>-->
                             </div>
                         </div>
                         <i class="ri-arrow-right-s-line arrow"></i>
@@ -618,8 +619,8 @@
                         <div class="recant-address">
                             <i class="ri-map-pin-line theme-color"></i>
                             <div>
-                                <h5>Bayshore</h5>
-                                <h6>kingston St., Ottawa, Ontario, Canada</h6>
+                                <!--<h5>Bayshore</h5>
+                                <h6>kingston St., Ottawa, Ontario, Canada</h6>-->
                             </div>
                         </div>
                     </a>
@@ -632,6 +633,9 @@
         </div>
     </div>
     <!-- location offcanvas end -->
+
+    <!-- Register js (script for register using firebase) -->
+    <script src="assets/js/register.js" type="module" defer></script>
 
     <!-- bootstrap js -->
     <script src="assets/js/bootstrap.bundle.min.js"></script>
