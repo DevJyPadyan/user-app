@@ -56,7 +56,7 @@
                     <i class="ri-map-pin-line"></i> Location
                 </a>
                 <div class="nav-option order-md-2">
-                    <div class="dropdown-button">
+                    <!-- <div class="dropdown-button">
                         <div class="cart-button">
                             <span>5</span>
                             <i class="ri-shopping-cart-line text-white cart-bag"></i>
@@ -153,7 +153,7 @@
                                     Cart</a>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="profile-part dropdown-button order-md-2">
                         <img class="img-fluid profile-pic" src="assets/images/icons/p5.png" alt="profile">
                         <div>
@@ -192,7 +192,7 @@
                     </div>
                     <div class="offcanvas-body">
                         <ul class="navbar-nav justify-content-center flex-grow-1">
-                            <li class="nav-item dropdown mega-menu">
+                            <!-- <li class="nav-item dropdown mega-menu">
                                 <a class="nav-link dropdown-toggle" href="#!" id="accountDropdown" role="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">Home</a>
                                 <div class="dropdown-menu mt-0 border-0 bsb-zoomIn" aria-labelledby="accountDropdown">
@@ -234,8 +234,8 @@
                                         </div>
                                     </div>
                                 </div>
-                            </li>
-                            <li class="nav-item">
+                            </li> -->
+                            <!-- <li class="nav-item">
                                 <a class="nav-link dropdown-toggle" href="#!" id="orderMenu" role="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">Order</a>
                                 <ul class="dropdown-menu mt-0 border-0" aria-labelledby="orderMenu">
@@ -267,8 +267,8 @@
                                         <a class="dropdown-item" href="restaurant-listing.html">Restaurant listing</a>
                                     </li>
                                 </ul>
-                            </li>
-                            <li class="nav-item">
+                            </li> -->
+                            <!-- <li class="nav-item">
                                 <a class="nav-link dropdown-toggle" href="#!" id="blogMenu" role="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">Blog</a>
                                 <ul class="dropdown-menu mt-0 border-0" aria-labelledby="blogMenu">
@@ -287,8 +287,8 @@
                                         <a class="dropdown-item" href="blog-details.html">Blog Details</a>
                                     </li>
                                 </ul>
-                            </li>
-                            <li class="nav-item dropdown">
+                            </li> -->
+                            <!-- <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#!" id="pagesMenu" role="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">Pages</a>
                                 <ul class="dropdown-menu mt-0 border-0" aria-labelledby="pagesMenu">
@@ -317,9 +317,15 @@
                                         <a class="dropdown-item" href="wishlist.html">Wishlist</a>
                                     </li>
                                 </ul>
+                            </li> -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.html">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="contact.html">Contact</a>
+                                <a class="nav-link" href="restaurant-listing.html">Hostel List</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="profile.html">Profile</a>
                             </li>
                         </ul>
                     </div>
@@ -332,14 +338,14 @@
     <!-- page head section starts -->
     <section class="page-head-section">
         <div class="container page-heading">
-            <h2 class="h3 mb-3 text-white text-center">Restaurant Listing</h2>
+            <h2 class="h3 mb-3 text-white text-center">Hostel Listing</h2>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb flex-lg-nowrap justify-content-center justify-content-lg-star">
                     <li class="breadcrumb-item">
                         <a href="index.html"><i class="ri-home-line"></i>Home</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                        Restaurant Listing
+                        Hostel Listing
                     </li>
                 </ol>
             </nav>
@@ -351,28 +357,28 @@
     <section class="restaurant-list section-b-space ratio3_2">
         <div class="container">
             <div class="title restaurant-title pb-0 w-border">
-                <h2>Pizza</h2>
+                <h2>Hostel Details</h2>
                 <ul class="nav nav-pills restaurant-tab tab-style2 border-0 w-100 m-0" id="Tab" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pill-delivery-tab" data-bs-toggle="pill"
+                        <button class="nav-link active" id="pill-delivery-tab" data-bs-toggle="pill"
                             data-bs-target="#delivery-tab">
-                            Fast Delivery
+                            No Filters
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="pill-rating-tab" data-bs-toggle="pill"
+                        <button class="nav-link" id="pill-rating-tab" data-bs-toggle="pill"
                             data-bs-target="#rating-tab">
-                            Rating
+                            Veg & Non Veg
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="pill-veg-tab" data-bs-toggle="pill" data-bs-target="#veg-tab">
-                            Pure Veg
+                            AC
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="pill-cost-tab" data-bs-toggle="pill" data-bs-target="#cost-tab">
-                            Cost
+                            Cost : Low to High
                         </button>
                     </li>
                 </ul>
@@ -1761,18 +1767,18 @@
                     <span>Home</span>
                 </a>
             </li>
-            <li>
+            <!-- <li>
                 <a href="wishlist.html" class="menu-box">
                     <i class="ri-heart-3-line"></i>
                     <span>Wishlist</span>
                 </a>
-            </li>
-            <li>
+            </li> -->
+            <!-- <li>
                 <a href="checkout.html" class="menu-box">
                     <i class="ri-shopping-cart-2-line"></i>
                     <span>Cart</span>
                 </a>
-            </li>
+            </li> -->
             <li>
                 <a href="profile.html" class="menu-box">
                     <i class="ri-user-line"></i>
@@ -1833,12 +1839,13 @@
     <!-- location offcanvas end -->
 
     <!-- theme btn start -->
+    <!-- Adding style="display:none;" to hide the button from UI -->
     <div class="theme-btns">
-        <button type="button" class="btntheme mode-change-button">
+        <button style="display:none;" type="button" class="btntheme mode-change-button">
             <i id="themeIcon" class="ri-moon-line icon mode-icon"></i>
             <span class="text-value">Dark</span>
         </button>
-        <button type="button" id="rtl-btn" class="btntheme rtlBtnEl">
+        <button style="display:none;" type="button" id="rtl-btn" class="btntheme rtlBtnEl">
             <i class="ri-repeat-line icon"></i>
             <span class="text-value">RTL</span>
         </button>
