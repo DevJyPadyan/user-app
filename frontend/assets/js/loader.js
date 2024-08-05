@@ -13,4 +13,8 @@ setTimeout(() => {
   if (document.getElementById("user-name2") != null) {
     document.getElementById("user-name2").innerHTML = userDeatilObj.name == undefined ? "User" : userDeatilObj.name;
   }
+  //if user is not logged-in , then logout btn name will be shown as Sign In
+  if (userDeatilObj.name == undefined) {
+    document.getElementById("logoutBtn").innerHTML = "Sign In";
+  }
 }, 4000);
