@@ -30,8 +30,12 @@ const loadDataFromDB = () => {
 const postContainer = document.getElementById('card-content');
 const addSwiperSlideCard = (Hostelname, Hosteltype, Hosteladd1,
     Hosteladd2, Hostelphone, Hostelemail, Hostelcity, Hostelstate,
-    Hostelpin, Hostelrent, Hostelfood, Acprice, Nonacprice, Imagelink, card_number) => {
+    Hostelpin, Hostelrent, Hostelfood, Acprice, Nonacprice, ImageArray, card_number) => {
 
+    let Imagelink = "assets/images/product/p-18.png";//default image URL , if there is no Image data present in DB
+    if((ImageArray != undefined)){
+        Imagelink = ImageArray[0];//if Image data is pereset [0] is always kept as thumbnail image for hostel
+    }
     //Parent Container
     const mainParentElem = document.createElement('div');
     mainParentElem.classList.add('swiper-slide');
@@ -121,7 +125,7 @@ const iterateAllRecords = () => {
         addSwiperSlideCard(iterator.Hostelname, iterator.Hosteltype, iterator.Hosteladd1,
             iterator.Hosteladd2, iterator.Hostelphone, iterator.Hostelemail, iterator.Hostelcity,
             iterator.Hostelstate, iterator.Hostelpin,
-            iterator.Hostelrent, iterator.Hostelfood, iterator.Acprice, iterator.Nonacprice, iterator.ImageData[0], i)
+            iterator.Hostelrent, iterator.Hostelfood, iterator.Acprice, iterator.Nonacprice, iterator.ImageData, i)
     })
     localStorage.setItem("total_hostel_length", hostelist.length);
 }
@@ -169,7 +173,7 @@ function searchFunction() {
             addSwiperSlideCard(iterator.Hostelname, iterator.Hosteltype, iterator.Hosteladd1,
                 iterator.Hosteladd2, iterator.Hostelphone, iterator.Hostelemail, iterator.Hostelcity,
                 iterator.Hostelstate, iterator.Hostelpin,
-                iterator.Hostelrent, iterator.Hostelfood, iterator.Acprice, iterator.Nonacprice, iterator.ImageData[0], i)
+                iterator.Hostelrent, iterator.Hostelfood, iterator.Acprice, iterator.Nonacprice, iterator.ImageData, i)
         });
         localStorage.setItem("total_search_length", i);
     }
