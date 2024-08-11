@@ -1,3 +1,7 @@
+/**
+ * Dynamic card list generator which creates card 
+ * in index.html
+ */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getDatabase, ref, get, set, onValue, child, update, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"
 import { firebaseConfig } from "./firebase-config.js";
@@ -8,6 +12,8 @@ const db = getDatabase();
 let hostelist = [];
 
 const loadDataFromDB = () => {
+    localStorage.setItem("total_hostel_length", 0);
+    localStorage.setItem("total_search_length", 0);
     const dbref = ref(db, 'Hostel details');
     onValue(dbref, (snapshot) => {
 
@@ -19,27 +25,35 @@ const loadDataFromDB = () => {
         iterateAllRecords();
     })
 }
+
+//Main Head Parent Container
 const postContainer = document.getElementById('card-content');
 const addSwiperSlideCard = (Hostelname, Hosteltype, Hosteladd1,
     Hosteladd2, Hostelphone, Hostelemail, Hostelcity, Hostelstate,
-    Hostelpin, Hostelrent, Hostelfood, Acprice, Nonacprice, Imagelink) => {
+    Hostelpin, Hostelrent, Hostelfood, Acprice, Nonacprice, Imagelink, card_number) => {
 
-    const imgSrc = "assets/images/product/vp-11.png";
+        console.log(Imagelink);
+    //Parent Container
     const mainParentElem = document.createElement('div');
     mainParentElem.classList.add('swiper-slide');
+    mainParentElem.setAttribute('id', card_number);
 
+    //Sub Parent to be added to Parent
     const parentElem = document.createElement('div');
     parentElem.classList.add('vertical-product-box');
     parentElem.classList.add('product-style-2');
 
+    //Element(Child) to be added to Sub Parent
     const elem = document.createElement('div');
     elem.classList.add('vertical-product-box-img');
-    elem.innerHTML = `<a href="menu-listing.html">
+    elem.innerHTML = `<a>
                                     <img class="product-img-top w-100 bg-img"
                                         src="${Imagelink}" alt="vp1">
                                 </a>`;
     parentElem.appendChild(elem);
 
+
+    //Element(Child) to be added to Sub Parent
     const elem1 = document.createElement('div');
     elem1.classList.add('vertical-product-body');
     elem1.innerHTML = `<div class="d-flex align-items-center justify-content-between">
@@ -61,36 +75,129 @@ const addSwiperSlideCard = (Hostelname, Hosteltype, Hosteladd1,
                                         <ul class="marquee-discount">
                                             <li class="discount-info">
                                                 <i class="ri-discount-percent-fill"></i> Upto 50%
-                                                off | Code ZOMO50
+                                                off | Code Perikities
                                             </li>
                                             <li class="discount-info">
                                                 <i class="ri-discount-percent-fill"></i> Upto 50%
-                                                off | Code ZOMO50
+                                                off | Code Perikities
                                             </li>
                                             <li class="discount-info">
                                                 <i class="ri-discount-percent-fill"></i> Upto 50%
-                                                off | Code ZOMO50
+                                                off | Code Perikities
                                             </li>
                                             <li class="discount-info">
                                                 <i class="ri-discount-percent-fill"></i> Upto 50%
-                                                off | Code ZOMO50
+                                                off | Code Perikities
                                             </li>
                                         </ul>
                                     </li>
                                 </ul>`;
+
+    //adding click events to the child and also onclick event , these values will be passed.
+    elem1.dataset.hostelName = Hostelname;
+    elem1.dataset.hostelAddress = Hosteladd1;
+    elem1.addEventListener('click', handleCardClick);
+
+
     parentElem.appendChild(elem1);
     mainParentElem.appendChild(parentElem)
     postContainer.appendChild(mainParentElem);
 }
 
+function handleCardClick(event) {
+    const card = event.currentTarget;
+    const cardHostelName = card.dataset.hostelName;
+    const cardHostelAddress = card.dataset.hostelAddress;
+    console.log(`Card ID: ${cardHostelName}, Card Name: ${cardHostelAddress}`);
+    localStorage.setItem("hostel-name",cardHostelName);
+    localStorage.setItem("hostel-address",cardHostelAddress);
+    window.location.href = "menu-listing.html";
+}
+
 const iterateAllRecords = () => {
+    var i = 0;
     //iterating thro the hostle obj fetched from DB
     hostelist.forEach(iterator => {
+        i++;
         addSwiperSlideCard(iterator.Hostelname, iterator.Hosteltype, iterator.Hosteladd1,
             iterator.Hosteladd2, iterator.Hostelphone, iterator.Hostelemail, iterator.Hostelcity,
             iterator.Hostelstate, iterator.Hostelpin,
-            iterator.Hostelrent, iterator.Hostelfood, iterator.Acprice, iterator.Nonacprice, iterator.Imagelink)
+            iterator.Hostelrent, iterator.Hostelfood, iterator.Acprice, iterator.Nonacprice, iterator.ImageData[0], i)
     })
+    localStorage.setItem("total_hostel_length", hostelist.length);
 }
+
+//Search Box value Changes searchFuntion will be triggered.
+document.getElementById("global-search").addEventListener("change", searchFunction);
+
+/**
+ * Part A - if an value is searched
+ * the existing card record will be removed.
+ * searched relevant data cards will be populated
+ * 
+ * Part B - if the search value is removed
+ * the searched relevant data cards will be removed
+ * List of All Hostel Record cards will be populated
+ */
+function searchFunction() {
+    console.log("..inside search")
+    var searcheValue = document.getElementById("global-search");
+    searcheValue = searcheValue.value;
+    //need to add more search values based on all columns , now only name , type and city is added.
+    var data_filter = hostelist.filter(element =>
+        element.Hosteltype.toLowerCase() == searcheValue.toLowerCase() || element.Hostelname.toLowerCase() == searcheValue.toLowerCase()
+        || element.Hostelcity.toLowerCase() == searcheValue.toLowerCase()
+    );
+    var total_len = localStorage.getItem("total_hostel_length");
+
+    //Part A - refer function comment
+    if (searcheValue != '') {
+        //Removing All cards, Populated during page load.
+        if (total_len != 0) {
+            removeCards(total_len);
+            localStorage.setItem("total_hostel_length", 0);
+        }
+
+        if (localStorage.getItem("total_search_length") != 0) {
+            removeCards(localStorage.getItem("total_search_length"));
+            localStorage.setItem("total_search_length", 0);
+        }
+
+        //Adding search relevant cards data.
+        var i = 0;
+        data_filter.forEach(iterator => {
+            i++;
+            addSwiperSlideCard(iterator.Hostelname, iterator.Hosteltype, iterator.Hosteladd1,
+                iterator.Hosteladd2, iterator.Hostelphone, iterator.Hostelemail, iterator.Hostelcity,
+                iterator.Hostelstate, iterator.Hostelpin,
+                iterator.Hostelrent, iterator.Hostelfood, iterator.Acprice, iterator.Nonacprice, iterator.Imagelink, i)
+        });
+        localStorage.setItem("total_search_length", i);
+    }
+
+    //Part B - refer function comment
+    else {
+        //removing search releavant card data
+        removeCards(localStorage.getItem("total_search_length"));
+        localStorage.setItem("total_search_length", 0);
+
+        //appending full hostel details card
+        loadDataFromDB();
+    }
+}
+
+/**
+ * 
+ * @param {length of the cards needs to removed from the UI} length 
+ * Removes the cards present in UI either the cards populated from search result or entire list of hostel cards
+ */
+function removeCards(length) {
+    console.log("length to remove cards - " + length)
+    for (var i = 1; i <= length; i++) {
+        console.log("card - " + i);
+        document.getElementById(i).remove();
+    }
+}
+
 window.addEventListener('load', loadDataFromDB);
 
