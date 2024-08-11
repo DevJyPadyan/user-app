@@ -32,7 +32,6 @@ const addSwiperSlideCard = (Hostelname, Hosteltype, Hosteladd1,
     Hosteladd2, Hostelphone, Hostelemail, Hostelcity, Hostelstate,
     Hostelpin, Hostelrent, Hostelfood, Acprice, Nonacprice, Imagelink, card_number) => {
 
-        console.log(Imagelink);
     //Parent Container
     const mainParentElem = document.createElement('div');
     mainParentElem.classList.add('swiper-slide');
@@ -108,7 +107,7 @@ function handleCardClick(event) {
     const card = event.currentTarget;
     const cardHostelName = card.dataset.hostelName;
     const cardHostelAddress = card.dataset.hostelAddress;
-    console.log(`Card ID: ${cardHostelName}, Card Name: ${cardHostelAddress}`);
+    console.log(`Clicked Card ID: ${cardHostelName}, Card Name: ${cardHostelAddress}`);
     localStorage.setItem("hostel-name",cardHostelName);
     localStorage.setItem("hostel-address",cardHostelAddress);
     window.location.href = "menu-listing.html";
@@ -170,7 +169,7 @@ function searchFunction() {
             addSwiperSlideCard(iterator.Hostelname, iterator.Hosteltype, iterator.Hosteladd1,
                 iterator.Hosteladd2, iterator.Hostelphone, iterator.Hostelemail, iterator.Hostelcity,
                 iterator.Hostelstate, iterator.Hostelpin,
-                iterator.Hostelrent, iterator.Hostelfood, iterator.Acprice, iterator.Nonacprice, iterator.Imagelink, i)
+                iterator.Hostelrent, iterator.Hostelfood, iterator.Acprice, iterator.Nonacprice, iterator.ImageData[0], i)
         });
         localStorage.setItem("total_search_length", i);
     }
@@ -192,9 +191,9 @@ function searchFunction() {
  * Removes the cards present in UI either the cards populated from search result or entire list of hostel cards
  */
 function removeCards(length) {
-    console.log("length to remove cards - " + length)
+    // console.log("length to remove cards - " + length)
     for (var i = 1; i <= length; i++) {
-        console.log("card - " + i);
+        // console.log("card - " + i);
         document.getElementById(i).remove();
     }
 }
