@@ -290,8 +290,8 @@ function applyFilters(roomTypeFilters) {
         if (localStorage.getItem("total_filter_length") != 0) {
             removeCards(localStorage.getItem("total_filter_length"));
             localStorage.setItem("total_filter_length", 0);
-            loadDataFromDB();
         }
+        loadDataFromDB();
     }
     else {
         roomTypeFilters.forEach(filterValue => {
