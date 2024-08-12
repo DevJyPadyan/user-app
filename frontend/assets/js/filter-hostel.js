@@ -1,47 +1,86 @@
-var twoSharingAcBx = document.getElementById("item_2_1_checkbx");
-var twoSharingNonAcBx = document.getElementById("item_2_2_checkbx");
-var twoSharingAttachedBathroomBx = document.getElementById("item_2_3_checkbx");
+// var twoSharingBx = document.getElementById("item_2_1_checkbx");
+// var threeSharingBx = document.getElementById("item_2_2_checkbx");
+// var fourSharingBx = document.getElementById("item_2_3_checkbx");
 
-twoSharingAcBx.addEventListener('click',(e)=>{
-    twoSharingFilters();
-});
+// var acBx = document.getElementById("item_3_1_checkbx");
+// var nonacBx = document.getElementById("item_3_2_checkbx");
 
-twoSharingNonAcBx.addEventListener('click',(e)=>{
-    twoSharingFilters();
-});
+// twoSharingBx.addEventListener('click',(e)=>{
+//     roomTypeFilters();
+// });
 
-twoSharingAttachedBathroomBx.addEventListener('click',(e)=>{
-    twoSharingFilters();
-});
+// threeSharingBx.addEventListener('click',(e)=>{
+//     roomTypeFilters();
+// });
 
-function twoSharingFilters(){
-       var acFlag = twoSharingAcBx.checked;
-       var nonAcFlag = twoSharingNonAcBx.checked;
-       var attachedBathroomFlag = twoSharingAttachedBathroomBx.checked;
-       var twoSharingFilterValue = "";
-       if(acFlag == true && nonAcFlag == false && attachedBathroomFlag == false){
-         twoSharingFilterValue = twoSharingAcBx.value;
-       }
-       else if(acFlag == false && nonAcFlag == true && attachedBathroomFlag == false){
-        twoSharingFilterValue = twoSharingNonAcBx.value;
-       }
-       else if(acFlag == false && nonAcFlag == false && attachedBathroomFlag == true){
-        twoSharingFilterValue = twoSharingAttachedBathroomBx.value;
-       }
-       else if(acFlag == true && nonAcFlag == false && attachedBathroomFlag == true){
-        twoSharingFilterValue = twoSharingAcBx.value + twoSharingAttachedBathroomBx.value;
-       }
-       else if(acFlag == false && nonAcFlag == true && attachedBathroomFlag == true){
-        twoSharingFilterValue = twoSharingNonAcBx.value + twoSharingAttachedBathroomBx.value;
-       }
-       else{
-        alert("noooo")
-       }
-       console.log(twoSharingFilterValue+" filter value");
-}
+// fourSharingBx.addEventListener('click',(e)=>{
+//     roomTypeFilters();
+// });
 
-filtersClrBtn.addEventListener('click',(e)=>{
-    twoSharingAcBx.checked = false;
-    twoSharingNonAcBx.checked = false;
-    twoSharingAttachedBathroomBx.checked = false;
-});
+// acBx.addEventListener('click',(e)=>{
+//     airConditionFilters();
+// });
+
+// nonacBx.addEventListener('click',(e)=>{
+//     airConditionFilters();
+// });
+
+// function roomTypeFilters(){
+//        var twoSharingFlag = twoSharingBx.checked;
+//        var threeSharingFlag = threeSharingBx.checked;
+//        var fourSharingFlag = fourSharingBx.checked;
+//        var roomTypeFilterValue = "";
+//        if(twoSharingFlag == true && threeSharingFlag == false && fourSharingFlag == false){
+//          roomTypeFilterValue = twoSharingBx.value;
+//        }
+//        else if(twoSharingFlag == false && threeSharingFlag == true && fourSharingFlag == false){
+//         roomTypeFilterValue = threeSharingBx.value;
+//        }
+//        else if(twoSharingFlag == false && threeSharingFlag == false && fourSharingFlag == true){
+//         roomTypeFilterValue = fourSharingBx.value;
+//        }
+//        else if(twoSharingFlag == true && threeSharingFlag == false && fourSharingFlag == true){
+//         roomTypeFilterValue = twoSharingBx.value + fourSharingBx.value;
+//        }
+//        else if(twoSharingFlag == true && threeSharingFlag == true && fourSharingFlag == false){
+//         roomTypeFilterValue = twoSharingBx.value + threeSharingBx.value;
+//        }
+//        else if(twoSharingFlag == false && threeSharingFlag == true && fourSharingFlag == true){
+//         roomTypeFilterValue = threeSharingBx.value + fourSharingBx.value;
+//        }
+//        else if(twoSharingFlag == true && threeSharingFlag == true && fourSharingFlag == true){
+//         roomTypeFilterValue =twoSharingBx.value + threeSharingBx.value + fourSharingBx.value;
+//        }
+//        else{
+//         alert("No Filter")
+//        }
+//        console.log("Room Type filter value -"+roomTypeFilterValue);
+// }
+
+// function airConditionFilters(){
+//     var acFlag = acBx.checked;
+//     var nonacFlag = nonacBx.checked;
+//     var airConditionFilterValue = "";
+//     if(acFlag == true && nonacFlag == false){
+//       airConditionFilterValue = acBx.value;
+//     }
+//     else if(acFlag == false && nonacFlag == true){
+//      airConditionFilterValue = nonacBx.value;
+//     }
+//     else if(acFlag == true && nonacFlag == true){
+//      airConditionFilterValue = acBx.value + nonacBx.value;
+//     }
+//     else{
+//      alert("No Filter")
+//     }
+//     console.log("Air Contion filter value - "+airConditionFilterValue);
+// }
+
+// filtersClrBtn.addEventListener('click',(e)=>{
+//     twoSharingBx.checked = false;
+//     threeSharingBx.checked = false;
+//     fourSharingBx.checked = false;
+
+//     acBx.checked = false;
+//     nonacBx.checked =  false;
+// });
