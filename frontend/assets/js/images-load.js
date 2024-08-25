@@ -15,8 +15,11 @@ let hostelName = localStorage.getItem('hostel-name');
 let hostelAddress = localStorage.getItem('hostel-address');
 let hostelist = [];
 let overviewList = [];
+let roomTypeFilterValue = [];
+let airConditionFilterValue = [];
+let bathroomFilterValue = [];
 
-/**********Loading Image data in Photos Section starts***************/
+/**********Loading Image data in - Photos Section - starts***************/
 const loadImagesDataFromDB = () => {
     console.log("...inside DB Image Load ")
     document.getElementById("hostel-name").innerHTML = hostelName;
@@ -60,9 +63,11 @@ window.addEventListener('load', loadImagesDataFromDB);
 /**********Loading Image data in Photos Section ends***************/
 
 
-/**********Loading Room data in Book Online Section starts***************/
+/**********Loading Room data in - Book Online - Section starts***************/
 const loadDataFromDB = () => {
-    console.log("...inside DB ")
+    console.log("...inside DB ");
+    localStorage.setItem("total_filter_length", 0);
+    localStorage.setItem("total_rooms_length", 0);
     const dbref = ref(db, 'Hostel details/' + hostelName + "/rooms");
     onValue(dbref, (snapshot) => {
 
@@ -88,9 +93,17 @@ const iterateAllRecords = () => {
         }
         i++;
         addHostelRoomCard(iterator.ac, iterator.amenities, iterator.bathroom, iterator.floor,
-            iterator.price, iterator.roomcount, iterator.roomtype, imageArray[0], i)
+            iterator.price, iterator.roomCount, iterator.roomType, imageArray[0], i)
     });
     localStorage.setItem("total_rooms_length", hostelist.length);
+    if (hostelist.length == 0) {
+        document.getElementById("no_room_msg").style.display = "flex";
+        document.getElementById("no_room_msg").style.justifyContent = "center";
+        document.getElementById("no_room_msg").style.alignItems = "center";
+    }
+    else {
+        document.getElementById("no_room_msg").style.display = "none";
+    }
 
 }
 
@@ -116,7 +129,16 @@ const addHostelRoomCard = (ac, amenities, bathroom, floor, roomprice, roomcount,
                                                                             <h6 class="customized">Floor No: ${floor} </h6>
                                                                         </div>
                                                                         <p>
-                                                                            Amenities : ${ac}, ${bathroom}, ${roomtype} Sharing, ${amenities}
+                                                                            Air Condition : ${ac}
+                                                                        </p>
+                                                                        <p>
+                                                                            Bathroom : ${bathroom}
+                                                                        </p>
+                                                                        <p>
+                                                                            Sharing : ${roomtype} 
+                                                                        </p>
+                                                                        <p>
+                                                                            Amenities : ${amenities}
                                                                         </p>
                                                                     </div>
                                                                     <div class="product-box-price">
@@ -180,13 +202,16 @@ window.addEventListener('load', loadOverviewDataFromDB);
 
 /**********Loading Overview Section data ends***************/
 
-/**Applying Filters Section Starts here */
+/**Applying Filters Section Starts here for - Book Online Section */
 var twoSharingBx = document.getElementById("item_2_1_checkbx");
 var threeSharingBx = document.getElementById("item_2_2_checkbx");
 var fourSharingBx = document.getElementById("item_2_3_checkbx");
 
 var acBx = document.getElementById("item_3_1_checkbx");
 var nonacBx = document.getElementById("item_3_2_checkbx");
+
+var attachedBx = document.getElementById("item_4_1_checkbx");
+var commonBx = document.getElementById("item_4_2_checkbx");
 
 twoSharingBx.addEventListener('click', (e) => {
     roomTypeFilters();
@@ -208,69 +233,102 @@ nonacBx.addEventListener('click', (e) => {
     airConditionFilters();
 });
 
+attachedBx.addEventListener('click', (e) => {
+    bathroomFilters();
+});
+
+commonBx.addEventListener('click', (e) => {
+    bathroomFilters();
+});
+
 function roomTypeFilters() {
+    roomTypeFilterValue = [];
     var twoSharingFlag = twoSharingBx.checked;
     var threeSharingFlag = threeSharingBx.checked;
     var fourSharingFlag = fourSharingBx.checked;
-    var roomTypeFilterValue = [];
     if (twoSharingFlag == true && threeSharingFlag == false && fourSharingFlag == false) {
         roomTypeFilterValue.push(twoSharingBx.value);
-        applyFilters(roomTypeFilterValue);
+        applyFilters();
     }
     else if (twoSharingFlag == false && threeSharingFlag == true && fourSharingFlag == false) {
         roomTypeFilterValue.push(threeSharingBx.value);
-        applyFilters(roomTypeFilterValue);
+        applyFilters();
     }
     else if (twoSharingFlag == false && threeSharingFlag == false && fourSharingFlag == true) {
         roomTypeFilterValue.push(fourSharingBx.value);
-        applyFilters(roomTypeFilterValue);
+        applyFilters();
     }
     else if (twoSharingFlag == true && threeSharingFlag == false && fourSharingFlag == true) {
         roomTypeFilterValue.push(twoSharingBx.value);
         roomTypeFilterValue.push(fourSharingBx.value);
-        applyFilters(roomTypeFilterValue);
+        applyFilters();
     }
     else if (twoSharingFlag == true && threeSharingFlag == true && fourSharingFlag == false) {
         roomTypeFilterValue.push(twoSharingBx.value);
         roomTypeFilterValue.push(threeSharingBx.value);
-        applyFilters(roomTypeFilterValue);
+        applyFilters();
     }
     else if (twoSharingFlag == false && threeSharingFlag == true && fourSharingFlag == true) {
         roomTypeFilterValue.push(threeSharingBx.value);
         roomTypeFilterValue.push(fourSharingBx.value);
-        applyFilters(roomTypeFilterValue);
+        applyFilters();
     }
     else if (twoSharingFlag == true && threeSharingFlag == true && fourSharingFlag == true) {
         roomTypeFilterValue.push(twoSharingBx.value);
         roomTypeFilterValue.push(threeSharingBx.value);
         roomTypeFilterValue.push(fourSharingBx.value);
-        applyFilters(roomTypeFilterValue);
+        applyFilters();
     }
     else {
         console.log("No Filter");
-        applyFilters(roomTypeFilterValue);
+        applyFilters();
     }
-    console.log("Room Type filter value -" + roomTypeFilterValue);
 }
 
 function airConditionFilters() {
+    airConditionFilterValue = [];
     var acFlag = acBx.checked;
     var nonacFlag = nonacBx.checked;
-    var airConditionFilterValue = [];
     if (acFlag == true && nonacFlag == false) {
         airConditionFilterValue.push(acBx.value);
+        applyFilters();
     }
     else if (acFlag == false && nonacFlag == true) {
         airConditionFilterValue.push(nonacBx.value);
+        applyFilters();
     }
     else if (acFlag == true && nonacFlag == true) {
         airConditionFilterValue.push(acBx.value);
         airConditionFilterValue.push(nonacBx.value);
+        applyFilters();
     }
     else {
-        console("No Filter");
+        console.log("No Filter");
+        applyFilters();
     }
-    console.log("Air Contion filter value - " + airConditionFilterValue);
+}
+
+function bathroomFilters() {
+    bathroomFilterValue = [];
+    var attachedFlag = attachedBx.checked;
+    var commonFlag = commonBx.checked;
+    if (attachedFlag == true && commonFlag == false) {
+        bathroomFilterValue.push(attachedBx.value);
+        applyFilters();
+    }
+    else if (attachedFlag == false && commonFlag == true) {
+        bathroomFilterValue.push(commonBx.value);
+        applyFilters();
+    }
+    else if (attachedFlag == true && commonFlag == true) {
+        bathroomFilterValue.push(attachedBx.value);
+        bathroomFilterValue.push(commonBx.value);
+        applyFilters();
+    }
+    else {
+        console.log("No Filter");
+        applyFilters();
+    }
 }
 
 filtersClrBtn.addEventListener('click', (e) => {
@@ -280,45 +338,85 @@ filtersClrBtn.addEventListener('click', (e) => {
 
     acBx.checked = false;
     nonacBx.checked = false;
+
+    attachedBx.checked = false;
+    commonBx.checked = false;
+
+    roomTypeFilterValue = [];
+    airConditionFilterValue = [];
+    bathroomFilterValue = [];
+
+    applyFilters();
 });
 
-function applyFilters(roomTypeFilters) {
-    var data_filter_value = [];
+function applyFilters() {
     var data_filter = [];
-    console.log(roomTypeFilters.length);
-    if (roomTypeFilters.length == 0) {
+    console.log("Room Type Filters - " + roomTypeFilterValue.length + " AC filters - " + airConditionFilterValue.length +" Bathroom filter - "+bathroomFilterValue.length);
+    if (roomTypeFilterValue.length == 0 && airConditionFilterValue.length == 0 && bathroomFilterValue.length == 0) {
         if (localStorage.getItem("total_filter_length") != 0) {
             removeCards(localStorage.getItem("total_filter_length"));
             localStorage.setItem("total_filter_length", 0);
         }
-        loadDataFromDB();
+        if(localStorage.getItem("total_rooms_length") == 0){
+            loadDataFromDB();
+        }
     }
     else {
-        roomTypeFilters.forEach(filterValue => {
-            data_filter = hostelist.filter(element =>
-                element.roomtype.toLowerCase() == filterValue.toLowerCase()
-            );
-            data_filter_value.push(data_filter);
-        });
-
-        if (localStorage.getItem("total_rooms_length") != 0) {
-            removeCards(localStorage.getItem("total_rooms_length"));
-            localStorage.setItem("total_rooms_length", 0)
+        data_filter = hostelist;
+        if (roomTypeFilterValue.length != 0) {
+            roomTypeFilterValue.forEach(filterValue => {
+                data_filter = data_filter.filter(element =>
+                    element.roomType.toLowerCase() == filterValue.toLowerCase()
+                );
+            });
+        }
+        if (airConditionFilterValue.length != 0) {
+            airConditionFilterValue.forEach(filterValue => {
+                data_filter = data_filter.filter(element =>
+                    element.ac.toLowerCase() == filterValue.toLowerCase()
+                );
+            });
+        }
+        if (bathroomFilterValue.length != 0) {
+            bathroomFilterValue.forEach(filterValue => {
+                data_filter = data_filter.filter(element =>
+                    element.bathroom.toLowerCase() == filterValue.toLowerCase()
+                );
+            });
+        }
+        if (roomTypeFilterValue.length != 0 || airConditionFilterValue.length != 0 || bathroomFilterValue.length != 0) {
+            if (localStorage.getItem("total_rooms_length") != 0) {
+                removeCards(localStorage.getItem("total_rooms_length"));
+                localStorage.setItem("total_rooms_length", 0);
+            }
+            if (localStorage.getItem("total_filter_length") != 0) {
+                removeCards(localStorage.getItem("total_filter_length"));
+                localStorage.setItem("total_filter_length", 0);
+            }
             //Adding fitler relevant room cards data.
             var i = 0;
             let imageArray = [];
             data_filter.forEach(iterator => {
                 i++;
                 if (iterator.images != undefined) {
-                    iterator.images.forEach(i => {
-                        imageArray.push(i);
-                        addImageCard(i);
+                    iterator.images.forEach(j => {
+                        imageArray.push(j);
+                        // addImageCard(i);
                     })
                 }
                 addHostelRoomCard(iterator.ac, iterator.amenities, iterator.bathroom, iterator.floor,
-                    iterator.price, iterator.roomcount, iterator.roomtype, imageArray[0], i)
+                    iterator.price, iterator.roomCount, iterator.roomType, imageArray[0], i)
             });
             localStorage.setItem("total_filter_length", i);
+            if (data_filter.length == 0) {
+                document.getElementById("no_room_msg").style.display = "flex";
+                document.getElementById("no_room_msg").style.justifyContent = "center";
+                document.getElementById("no_room_msg").style.alignItems = "center";
+            }
+            else {
+                document.getElementById("no_room_msg").style.display = "none";
+            }
+
         }
         else {
             loadDataFromDB();
@@ -338,4 +436,4 @@ function removeCards(length) {
         document.getElementById(i).remove();
     }
 }
-
+/**Applying Filters Section ends here for - Book Online Section */
