@@ -30,7 +30,7 @@ const loadDataFromDB = () => {
 const postContainer = document.getElementById('card-content');
 const addSwiperSlideCard = (Hostelname, Hosteltype, Hosteladd1,
     Hosteladd2, Hostelphone, Hostelemail, Hostelcity, Hostelstate,
-    Hostelpin, Hostelrent, Hostelfood, Acprice, Nonacprice, ImageArray, card_number) => {
+    Hostelpin, Hostelrent, Hostelfood, Acprice, ImageArray, card_number) => {
 
     let Imagelink = "assets/images/product/p-18.png";//default image URL , if there is no Image data present in DB
     if((ImageArray != undefined)){
@@ -122,10 +122,10 @@ const iterateAllRecords = () => {
     //iterating thro the hostle obj fetched from DB
     hostelist.forEach(iterator => {
         i++;
-        addSwiperSlideCard(iterator.Hostelname, iterator.Hosteltype, iterator.Hosteladd1,
-            iterator.Hosteladd2, iterator.Hostelphone, iterator.Hostelemail, iterator.Hostelcity,
-            iterator.Hostelstate, iterator.Hostelpin,
-            iterator.Hostelrent, iterator.Hostelfood, iterator.Acprice, iterator.Nonacprice, iterator.ImageData, i)
+        addSwiperSlideCard(iterator.hostelName, iterator.hostelType, iterator.hostelAddress1,
+            iterator.hostelAddress2, iterator.hostelPhone, iterator.hostelEmail, iterator.hostelCity,
+            iterator.hostelState, iterator.hostelPin,
+            iterator.hostelVegprice, iterator.hostelBothfoods, iterator.hostelNonvegprice, iterator.ImageData, i)
     })
     localStorage.setItem("total_hostel_length", hostelist.length);
 }
@@ -170,10 +170,10 @@ function searchFunction() {
         var i = 0;
         data_filter.forEach(iterator => {
             i++;
-            addSwiperSlideCard(iterator.Hostelname, iterator.Hosteltype, iterator.Hosteladd1,
-                iterator.Hosteladd2, iterator.Hostelphone, iterator.Hostelemail, iterator.Hostelcity,
-                iterator.Hostelstate, iterator.Hostelpin,
-                iterator.Hostelrent, iterator.Hostelfood, iterator.Acprice, iterator.Nonacprice, iterator.ImageData, i)
+            addSwiperSlideCard(iterator.hostelName, iterator.hostelType, iterator.hostelAddress1,
+                iterator.hostelAddress2, iterator.hostelPhone, iterator.hostelEmail, iterator.hostelCity,
+                iterator.hostelState, iterator.hostelPin,
+                iterator.hostelVegprice, iterator.hostelBothfoods, iterator.hostelNonvegprice, iterator.ImageData, i)
         });
         localStorage.setItem("total_search_length", i);
     }
