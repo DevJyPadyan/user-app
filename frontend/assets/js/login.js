@@ -14,9 +14,9 @@ login.addEventListener('click', (e) => {
         .then((snapshot) => {
             if (snapshot.exists()) {
 
-                let usname = snapshot.val().Username;
-                let password = snapshot.val().Password;
-                let phone = snapshot.val().Phone;
+                let usname = snapshot.val().userName;
+                let password = snapshot.val().Password1;
+                let phone = snapshot.val().userPhone;
                 let usercomp = usname.localeCompare(user);
                 let passcomp = password.localeCompare(passwd);
                 
@@ -39,4 +39,3 @@ login.addEventListener('click', (e) => {
         });
 
 });
-
