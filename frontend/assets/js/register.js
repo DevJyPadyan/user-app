@@ -11,9 +11,9 @@ register.addEventListener('click', (e) => {
     var pwd = document.getElementById("password").value;
 
     set(ref(db, "User details/" + user), {
-        Username: user,
-        Phone: phone,
-        Password: pwd
+        userName: user,
+        userPhone: phone,
+        password1: pwd
     })
         .then(() => {
             //const userReg = [user,phone,pwd];
@@ -27,4 +27,3 @@ register.addEventListener('click', (e) => {
         });
 
 });
-
