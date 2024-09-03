@@ -68,6 +68,8 @@ const loadDataFromDB = () => {
     console.log("...inside DB ");
     localStorage.setItem("total_filter_length", 0);
     localStorage.setItem("total_rooms_length", 0);
+    localStorage.setItem('bedCount', 0);//number of bed in room selected.
+    localStorage.setItem("bedId", 0);//selected Bed ID by the user.
     const dbref = ref(db, 'Hostel details/' + hostelName + "/rooms");
     onValue(dbref, (snapshot) => {
 
@@ -154,12 +156,89 @@ const addHostelRoomCard = (ac, amenities, bathroom, floor, roomprice, roomcount,
                                                         </div>`;
 
     // To add click event to the card
-    // elem.dataset.hostelName = Hostelname;
-    // elem.dataset.hostelAddress = Hosteladd1;
-    // elem.addEventListener('click', handleCardClick);
+    elem.dataset.roomType = roomtype;
+    elem.addEventListener('click', handleCardClick);
 
     postContainer.appendChild(elem);
 }
+/**
+ * 
+ * @param {*} event - click event on room card
+ * function gets triggered when room card is clicked. 
+ */
+function handleCardClick(event) {
+    const card = event.currentTarget;
+    const hostelRoomType = card.dataset.roomType;
+    // let bedCount = localStorage.getItem('bedCount');
+    if (localStorage.getItem('bedCount') != 0) {
+        for (i = 1; i <= localStorage.getItem('bedCount'); i++) {
+            let cardId = 'b' + i;
+            document.getElementById(cardId).remove();
+        }
+        localStorage.setItem('bedCount', 0);
+    }
+
+    // Using match with regEx
+
+    //need for regex since when user clicks on room , 
+    //the room type is "2 Sharing","3 Sharing","10 Sharing" to extract the number from the string we use REGEX.
+    let matches = hostelRoomType.match(/(\d+)/);
+    // Display output if number extracted
+    if (matches) {
+        let bedCount = parseInt(matches[0]);
+        localStorage.setItem("bedCount", bedCount);
+        for (i = 1; i <= bedCount; i++) {
+            addBed(i);
+        }
+    }
+}
+
+/**
+ * 
+ * @param {*} i - counter of the bed
+ * Bed card is added dynamically based on the Room's bed count clicked by user.
+ */
+function addBed(i) {
+    const parentContainer = document.getElementById('bedParent');
+    const elem = document.createElement('div');
+    elem.classList.add('card');
+    let bedId = 'b' + i;
+    elem.setAttribute("id", bedId);
+    elem.innerHTML = `<div class="card-body">Bed ${i}</div>`;
+    elem.dataset.bedId = bedId;
+    elem.addEventListener('click', bedSelection);
+    parentContainer.appendChild(elem);
+
+}
+/**
+ * 
+ * @param {*} event
+ * WHen user selects a bed , this function is triggered. 
+ */
+function bedSelection(event) {
+    const bed = event.currentTarget;
+    let bedId;
+    for (i = 1; i <= localStorage.getItem('bedCount'); i++) {
+        bedId = 'b' + i;
+        if (document.getElementById(bedId).style.backgroundColor != "red") {
+            document.getElementById(bedId).style.backgroundColor = "white";
+        }
+    }
+    bedId = bed.dataset.bedId;
+    if (document.getElementById(bedId).style.backgroundColor != "red") {
+        document.getElementById(bedId).style.backgroundColor = "lightgreen";
+        localStorage.setItem("bedId", bedId);
+    }
+}
+
+bookNowBtn.addEventListener('click', (e) => {
+    if (localStorage.getItem("bedId") != 0) {
+        window.location.href = "././checkout.html"
+    }
+    else {
+        alert("select an bed to book")
+    }
+})
 
 window.addEventListener('load', loadDataFromDB);
 /**********Loading Rooms in Book Online Section data end***************/
@@ -168,8 +247,8 @@ window.addEventListener('load', loadDataFromDB);
 //Need to re-visit this
 /**********Loading Overview Section data starts***************/
 
-const loadOverviewDataFromDB = () => {
-    console.log("...inside overview load ")
+const loadMenuDataFromDB = () => {
+    console.log("...inside menu load ")
     const dbref = ref(db, 'Hostel details/' + hostelName);
     onValue(dbref, (snapshot) => {
         overviewList = [];
@@ -182,23 +261,12 @@ const loadOverviewDataFromDB = () => {
     });
 }
 
-// const iterateOverviewRecords = () => {
-//     //iterating thro the hostle obj fetched from DB.
-//     hostelist.forEach(iterator => {
-//         console.log(iterator)
-//         loadOverviewData(iterator.Hostelname, iterator.Hosteltype, iterator.Hosteladd1,
-//             iterator.Hosteladd2, iterator.Hostelphone, iterator.Hostelemail, iterator.Hostelcity,
-//             iterator.Hostelstate, iterator.Hostelpin,
-//             iterator.Hostelrent, iterator.Hostelfood, iterator.Acprice, iterator.Nonacprice)
-//     })
-// }
-
 const loadOverviewData = () => {
     document.getElementById("hostel_phone_number").innerHTML = overviewList[0];
     document.getElementById("hostel_address").innerHTML = overviewList[1] + ", " + overviewList[2];
 }
 
-window.addEventListener('load', loadOverviewDataFromDB);
+window.addEventListener('load', loadMenuDataFromDB);
 
 /**********Loading Overview Section data ends***************/
 
@@ -351,13 +419,13 @@ filtersClrBtn.addEventListener('click', (e) => {
 
 function applyFilters() {
     var data_filter = [];
-    console.log("Room Type Filters - " + roomTypeFilterValue.length + " AC filters - " + airConditionFilterValue.length +" Bathroom filter - "+bathroomFilterValue.length);
+    console.log("Room Type Filters - " + roomTypeFilterValue.length + " AC filters - " + airConditionFilterValue.length + " Bathroom filter - " + bathroomFilterValue.length);
     if (roomTypeFilterValue.length == 0 && airConditionFilterValue.length == 0 && bathroomFilterValue.length == 0) {
         if (localStorage.getItem("total_filter_length") != 0) {
             removeCards(localStorage.getItem("total_filter_length"));
             localStorage.setItem("total_filter_length", 0);
         }
-        if(localStorage.getItem("total_rooms_length") == 0){
+        if (localStorage.getItem("total_rooms_length") == 0) {
             loadDataFromDB();
         }
     }
