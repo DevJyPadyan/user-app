@@ -157,10 +157,14 @@ const addHostelRoomCard = (ac, amenities, bathroom, floor, roomprice, roomcount,
 
     // To add click event to the card
     elem.dataset.roomType = roomtype;
+    elem.dataset.roomPrice = roomprice;
+    elem.dataset.roomCount = roomcount;
+    elem.dataset.roomFloor = floor;
     elem.addEventListener('click', handleCardClick);
 
     postContainer.appendChild(elem);
 }
+
 /**
  * 
  * @param {*} event - click event on room card
@@ -169,7 +173,8 @@ const addHostelRoomCard = (ac, amenities, bathroom, floor, roomprice, roomcount,
 function handleCardClick(event) {
     const card = event.currentTarget;
     const hostelRoomType = card.dataset.roomType;
-    // let bedCount = localStorage.getItem('bedCount');
+    let roomDetails = card.dataset.roomType + "-" + card.dataset.roomPrice + "-" + card.dataset.roomCount + "-" + card.dataset.roomFloor;
+    localStorage.setItem("room-details", roomDetails);
     if (localStorage.getItem('bedCount') != 0) {
         for (i = 1; i <= localStorage.getItem('bedCount'); i++) {
             let cardId = 'b' + i;
@@ -202,6 +207,7 @@ function addBed(i) {
     const parentContainer = document.getElementById('bedParent');
     const elem = document.createElement('div');
     elem.classList.add('card');
+    elem.style.backgroundColor = "white";
     let bedId = 'b' + i;
     elem.setAttribute("id", bedId);
     elem.innerHTML = `<div class="card-body">Bed ${i}</div>`;
@@ -218,25 +224,76 @@ function addBed(i) {
 function bedSelection(event) {
     const bed = event.currentTarget;
     let bedId;
+    bedId = bed.dataset.bedId;
+    console.log("inside bed click")
     for (i = 1; i <= localStorage.getItem('bedCount'); i++) {
-        bedId = 'b' + i;
-        if (document.getElementById(bedId).style.backgroundColor != "red") {
-            document.getElementById(bedId).style.backgroundColor = "white";
+        let bedId2 = 'b' + i;
+        console.log("inside for color - " + document.getElementById(bedId2).style.backgroundColor);
+        if (bedId != bedId2) {
+            if (document.getElementById(bedId2).style.backgroundColor != "red" && document.getElementById(bedId2).style.backgroundColor == "lightgreen") {
+                document.getElementById(bedId2).style.backgroundColor = "white";
+                // localStorage.setItem("room-details", "");
+                document.getElementById("cart-title").innerHTML = "Empty Cart";
+                document.getElementById("cart-room-price").innerHTML = '';
+                document.getElementById("cart-room-floor").innerHTML = "";
+                document.getElementById("cart-bed-number").innerHTML = "";
+            }
         }
     }
-    bedId = bed.dataset.bedId;
     if (document.getElementById(bedId).style.backgroundColor != "red") {
-        document.getElementById(bedId).style.backgroundColor = "lightgreen";
-        localStorage.setItem("bedId", bedId);
+        if (document.getElementById(bedId).style.backgroundColor == "white") {
+            console.log("inside iffff "+document.getElementById(bedId).style.backgroundColor);
+            document.getElementById(bedId).style.backgroundColor = "lightgreen";
+            localStorage.setItem("bedId", bedId);
+            let text = localStorage.getItem("room-details");
+            let roomDetails = text.split("-");
+            document.getElementById("cart-title").innerHTML = "Room Rate";
+            document.getElementById("cart-room-price").innerHTML = roomDetails[1];
+            document.getElementById("cart-room-floor").innerHTML = "Floor - " + roomDetails[3] + " Room - " + roomDetails[2];
+            document.getElementById("cart-bed-number").innerHTML = "Selected Bed - " + bedId;
+        }
+        else {
+            console.log("inside elseee "+document.getElementById(bedId).style.backgroundColor)
+            document.getElementById(bedId).style.backgroundColor = "white";
+            localStorage.setItem("bedId", 0);
+            document.getElementById("cart-title").innerHTML = "Empty Cart";
+            document.getElementById("cart-room-price").innerHTML = '';
+            document.getElementById("cart-room-floor").innerHTML = "";
+            document.getElementById("cart-bed-number").innerHTML = "";
+        }
     }
+
 }
+function clearCartItems() {
+    console.log("yess inside close")
+    // localStorage.setItem("bedId", 0);
+    document.getElementById("cart-title").innerHTML = "Empty Cart";
+    document.getElementById("cart-room-price").innerHTML = '';
+    document.getElementById("cart-room-floor").innerHTML = "";
+    document.getElementById("cart-bed-number").innerHTML = "";
+}
+bedSelectionCloseModalBtn.addEventListener('click', (e) => {
+    clearCartItems();
+})
+customized.addEventListener('hide.bs.modal', function () {
+    clearCartItems();
+});
 
 bookNowBtn.addEventListener('click', (e) => {
+    console.log(localStorage.getItem("bedId"));
     if (localStorage.getItem("bedId") != 0) {
-        window.location.href = "././checkout.html"
+        window.location.href = "././checkout.html";
     }
     else {
-        alert("select an bed to book")
+        alert("select an bed to book");
+    }
+})
+proceedPaymentBtn.addEventListener('click', (e) => {
+    if (localStorage.getItem("bedId") != 0) {
+        window.location.href = "././checkout.html";
+    }
+    else {
+        alert("select an bed to proceed payment");
     }
 })
 
@@ -244,31 +301,89 @@ window.addEventListener('load', loadDataFromDB);
 /**********Loading Rooms in Book Online Section data end***************/
 
 
-//Need to re-visit this
-/**********Loading Overview Section data starts***************/
-
+/**********Loading Food Menu Section data starts***************/
 const loadMenuDataFromDB = () => {
-    console.log("...inside menu load ")
-    const dbref = ref(db, 'Hostel details/' + hostelName);
-    onValue(dbref, (snapshot) => {
-        overviewList = [];
-        console.log(snapshot);
-        snapshot.forEach(iterator => {
-            overviewList.push(iterator.val());
-            loadOverviewData();
-        })
-        // iterateOverviewRecords();
+    for(i=1;i<=5;i++){
+        loadMenuWeekWise("week"+i);
+    }
+};
+const loadMenuWeekWise = (weekNumber) => {
+    const dbRef = ref(db, `Hostel details/${hostelName}/weeks/${weekNumber}`);
+    onValue(dbRef, (snapshot) => {
+        const weekData = snapshot.val();        
+        if (weekData) {
+            document.getElementById(weekNumber+"_no_menu_msg").style.display="none";
+            ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'].forEach(day => {
+                const dayData = weekData[day] || {};
+                addFoodMealCard(weekNumber, day, dayData);
+            });
+        } else {
+            document.getElementById(weekNumber+"_no_menu_msg").style.display="block";
+        }
     });
-}
+};
 
-const loadOverviewData = () => {
-    document.getElementById("hostel_phone_number").innerHTML = overviewList[0];
-    document.getElementById("hostel_address").innerHTML = overviewList[1] + ", " + overviewList[2];
+function addFoodMealCard(weekNumber, day, dayData) {
+    const postContainer = document.getElementById(weekNumber);
+    const mainParentElem = document.createElement('div');
+    mainParentElem.id = weekNumber+'-'+day;
+    mainParentElem.innerHTML = `<div style="padding-top:10px;" class="filter-title">
+                                    <h2 class="fw-medium dark-text">${day}</h2>
+                                </div>
+                                <br>`;
+                                
+    const mainELem = document.createElement('div');
+    mainELem.setAttribute("style","display: grid;gap: 20px;grid-template-columns:1fr 1fr 1fr;");
+    ['Morning', 'Afternoon', 'Night'].forEach(mealTime => {
+        const mealData = dayData[mealTime] || {};
+        const elem = document.createElement('div');
+        elem.classList.add('card');
+        elem.style.backgroundColor = "white";
+        elem.innerHTML = `  <h6> ${mealTime} </h6>
+                            <div class="card-body">
+                                <ul>
+                                    <li>Main Dish: ${mealData.mainDish || 'N/A'}</li>
+                                    <li>Side Dish: ${mealData.sideDish || 'N/A'}</li>
+                                    <li>Timings: ${mealData.timing || 'N/A'}</li>
+                                </ul>
+                            </div>`;
+        mainELem.appendChild(elem);
+        mainParentElem.appendChild(mainELem);
+    });
+    postContainer.appendChild(mainParentElem);
+    
 }
-
+function showHideFoodWeek(week){
+    document.getElementById("weekNumber").innerHTML ="Menu for Week - "+week;
+    for(i=1;i<=5;i++){
+        if(i == week){
+            document.getElementById("week"+i).style.display="block";
+            document.getElementById("nav_week"+i).classList.add("active");
+        }
+        else{
+            document.getElementById("week"+i).style.display="none";
+            document.getElementById("nav_week"+i).classList.remove("active");
+        }
+    }
+}
+nav_week1.addEventListener('click',(e)=>{
+    showHideFoodWeek(1);
+})
+nav_week2.addEventListener('click',(e)=>{
+    showHideFoodWeek(2);
+})
+nav_week3.addEventListener('click',(e)=>{
+    showHideFoodWeek(3);
+})
+nav_week4.addEventListener('click',(e)=>{
+    showHideFoodWeek(4);
+})
+nav_week5.addEventListener('click',(e)=>{
+    showHideFoodWeek(5);
+})
 window.addEventListener('load', loadMenuDataFromDB);
 
-/**********Loading Overview Section data ends***************/
+/**********Loading Food Menu Section data ends***************/
 
 /**Applying Filters Section Starts here for - Book Online Section */
 var twoSharingBx = document.getElementById("item_2_1_checkbx");

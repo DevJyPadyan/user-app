@@ -19,7 +19,12 @@ googleLogin.addEventListener('click', (e) => {
             //converting array to string(for setting in localstorage).
             let userDetails = JSON.stringify(userDetailsArray);
             localStorage.setItem("userDetails", userDetails);
-            window.location.href = "././index.html";
+            if(localStorage.getItem('purposeToLogin') == "checkout"){
+                window.location.href = "././checkout.html";
+            }
+            else{
+                window.location.href = "././index.html";
+            }
         }).catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
