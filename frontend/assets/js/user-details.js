@@ -12,7 +12,8 @@ if (userDetails != null) {
         email: userDetailsArray[1],
         phoneNumber: userDetailsArray[2],
         photoURL: userDetailsArray[3],
-        accessToken: userDetailsArray[4]
+        accessToken: userDetailsArray[4],
+        proofSubmission:userDetailsArray[5]
     }
 }
 

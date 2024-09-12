@@ -125,7 +125,7 @@ const iterateAllRecords = () => {
         addSwiperSlideCard(iterator.hostelName, iterator.hostelType, iterator.hostelAddress1,
             iterator.hostelAddress2, iterator.hostelPhone, iterator.hostelEmail, iterator.hostelCity,
             iterator.hostelState, iterator.hostelPin,
-            iterator.hostelVegprice, iterator.hostelBothfoods, iterator.hostelNonvegprice, iterator.ImageData, i)
+            iterator.hostelVegprice, iterator.hostelbothfoods, iterator.hostelNonvegprice, iterator.ImageData, i)
     })
     localStorage.setItem("total_hostel_length", hostelist.length);
 }
@@ -148,8 +148,8 @@ function searchFunction() {
     searcheValue = searcheValue.value;
     //need to add more search values based on all columns , now only name , type and city is added.
     var data_filter = hostelist.filter(element =>
-        element.Hosteltype.toLowerCase() == searcheValue.toLowerCase() || element.Hostelname.toLowerCase() == searcheValue.toLowerCase()
-        || element.Hostelcity.toLowerCase() == searcheValue.toLowerCase()
+        element.hostelType.toLowerCase() == searcheValue.toLowerCase() || element.hostelName.toLowerCase() == searcheValue.toLowerCase()
+        || element.hostelCity.toLowerCase() == searcheValue.toLowerCase()
     );
     var total_len = localStorage.getItem("total_hostel_length");
 

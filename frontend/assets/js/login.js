@@ -17,12 +17,13 @@ login.addEventListener('click', (e) => {
                 let usname = snapshot.val().userName;
                 let password = snapshot.val().Password1;
                 let phone = snapshot.val().userPhone;
+                let proofSubmission = snapshot.val().proofSubmission;
                 let usercomp = usname.localeCompare(user);
                 let passcomp = password.localeCompare(passwd);
-                
+
                 //storing the user details data in an array list
-                const userdetailList = [usname, password, phone];
-                 //converting array to string(for setting in localstorage).
+                const userdetailList = [usname, password, phone, proofSubmission];
+                //converting array to string(for setting in localstorage).
                 let userdetails = JSON.stringify(userdetailList);
                 localStorage.setItem("userDetails", userdetails);
                 //comparing the firebase data and user input
