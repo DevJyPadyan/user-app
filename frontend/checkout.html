@@ -361,7 +361,7 @@
                     <div class="col-lg-8">
                         <div class="process-section">
                             <ul class="process-list">
-                                <li class="active">
+                                <li id="account-li" class="active">
                                     <a href="checkout.html">
                                         <div class="process-icon">
                                             <img class="img-fluid icon" src="assets/images/svg/user.svg" alt="user">
@@ -378,8 +378,8 @@
                                         <h6>Address</h6>
                                     </a>
                                 </li> -->
-                                <li>
-                                    <a href="payment.html">
+                                <li id="payment-li">
+                                    <a>
                                         <div class="process-icon">
                                             <img class="img-fluid icon" src="assets/images/svg/wallet-add.svg"
                                                 alt="wallet-add">
@@ -387,8 +387,8 @@
                                         <h6>Payment</h6>
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="confirm-order.html">
+                                <li id="confirm-li">
+                                    <a>
                                         <div class="process-icon">
                                             <img class="img-fluid icon" src="assets/images/svg/verify.svg" alt="verify">
                                         </div>
@@ -397,7 +397,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="account-part">
+                        <div class="account-part" style="padding-top: 5px !important;">
                             <div id="showLoginDiv">
                                 <img class="img-fluid account-img" src="assets/images/account.svg" alt="account">
                                 <div class="title mb-0">
@@ -409,7 +409,7 @@
                                     </p>
                                     <div class="account-btn d-flex justify-content-center gap-2">
                                         <a id="sign_in" class="btn theme-outline mt-0">SIGN IN</a>
-                                        <a id="sign_up" class="btn theme-outline mt-0">SIGN UP</a>
+                                        <!-- <a id="sign_up" class="btn theme-outline mt-0">SIGN UP</a> -->
                                     </div>
                                 </div>
                             </div>
@@ -422,14 +422,35 @@
                                     <div class="card">
                                         <div class="card-body">
                                             <div style="text-align: left;">
-                                                <p id="user-name"> User Name : </p>
+                                                <p id="user-name2"> User Name : </p>
                                                 <br>
                                                 <p id="user-email"> Email : </p>
                                                 <br>
                                                 <p id="user-phone"> Phone : </p>
+                                                <br>
+                                                <p id="user-proof"> ID Proof :</p>
+                                            </div>
+                                            <br>
+                                            <div id="showCompleteProofDiv" style="text-align: left;">
+                                                <div class="input-box" style=" display: flex; flex-direction: row;gap: 4px;">
+                                                    <h6>Upload Government Proof ID:</h6>
+                                                    <input type="file" id="files" multiple>
+                                                    <br>
+                                                </div>
+                                                <br>
+                                                <button type="button" id="uploadImage" class="btn theme-btn restaurant-btn">Upload
+                                                    Image</button>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            <div id="showPaymentSuccessDiv" style="display: none;" class="account-part confirm-part">
+                                <img class="img-fluid account-img w-25" src="assets/images/gif/confirm.gif"
+                                    alt="confirm">
+                                <h3>Your room has been successfully booked</h3>
+                                <div class="account-btn d-flex justify-content-center gap-2">
+                                    <!-- <a href="order-tracking.html" class="btn theme-btn mt-0">TRACK ORDER</a> -->
                                 </div>
                             </div>
                         </div>
@@ -466,6 +487,7 @@
                                 </div>
                                 <div class="sub-total">
                                     <h6 class="content-color fw-normal">
+                                        <input type="checkbox" id="extra_chapati_check">
                                         Extra Chapati
                                     </h6>
                                     <h6 class="fw-semibold" id="extra-chapati">0</h6>
@@ -474,7 +496,7 @@
                                     <h6 class="fw-semibold dark-text">To Pay</h6>
                                     <h6 class="fw-semibold amount" id="total-payment">0</h6>
                                 </div>
-                                <a href="payment.html" class="btn theme-btn restaurant-btn w-100 rounded-2">CHECKOUT</a>
+                                <a id="rzp-button1" class="btn theme-btn restaurant-btn w-100 rounded-2">CHECKOUT</a>
                                 <img class="dots-design" src="assets/images/svg/dots-design.svg" alt="dots">
                             </div>
                         </div>
@@ -794,6 +816,68 @@
 
     <!-- checkout js -->
     <script src="assets/js/checkout.js" defer type="module"></script>
+
+    <!-- razor-pay js -->
+    <!-- <script src="assets/js/razor-pay.js" defer type="module"></script> -->
+
+    <script type="text/javascript" src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script type="text/javascript">
+        var options = {
+            "key": "rzp_test_3fiTqMb3dy1SaW", // Enter the Key ID generated from the Dashboard
+            "amount": document.getElementById("total-payment").value, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            "currency": "INR",
+            "name": "Perketis Hostel", //your business name
+            "description": "Test Transaction",
+            "image": "https://example.com/your_logo",
+            "order_id": "order_OUeuvfGWmX5ogx1", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+            "handler": function (response) {
+                alert(response.razorpay_payment_id);
+                alert(response.razorpay_order_id);
+                alert(response.razorpay_signature)
+            },
+            "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information, especially their phone number
+                "name": "Gaurav Kumar", //your customer's name
+                "email": "gaurav.kumar@example.com",
+                "contact": "9000090000"  //Provide the customer's phone number for better conversion rates 
+            },
+            "notes": {
+                "address": "Razorpay Corporate Office"
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.on('payment.failed', function (response) {
+            alert(response.error.code);
+            alert(response.error.description);
+            alert(response.error.source);
+            alert(response.error.step);
+            alert(response.error.reason);
+            alert(response.error.metadata.order_id);
+            alert(response.error.metadata.payment_id);
+        });
+        document.getElementById('rzp-button1').onclick = function (e) {
+            if (document.getElementById("showAccountInfoDiv").style.display == "block"
+                && document.getElementById("showCompleteProofDiv").style.display == "none") {
+                rzp1.open();
+                e.preventDefault();
+                document.getElementById("account-li").classList.remove("active");
+                document.getElementById("payment-li").classList.add("active");
+                document.getElementById("payment-li").classList.remove("active");
+                document.getElementById("confirm-li").classList.add("active");
+                document.getElementById("showAccountInfoDiv").style.display = "none";
+                document.getElementById("showPaymentSuccessDiv").style.display = "block";
+            }
+            else if(document.getElementById("showAccountInfoDiv").style.display == "block"
+            && document.getElementById("showCompleteProofDiv").style.display == "block"){
+                alert("Complete Government Proof Submission");
+            }
+            else {
+                alert("Login to make payment");
+            }
+        }
+    </script>
 </body>
 
 </html>

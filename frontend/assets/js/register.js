@@ -8,12 +8,15 @@ const db = getDatabase();
 register.addEventListener('click', (e) => {
     var user = document.getElementById("username").value;
     var phone = document.getElementById("phone").value;
+    var email = document.getElementById("useremail").value;
     var pwd = document.getElementById("password").value;
 
     set(ref(db, "User details/" + user), {
         userName: user,
         userPhone: phone,
-        password1: pwd
+        password1: pwd,
+        userEmail: email,
+        proofSubmission: "no"
     })
         .then(() => {
             //const userReg = [user,phone,pwd];
