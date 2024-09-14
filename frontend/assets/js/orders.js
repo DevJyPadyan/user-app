@@ -1,0 +1,75 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, get, set, child, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"
+import { firebaseConfig } from "./firebase-config.js";
+import { userDeatilObj } from "./user-details.js";
+
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase();
+let hostelName = localStorage.getItem("hostel-name");
+let hostelAddress = localStorage.getItem("hostel-address");
+let userName = userDeatilObj.name;
+let ordersList = [];
+
+function loadOderDetails() {
+    const dbref = ref(db, "User details/" + userName + '/Bookings/');
+    onValue(dbref, (snapshot) => {
+        ordersList = [];
+        snapshot.forEach(h => {
+            h.forEach(x => {
+                ordersList.push((x.val()))
+            })
+        })
+        if (ordersList.length == 0) {
+            document.getElementById("no-orders-msg").style.display = "block";
+        }
+        else {
+            document.getElementById("no-orders-msg").style.display = "none";
+            iterateOrderDetails();
+
+        }
+
+    })
+}
+function iterateOrderDetails() {
+    ordersList.forEach(o => {
+        addOrderDetailsCard(o.bedId, o.floor, o.paymenttransId, o.totalAmount);
+    })
+}
+const postContainer = document.getElementById('ul-orders');
+function addOrderDetailsCard(bedId, floor, paymentId, totalAmount) {
+    const elem = document.createElement('li');
+    elem.innerHTML = ` <div class="order-box">
+                                    <div class="order-box-content">
+                                        <div class="brand-icon">
+                                            <img class="img-fluid icon" src="assets/images/icons/brand2.png"
+                                                alt="brand3">
+                                        </div>
+                                        <div class="order-details">
+                                            <div class="d-flex align-items-center justify-content-between w-100">
+                                                <h5 class="brand-name dark-text fw-medium">
+                                                ${hostelName}
+                                                </h5>
+                                                <h6 class="fw-medium content-color text-end">
+                                                    Today, 3:00 PM
+                                                </h6>
+                                            </div>
+                                            <h6 class="fw-medium dark-text">
+                                                <span class="fw-normal content-color">Transaction Id :
+                                                </span>
+                                                ${paymentId}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-between mt-sm-3 mt-2">
+                                        <h6 class="fw-medium dark-text">
+                                            <span class="fw-normal content-color">Total Amount :</span>
+                                            ${totalAmount}
+                                        </h6>
+                                        <a href="#order" class="btn theme-outline details-btn"
+                                            data-bs-toggle="modal">Details</a>
+                                    </div>
+                                </div>`;
+    postContainer.appendChild(elem);
+}
+window.addEventListener('load', loadOderDetails());

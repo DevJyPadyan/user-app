@@ -15,15 +15,16 @@ let hostelAddress = localStorage.getItem("hostel-address");
 let extraChapatiCost = 1000;
 let text = localStorage.getItem("room-details");
 let roomDetails = text.split("-");
+let bedId = localStorage.getItem("bedId");
+let userName = userDeatilObj.name;
 
 const loadBillDetails = () => {
     settingPurposeToLogin();
     document.getElementById("hostel-name").innerHTML = hostelName;
     document.getElementById("hostel-address").innerHTML = hostelAddress;
-    let bedId = localStorage.getItem("bedId");
     document.getElementById("cart-room-price").innerHTML = roomDetails[1];
     // document.getElementById("cart-room-floor").innerHTML = "Floor - " + roomDetails[3] + " Room - " + roomDetails[2] + " Bed Number - " + bedId;
-    document.getElementById("cart-room-floor").innerHTML = "Floor - " + roomDetails[3]+ " Bed Number - " + bedId;
+    document.getElementById("cart-room-floor").innerHTML = "Floor - " + roomDetails[3] + " Bed Number - " + bedId;
 
     document.getElementById("extra-chapati").innerHTML = extraChapatiCost;
     let chapatiChecked = document.getElementById('extra_chapati_check').checked;
@@ -85,9 +86,9 @@ extra_chapati_check.addEventListener('click', (e) => {
 var files = [];
 let imagelink = [];
 document.getElementById("files").addEventListener("change", function (e) {
-  files = e.target.files;
-  for (let i = 0; i < files.length; i++) {
-  }
+    files = e.target.files;
+    for (let i = 0; i < files.length; i++) {
+    }
 });
 
 document.getElementById("uploadImage").addEventListener("click", async function () {
@@ -106,7 +107,7 @@ document.getElementById("uploadImage").addEventListener("click", async function 
         const imageRef = ref(db, 'User details/' + userName + '/proofData/' + '/');
         set(imageRef, imagelink)
             .then(() => {
-                alert("Image is uploading.. Give OK after 5 secs");
+                alert("Image is uploading..");
                 console.log('Image URLs have been successfully stored!');
             })
         update(ref(db, "User details/" + userName + '/'), {
@@ -114,7 +115,8 @@ document.getElementById("uploadImage").addEventListener("click", async function 
         })
             .then(() => {
                 alert("Govt Proof Submitted successfully");
-                window.location.reload();            })
+                window.location.reload();
+            })
             .catch((error) => {
                 alert(error);
             });
@@ -122,3 +124,26 @@ document.getElementById("uploadImage").addEventListener("click", async function 
         alert("No file chosen");
     }
 });
+
+function storeOrderDetails(paymentResponse) {
+    console.log("payment - "+JSON.stringify(paymentResponse)+paymentResponse.razorpay_order_id);
+    console.log("User details/" + userName +'/Bookings/'+ hostelName + '/RoomDetails/');
+    update(ref(db, "User details/" + userName +'/Bookings/'+ hostelName + '/RoomDetails/'), {
+        bedId:bedId,
+        floor:roomDetails[3],
+        paymentComplete: "yes",
+        totalAmount:5000,
+        paymenttransId:paymentResponse.razorpay_payment_id
+        // paymentOrderId:paymentResponse.razorpay_order_id
+    })
+        .then(() => {
+            alert("Room Booked");
+            window.location.href = "././confirm-order.html";
+        })
+        .catch((error) => {
+            alert(error);
+        });
+}
+
+
+export { storeOrderDetails };
