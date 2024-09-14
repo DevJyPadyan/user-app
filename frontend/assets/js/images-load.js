@@ -118,7 +118,7 @@ const addHostelRoomCard = (ac, amenities, bathroom, floor, roomprice, roomcount,
     elem.innerHTML = `<div class="product-details-box">
                                                             <div class="product-img">
                                                                 <img class="img-fluid img"
-                                                                    src="${imgURL}" alt="rp1">
+                                                                    src="${imgURL}" alt="no room img">
                                                             </div>
                                                             <div class="product-content">
                                                                 <div
@@ -126,9 +126,9 @@ const addHostelRoomCard = (ac, amenities, bathroom, floor, roomprice, roomcount,
                                                                     <div>
                                                                         <div class="d-flex align-items-center gap-2">
                                                                             <h6 class="product-name">
-                                                                                Room ${roomcount}
+                                                                                Floor No: ${floor} 
                                                                             </h6>
-                                                                            <h6 class="customized">Floor No: ${floor} </h6>
+                                                                            <h6 class="customized">${roomcount} rooms available </h6>
                                                                         </div>
                                                                         <p>
                                                                             Air Condition : ${ac}
@@ -249,7 +249,8 @@ function bedSelection(event) {
             let roomDetails = text.split("-");
             document.getElementById("cart-title").innerHTML = "Room Rate";
             document.getElementById("cart-room-price").innerHTML = roomDetails[1];
-            document.getElementById("cart-room-floor").innerHTML = "Floor - " + roomDetails[3] + " Room - " + roomDetails[2];
+            // document.getElementById("cart-room-floor").innerHTML = "Floor - " + roomDetails[3] + " Room - " + roomDetails[2];
+            document.getElementById("cart-room-floor").innerHTML = "Floor - " + roomDetails[3];
             document.getElementById("cart-bed-number").innerHTML = "Selected Bed - " + bedId;
         }
         else {

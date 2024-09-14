@@ -22,7 +22,9 @@ const loadBillDetails = () => {
     document.getElementById("hostel-address").innerHTML = hostelAddress;
     let bedId = localStorage.getItem("bedId");
     document.getElementById("cart-room-price").innerHTML = roomDetails[1];
-    document.getElementById("cart-room-floor").innerHTML = "Floor - " + roomDetails[3] + " Room - " + roomDetails[2] + " Bed Number - " + bedId;
+    // document.getElementById("cart-room-floor").innerHTML = "Floor - " + roomDetails[3] + " Room - " + roomDetails[2] + " Bed Number - " + bedId;
+    document.getElementById("cart-room-floor").innerHTML = "Floor - " + roomDetails[3]+ " Bed Number - " + bedId;
+
     document.getElementById("extra-chapati").innerHTML = extraChapatiCost;
     let chapatiChecked = document.getElementById('extra_chapati_check').checked;
     extraChapatiCost = chapatiChecked ? 1000 : 0;
@@ -52,18 +54,18 @@ function settingPurposeToLogin() {
         document.getElementById("user-email").innerHTML = "Email : " + userDeatilObj.email;
         document.getElementById("user-phone").innerHTML = "Phone : " + userDeatilObj.phoneNumber || "n/a";
 
-        //hitting DB, to check whether the user has completed proof submission.
+        //hitting DB, to check whether the user has submitted proof submission.
         const dbref = ref(db);
         get(child(dbref, "User details/" + userDeatilObj.name + '/'))
             .then((snapshot) => {
                 if (snapshot.exists()) {
                     if (snapshot.val().proofSubmission == "no") {
                         document.getElementById("showCompleteProofDiv").style.display = "block";
-                        document.getElementById("user-proof").innerHTML = "ID Proof : Not Completed";
+                        document.getElementById("user-proof").innerHTML = "ID Proof : Not Submitted";
                     }
                     else {
                         document.getElementById("showCompleteProofDiv").style.display = "none";
-                        document.getElementById("user-proof").innerHTML = "ID Proof : Completed";
+                        document.getElementById("user-proof").innerHTML = "ID Proof : Submitted";
 
                     }
                 }

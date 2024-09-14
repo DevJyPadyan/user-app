@@ -50,10 +50,10 @@
                 <a href="index.html">
                     <img class="img-fluid logo" src="assets/images/svg/logo.svg" alt="logo">
                 </a>
-                <a target="_blank" href="#!" data-bs-toggle="modal" data-bs-target="#location"
+                <!-- <a style="display: none;" target="_blank" href="#!" data-bs-toggle="modal" data-bs-target="#location"
                     class="btn btn-sm theme-btn location-btn mt-0 ms-3 d-flex align-content-center gap-1">
-                    <i class="ri-map-pin-line"></i> Location
-                </a>
+                    <i style="display: none;" class="ri-map-pin-line"></i> Location
+                </a> -->
                 <div class="nav-option order-md-2">
                     <div class="dropdown-button">
                         <!-- <div class="cart-button">
@@ -445,7 +445,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="showPaymentSuccessDiv" style="display: none;" class="account-part confirm-part">
+                            <div id="showPaymentSuccessDiv" style="display: none;" class="onfirm-part">
                                 <img class="img-fluid account-img w-25" src="assets/images/gif/confirm.gif"
                                     alt="confirm">
                                 <h3>Your room has been successfully booked</h3>
@@ -706,18 +706,6 @@
                 </a>
             </li>
             <li>
-                <a href="wishlist.html" class="menu-box">
-                    <i class="ri-heart-3-line"></i>
-                    <span>Wishlist</span>
-                </a>
-            </li>
-            <li class="active">
-                <a href="checkout.html" class="menu-box">
-                    <i class="ri-shopping-cart-2-line"></i>
-                    <span>Cart</span>
-                </a>
-            </li>
-            <li>
                 <a href="profile.html" class="menu-box">
                     <i class="ri-user-line"></i>
                     <span>Profile</span>
@@ -820,6 +808,7 @@
     <!-- razor-pay js -->
     <!-- <script src="assets/js/razor-pay.js" defer type="module"></script> -->
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script type="text/javascript">
         var options = {
@@ -833,7 +822,8 @@
             "handler": function (response) {
                 alert(response.razorpay_payment_id);
                 alert(response.razorpay_order_id);
-                alert(response.razorpay_signature)
+                alert(response.razorpay_signature);
+                window.location.href = "././confirm-order.html"
             },
             "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information, especially their phone number
                 "name": "Gaurav Kumar", //your customer's name
@@ -867,7 +857,9 @@
                 document.getElementById("payment-li").classList.remove("active");
                 document.getElementById("confirm-li").classList.add("active");
                 document.getElementById("showAccountInfoDiv").style.display = "none";
-                document.getElementById("showPaymentSuccessDiv").style.display = "block";
+                setTimeout(()=>{
+                    window.location.href = "././confirm-order.html"
+                },1000);
             }
             else if(document.getElementById("showAccountInfoDiv").style.display == "block"
             && document.getElementById("showCompleteProofDiv").style.display == "block"){

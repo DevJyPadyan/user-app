@@ -15,7 +15,7 @@ login.addEventListener('click', (e) => {
             if (snapshot.exists()) {
 
                 let usname = snapshot.val().userName;
-                let password = snapshot.val().Password1;
+                let password = snapshot.val().password1;
                 let phone = snapshot.val().userPhone;
                 let proofSubmission = snapshot.val().proofSubmission;
                 let usercomp = usname.localeCompare(user);
