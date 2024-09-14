@@ -53,16 +53,16 @@
                 <a href="index.html">
                     <img class="img-fluid logo" src="assets/images/svg/logo.svg" alt="logo">
                 </a>
-                <a target="_blank" href="#!" data-bs-toggle="modal" data-bs-target="#location"
+                <!-- <a style="display: none;" target="_blank" href="#!" data-bs-toggle="modal" data-bs-target="#location"
                     class="btn btn-sm theme-btn location-btn mt-0 ms-3 d-flex align-content-center gap-1">
-                    <i class="ri-map-pin-line"></i> Location
-                </a>
+                    <i style="display: none;" class="ri-map-pin-line"></i> Location
+                </a> -->
                 <div class="nav-option order-md-2">
                     <div class="dropdown-button">
-                        <div class="cart-button">
+                        <!-- <div class="cart-button">
                             <span>5</span>
                             <i class="ri-shopping-cart-line text-white cart-bag"></i>
-                        </div>
+                        </div> -->
                         <div class="onhover-box">
                             <ul class="cart-list">
                                 <li class="product-box-contain">
@@ -170,11 +170,11 @@
                                 <li>
                                     <a class="dropdown-item" href="my-order.html">My orders</a>
                                 </li>
-                                <li>
+                                <!-- <li>
                                     <a class="dropdown-item" href="saved-address.html">Saved Address</a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" href="saved-card.html">Saved cards</a>
+                                    <a class="dropdown-item" href="saved-card.html">Saved cards</a> -->
                                 </li>
                                 <li>
                                     <a class="dropdown-item" href="setting.html">Settings</a>
@@ -194,7 +194,7 @@
                     </div>
                     <div class="offcanvas-body">
                         <ul class="navbar-nav justify-content-center flex-grow-1">
-                            <li class="nav-item dropdown mega-menu">
+                            <!-- <li class="nav-item dropdown mega-menu">
                                 <a class="nav-link dropdown-toggle" href="#!" id="accountDropdown" role="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">Home</a>
                                 <div class="dropdown-menu mt-0 border-0 bsb-zoomIn" aria-labelledby="accountDropdown">
@@ -322,6 +322,15 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="contact.html">Contact</a>
+                            </li> -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.html">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="restaurant-listing.html">Hostel List</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="profile.html">Profile</a>
                             </li>
                         </ul>
                     </div>
@@ -369,14 +378,14 @@
                                 <i class="ri-shopping-bag-3-line"></i>
                                 <a href="my-order.html">My Order</a>
                             </li>
-                            <li>
+                            <!-- <li>
                                 <i class="ri-map-pin-line"></i>
                                 <a href="saved-address.html">Saved Address</a>
                             </li>
                             <li>
                                 <i class="ri-bank-card-line"></i>
                                 <a href="saved-card.html">Saved Card</a>
-                            </li>
+                            </li> -->
                             <li>
                                 <i class="ri-question-line"></i><a href="faq.html">Help</a>
                             </li>
@@ -397,8 +406,9 @@
                             <div class="loader-line"></div>
                             <h3>My Order</h3>
                         </div>
-                        <ul class="order-box-list">
-                            <li>
+                        <ul class="order-box-list" id="ul-orders">
+                            <h2 id="no-orders-msg" style="display: none;"> No Orders </h2>
+                            <!-- <li>
                                 <div class="order-box">
                                     <div class="order-box-content">
                                         <div class="brand-icon">
@@ -430,106 +440,7 @@
                                             data-bs-toggle="modal">Details</a>
                                     </div>
                                 </div>
-                            </li>
-                            <li>
-                                <div class="order-box">
-                                    <div class="order-box-content">
-                                        <div class="brand-icon">
-                                            <img class="img-fluid icon" src="assets/images/icons/brand3.png"
-                                                alt="brand3">
-                                        </div>
-                                        <div class="order-details">
-                                            <div class="d-flex align-items-center justify-content-between w-100">
-                                                <h5 class="brand-name dark-text fw-medium">
-                                                    Starbucks
-                                                </h5>
-                                                <h6 class="fw-medium content-color text-end">
-                                                    Yesterday, 6:00 PM
-                                                </h6>
-                                            </div>
-                                            <h6 class="fw-medium dark-text">
-                                                <span class="fw-normal content-color">Transaction Id :
-                                                </span>
-                                                #ACB12345459
-                                            </h6>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center justify-content-between mt-sm-3 mt-2">
-                                        <h6 class="fw-medium dark-text">
-                                            <span class="fw-normal content-color">Total Amount :</span>
-                                            $ 100.00
-                                        </h6>
-                                        <a href="#order" class="btn theme-outline details-btn"
-                                            data-bs-toggle="modal">Details</a>
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="order-box">
-                                    <div class="order-box-content">
-                                        <div class="brand-icon">
-                                            <img class="img-fluid icon" src="assets/images/icons/brand4.png"
-                                                alt="brand3">
-                                        </div>
-                                        <div class="order-details">
-                                            <div class="d-flex align-items-center justify-content-between w-100">
-                                                <h5 class="brand-name dark-text fw-medium">
-                                                    Pizza Hut
-                                                </h5>
-                                                <h6 class="fw-medium content-color text-end">
-                                                    25 March 2024, 8:00 PM
-                                                </h6>
-                                            </div>
-                                            <h6 class="fw-medium dark-text">
-                                                <span class="fw-normal content-color">Transaction Id :
-                                                </span>
-                                                #ACB123456678
-                                            </h6>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center justify-content-between mt-sm-3 mt-2">
-                                        <h6 class="fw-medium dark-text">
-                                            <span class="fw-normal content-color">Total Amount :</span>
-                                            $ 60.00
-                                        </h6>
-                                        <a href="#order" class="btn theme-outline details-btn"
-                                            data-bs-toggle="modal">Details</a>
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="order-box">
-                                    <div class="order-box-content">
-                                        <div class="brand-icon">
-                                            <img class="img-fluid icon" src="assets/images/icons/brand6.png"
-                                                alt="brand3">
-                                        </div>
-                                        <div class="order-details">
-                                            <div class="d-flex align-items-center justify-content-between w-100">
-                                                <h5 class="brand-name dark-text fw-medium">
-                                                    Burger King
-                                                </h5>
-                                                <h6 class="fw-medium content-color text-end">
-                                                    20 March 2024, 9:00 PM
-                                                </h6>
-                                            </div>
-                                            <h6 class="fw-medium dark-text">
-                                                <span class="fw-normal content-color">Transaction Id :
-                                                </span>
-                                                #ACB123458745
-                                            </h6>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center justify-content-between mt-sm-3 mt-2">
-                                        <h6 class="fw-medium dark-text">
-                                            <span class="fw-normal content-color">Total Amount :</span>
-                                            $ 50.00
-                                        </h6>
-                                        <a href="#order" class="btn theme-outline details-btn"
-                                            data-bs-toggle="modal">Details</a>
-                                    </div>
-                                </div>
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
                 </div>
@@ -930,7 +841,7 @@
     <!-- location offcanvas end -->
 
     <!-- theme btn start -->
-    <div class="theme-btns">
+    <div style="display: none;" class="theme-btns">
         <button type="button" class="btntheme mode-change-button">
             <i id="themeIcon" class="ri-moon-line icon mode-icon"></i>
             <span class="text-value">Dark</span>
@@ -966,6 +877,9 @@
 
     <!-- logout js -->
     <script src="assets/js/logout.js" defer type="module"></script>
+
+    <!-- orders js -->
+    <script src="assets/js/orders.js" defer type="module"></script>
 </body>
 
 </html>

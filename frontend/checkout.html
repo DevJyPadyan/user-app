@@ -33,6 +33,10 @@
 
     <!-- Theme css -->
     <link rel="stylesheet" id="change-link" type="text/css" href="assets/css/style.css">
+
+    <script defer src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <!-- razor-pay js -->
+    <script src="assets/js/razor-pay.js" defer type="module"></script>
 </head>
 
 <body class="bg-color">
@@ -432,13 +436,15 @@
                                             </div>
                                             <br>
                                             <div id="showCompleteProofDiv" style="text-align: left;">
-                                                <div class="input-box" style=" display: flex; flex-direction: row;gap: 4px;">
+                                                <div class="input-box"
+                                                    style=" display: flex; flex-direction: row;gap: 4px;">
                                                     <h6>Upload Government Proof ID:</h6>
                                                     <input type="file" id="files" multiple>
                                                     <br>
                                                 </div>
                                                 <br>
-                                                <button type="button" id="uploadImage" class="btn theme-btn restaurant-btn">Upload
+                                                <button type="button" id="uploadImage"
+                                                    class="btn theme-btn restaurant-btn">Upload
                                                     Image</button>
                                             </div>
                                         </div>
@@ -497,6 +503,7 @@
                                     <h6 class="fw-semibold amount" id="total-payment">0</h6>
                                 </div>
                                 <a id="rzp-button1" class="btn theme-btn restaurant-btn w-100 rounded-2">CHECKOUT</a>
+                                <!-- <a id="rzp-pay-button" class="btn theme-btn restaurant-btn w-100 rounded-2">CHECKOUT</a> -->
                                 <img class="dots-design" src="assets/images/svg/dots-design.svg" alt="dots">
                             </div>
                         </div>
@@ -805,31 +812,25 @@
     <!-- checkout js -->
     <script src="assets/js/checkout.js" defer type="module"></script>
 
-    <!-- razor-pay js -->
-    <!-- <script src="assets/js/razor-pay.js" defer type="module"></script> -->
+    <!-- checkout js -->
+    <script src="assets/js/razor-pay.js" defer type="module"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <script type="text/javascript">
+    <!-- <script type="text/javascript">
+        function successHandler(response) {
+            // Store these values in your Database
+            alert("Payment Success 🎉 " + response.razorpay_payment_id);
+            window.location.href = "././confirm-order.html"
+        }
         var options = {
-            "key": "rzp_test_3fiTqMb3dy1SaW", // Enter the Key ID generated from the Dashboard
+            "key": "rzp_test_dt8ARo16LbgcBt", // Enter the Key ID generated from the Dashboard
             "amount": document.getElementById("total-payment").value, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-            "currency": "INR",
-            "name": "Perketis Hostel", //your business name
-            "description": "Test Transaction",
-            "image": "https://example.com/your_logo",
-            "order_id": "order_OUeuvfGWmX5ogx1", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-            "handler": function (response) {
-                alert(response.razorpay_payment_id);
-                alert(response.razorpay_order_id);
-                alert(response.razorpay_signature);
-                window.location.href = "././confirm-order.html"
-            },
-            "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information, especially their phone number
-                "name": "Gaurav Kumar", //your customer's name
-                "email": "gaurav.kumar@example.com",
-                "contact": "9000090000"  //Provide the customer's phone number for better conversion rates 
-            },
+            "name": "Hostel Project",
+            "email": "saurabh.daware@razorpay.com",
+            "contact": "9167754927",
+            "receipt": "tx-" + new Date().getTime(),
+            "handler": successHandler,
             "notes": {
                 "address": "Razorpay Corporate Office"
             },
@@ -852,24 +853,20 @@
                 && document.getElementById("showCompleteProofDiv").style.display == "none") {
                 rzp1.open();
                 e.preventDefault();
-                document.getElementById("account-li").classList.remove("active");
-                document.getElementById("payment-li").classList.add("active");
-                document.getElementById("payment-li").classList.remove("active");
-                document.getElementById("confirm-li").classList.add("active");
                 document.getElementById("showAccountInfoDiv").style.display = "none";
-                setTimeout(()=>{
-                    window.location.href = "././confirm-order.html"
-                },1000);
+                // setTimeout(()=>{
+                //     window.location.href = "././confirm-order.html"
+                // },1000);
             }
-            else if(document.getElementById("showAccountInfoDiv").style.display == "block"
-            && document.getElementById("showCompleteProofDiv").style.display == "block"){
+            else if (document.getElementById("showAccountInfoDiv").style.display == "block"
+                && document.getElementById("showCompleteProofDiv").style.display == "block") {
                 alert("Complete Government Proof Submission");
             }
             else {
                 alert("Login to make payment");
             }
         }
-    </script>
+    </script> -->
 </body>
 
 </html>
