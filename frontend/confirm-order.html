@@ -50,16 +50,16 @@
                 <a href="index.html">
                     <img class="img-fluid logo" src="assets/images/svg/logo.svg" alt="logo">
                 </a>
-                <a target="_blank" href="#!" data-bs-toggle="modal" data-bs-target="#location"
+                <!-- <a style="display: none;" target="_blank" href="#!" data-bs-toggle="modal" data-bs-target="#location"
                     class="btn btn-sm theme-btn location-btn mt-0 ms-3 d-flex align-content-center gap-1">
-                    <i class="ri-map-pin-line"></i> Location
-                </a>
+                    <i style="display: none;" class="ri-map-pin-line"></i> Location
+                </a> -->
                 <div class="nav-option order-md-2">
                     <div class="dropdown-button">
-                        <div class="cart-button">
+                        <!-- <div class="cart-button">
                             <span>5</span>
                             <i class="ri-shopping-cart-line text-white cart-bag"></i>
-                        </div>
+                        </div> -->
                         <div class="onhover-box">
                             <ul class="cart-list">
                                 <li class="product-box-contain">
@@ -191,7 +191,7 @@
                     </div>
                     <div class="offcanvas-body">
                         <ul class="navbar-nav justify-content-center flex-grow-1">
-                            <li class="nav-item dropdown mega-menu">
+                            <!-- <li class="nav-item dropdown mega-menu">
                                 <a class="nav-link dropdown-toggle" href="#!" id="accountDropdown" role="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">Home</a>
                                 <div class="dropdown-menu mt-0 border-0 bsb-zoomIn" aria-labelledby="accountDropdown">
@@ -319,6 +319,15 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="contact.html">Contact</a>
+                            </li> -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.html">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="restaurant-listing.html">Hostel List</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="profile.html">Profile</a>
                             </li>
                         </ul>
                     </div>
@@ -351,7 +360,7 @@
         <div class="container">
             <div class="layout-sec">
                 <div class="row g-lg-4 g-4">
-                    <div class="col-lg-8">
+                    <div class="col-lg-12">
                         <div class="process-section">
                             <ul class="process-list">
                                 <li class="done">
@@ -363,16 +372,7 @@
                                     </a>
                                 </li>
                                 <li class="done">
-                                    <a href="address.html">
-                                        <div class="process-icon">
-                                            <img class="img-fluid icon" src="assets/images/svg/location-active.svg"
-                                                alt="location">
-                                        </div>
-                                        <h6>Address</h6>
-                                    </a>
-                                </li>
-                                <li class="done">
-                                    <a href="payment.html">
+                                    <a>
                                         <div class="process-icon">
                                             <img class="img-fluid icon" src="assets/images/svg/wallet-add-active.svg"
                                                 alt="wallet-add">
@@ -381,7 +381,7 @@
                                     </a>
                                 </li>
                                 <li class="active">
-                                    <a href="confirm-order.html">
+                                    <a>
                                         <div class="process-icon">
                                             <img class="img-fluid icon" src="assets/images/svg/verify-active.svg"
                                                 alt="verify">
@@ -393,18 +393,17 @@
                         </div>
                         <div class="account-part confirm-part">
                             <img class="img-fluid account-img w-25" src="assets/images/gif/confirm.gif" alt="confirm">
-                            <h3>Your order has been successfully placed</h3>
+                            <h3>Your room has been successfully booked</h3>
                             <p>
-                                Sit and relax while your order is being worked on. It’ll take
-                                5 min before you get it.
+                                Thank you for using Perikitis!
                             </p>
                             <div class="account-btn d-flex justify-content-center gap-2">
-                                <a href="order-tracking.html" class="btn theme-btn mt-0">TRACK ORDER</a>
+                                <a href="my-order.html" class="btn theme-btn mt-0">TRACK ORDER</a>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4">
-                        <div class="order-summery-section sticky-top">
+                        <!-- <div class="order-summery-section sticky-top">
                             <div class="checkout-detail">
                                 <div class="cart-address-box">
                                     <div class="add-img">
@@ -494,7 +493,7 @@
                                 </div>
                                 <img class="dots-design" src="assets/images/svg/dots-design.svg" alt="dots">
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -772,8 +771,8 @@
     <!-- location offcanvas end -->
 
     <!-- theme btn start -->
-    <div class="theme-btns">
-        <button type="button" class="btntheme mode-change-button">
+    <div style="display: none;" class="theme-btns">
+        <button  type="button" class="btntheme mode-change-button">
             <i id="themeIcon" class="ri-moon-line icon mode-icon"></i>
             <span class="text-value">Dark</span>
         </button>
