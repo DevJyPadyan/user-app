@@ -33,7 +33,7 @@ const addSwiperSlideCard = (Hostelname, Hosteltype, Hosteladd1,
     Hostelpin, Hostelrent, Hostelfood, Acprice, ImageArray, card_number) => {
 
     let Imagelink = "assets/images/product/p-18.png";//default image URL , if there is no Image data present in DB
-    if((ImageArray != undefined)){
+    if ((ImageArray != undefined)) {
         Imagelink = ImageArray[0];//if Image data is pereset [0] is always kept as thumbnail image for hostel
     }
     //Parent Container
@@ -112,8 +112,8 @@ function handleCardClick(event) {
     const cardHostelName = card.dataset.hostelName;
     const cardHostelAddress = card.dataset.hostelAddress;
     console.log(`Clicked Card ID: ${cardHostelName}, Card Name: ${cardHostelAddress}`);
-    localStorage.setItem("hostel-name",cardHostelName);
-    localStorage.setItem("hostel-address",cardHostelAddress);
+    localStorage.setItem("hostel-name", cardHostelName);
+    localStorage.setItem("hostel-address", cardHostelAddress);
     window.location.href = "menu-listing.html";
 }
 
@@ -145,11 +145,20 @@ document.getElementById("global-search").addEventListener("change", searchFuncti
 function searchFunction() {
     console.log("..inside search")
     var searcheValue = document.getElementById("global-search");
+
+    //OLD SEARCH LOGIC, only with exact string match , it'll filter the records.eg: if we give chennai then chennai location will filter(not for che,chen,chenna)
+    // var data_filter = hostelist.filter(element =>
+    //     element.hostelType.toLowerCase() == searcheValue.toLowerCase() || element.hostelName.toLowerCase() == searcheValue.toLowerCase()
+    //     || element.hostelCity.toLowerCase() == searcheValue.toLowerCase()
+    // );
+
+    //NEW SEARCH LOGIC implemented as regex search, where substring match is also considered. eg-> if we give(che,chen,chenna) chennai will populate
     searcheValue = searcheValue.value;
+    var textSearch = new RegExp(searcheValue, 'gi');//regex pattern for any substring match.
     //need to add more search values based on all columns , now only name , type and city is added.
-    var data_filter = hostelist.filter(element =>
-        element.hostelType.toLowerCase() == searcheValue.toLowerCase() || element.hostelName.toLowerCase() == searcheValue.toLowerCase()
-        || element.hostelCity.toLowerCase() == searcheValue.toLowerCase()
+    var data_filter = hostelist.filter(element => 
+        element.hostelType.match(textSearch) != null || element.hostelName.match(textSearch) != null
+        || element.hostelCity.match(textSearch) != null
     );
     var total_len = localStorage.getItem("total_hostel_length");
 
@@ -165,7 +174,6 @@ function searchFunction() {
             removeCards(localStorage.getItem("total_search_length"));
             localStorage.setItem("total_search_length", 0);
         }
-
         //Adding search relevant cards data.
         var i = 0;
         data_filter.forEach(iterator => {

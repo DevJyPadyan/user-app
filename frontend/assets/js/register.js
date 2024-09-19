@@ -10,27 +10,50 @@ register.addEventListener('click', (e) => {
     var phone = document.getElementById("phone").value;
     var email = document.getElementById("useremail").value;
     var pwd = document.getElementById("password").value;
-    var gaurdianName  = document.getElementById("gaurdianName").value;
-    var gaurdianPhone = document.getElementById("gaurdianPhone").value;
+    // var gaurdianName  = document.getElementById("gaurdianName").value;
+    // var gaurdianPhone = document.getElementById("gaurdianPhone").value;
 
-    set(ref(db, "User details/" + user), {
-        userName: user,
-        userPhone: phone,
-        password1: pwd,
-        userEmail: email,
-        proofSubmission: "no",
-        gaurdianName:gaurdianName,
-        gaurdianPhone:gaurdianPhone
-    })
-        .then(() => {
-            //const userReg = [user,phone,pwd];
-            //converting array to string(for setting in localstorage).
-            //let signIn = JSON.stringify(userReg);
-            //localStorage.setItem("userDetails", signIn);
-            window.location.href = "././signin.html";
+    if (user != '' && pwd != '' && email != '' && phone != '') {
+        document.getElementById("mandatory-user").style.visibility = "hidden";
+        document.getElementById("mandatory-pwd").style.visibility = "hidden";
+        document.getElementById("mandatory-email").style.visibility = "hidden";
+        document.getElementById("mandatory-phone").style.visibility = "hidden";
+        set(ref(db, "User details/" + user), {
+            userName: user,
+            userPhone: phone,
+            password1: pwd,
+            userEmail: email,
+            proofSubmission: "no",
+            guardianDetails: "no"
+            // gaurdianName: gaurdianName,
+            // gaurdianPhone: gaurdianPhone
         })
-        .catch((error) => {
-            alert(error);
-        });
+            .then(() => {
+                //const userReg = [user,phone,pwd];
+                //converting array to string(for setting in localstorage).
+                //let signIn = JSON.stringify(userReg);
+                //localStorage.setItem("userDetails", signIn);
+                alert("User Registered.")
+                window.location.href = "././signin.html";
+            })
+            .catch((error) => {
+                alert(error);
+            });
+    }
+    else {
+        if (user != '') {
+            document.getElementById("mandatory-user").style.visibility = "hidden";
+        }
+        if (pwd != '') {
+            document.getElementById("mandatory-pwd").style.visibility = "hidden";
+        }
+        if (email != '') {
+            document.getElementById("mandatory-email").style.visibility = "hidden";
+        }
+        if (phone != '') {
+            document.getElementById("mandatory-phone").style.visibility = "hidden";
+        }
+        alert("Please, Enter All Mandatory Details with *");
+    }
 
 });

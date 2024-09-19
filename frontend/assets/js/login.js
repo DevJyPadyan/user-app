@@ -10,7 +10,8 @@ login.addEventListener('click', (e) => {
     var user = document.getElementById('username').value;
     var passwd = document.getElementById('password').value;
 
-    get(child(dbref, "User details/" + user + '/'))
+    if(user != '' && passwd != ''){
+        get(child(dbref, "User details/" + user + '/'))
         .then((snapshot) => {
             if (snapshot.exists()) {
 
@@ -32,11 +33,15 @@ login.addEventListener('click', (e) => {
                 }
 
             } else {
-                alert("Incorrect username and password");
+                alert("Incorrect Username or Password");
             }
         })
         .catch((error) => {
             alert(error)
         });
+    }
+    else{
+        alert("Please check Username and Password")
+    }
 
 });
