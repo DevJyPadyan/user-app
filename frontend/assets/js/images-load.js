@@ -15,6 +15,7 @@ let hostelName = localStorage.getItem('hostel-name');
 let hostelAddress = localStorage.getItem('hostel-address');
 let hostelist = [];
 let overviewList = [];
+let roomFloorFilterValue = [];
 let roomTypeFilterValue = [];
 let airConditionFilterValue = [];
 let bathroomFilterValue = [];
@@ -54,7 +55,7 @@ function addImageCard(imageUrl) {
     const elem = document.createElement('li');
     elem.innerHTML = `<a href="${imageUrl}" data-fancybox="images"data-type="image">
                                     <img class=""img-fluid bg-img""
-                                        src="${imageUrl}" alt="vp1">
+                                        src="${imageUrl}" alt="room_img">
                                 </a>`;
     parentContainer.appendChild(elem);
 }
@@ -145,7 +146,7 @@ const addHostelRoomCard = (ac, amenities, bathroom, floor, roomprice, roomcount,
                                                                     </div>
                                                                     <div class="product-box-price">
                                                                         <h2 class="theme-color fw-semibold">
-                                                                            ${roomprice}
+                                                                            Rs.${roomprice}
                                                                         </h2>
                                                                         <a href="#customized"
                                                                             class="btn theme-outline add-btn mt-0"
@@ -175,26 +176,33 @@ function handleCardClick(event) {
     const hostelRoomType = card.dataset.roomType;
     let roomDetails = card.dataset.roomType + "-" + card.dataset.roomPrice + "-" + card.dataset.roomCount + "-" + card.dataset.roomFloor;
     localStorage.setItem("room-details", roomDetails);
-    if (localStorage.getItem('bedCount') != 0) {
-        for (i = 1; i <= localStorage.getItem('bedCount'); i++) {
-            let cardId = 'b' + i;
-            document.getElementById(cardId).remove();
+    if( card.dataset.roomCount > 1){
+        document.getElementById("no-bed-msg").style.display='none';
+        if (localStorage.getItem('bedCount') != 0) {
+            for (i = 1; i <= localStorage.getItem('bedCount'); i++) {
+                let cardId = 'b' + i;
+                document.getElementById(cardId).remove();
+            }
+            localStorage.setItem('bedCount', 0);
         }
-        localStorage.setItem('bedCount', 0);
+    
+        // Using match with regEx
+    
+        //need for regex since when user clicks on room , 
+        //the room type is "2 Sharing","3 Sharing","10 Sharing" to extract the number from the string we use REGEX.
+        let matches = hostelRoomType.match(/(\d+)/);
+        // Display output if number extracted
+        if (matches) {
+            let bedCount = parseInt(matches[0]);
+            localStorage.setItem("bedCount", bedCount);
+            for (i = 1; i <= bedCount; i++) {
+                addBed(i);
+            }
+        }
     }
-
-    // Using match with regEx
-
-    //need for regex since when user clicks on room , 
-    //the room type is "2 Sharing","3 Sharing","10 Sharing" to extract the number from the string we use REGEX.
-    let matches = hostelRoomType.match(/(\d+)/);
-    // Display output if number extracted
-    if (matches) {
-        let bedCount = parseInt(matches[0]);
-        localStorage.setItem("bedCount", bedCount);
-        for (i = 1; i <= bedCount; i++) {
-            addBed(i);
-        }
+    else{
+        document.getElementById("no-bed-msg").style.display='block';
+        alert("no rooms available");
     }
 }
 
@@ -387,6 +395,10 @@ window.addEventListener('load', loadMenuDataFromDB);
 /**********Loading Food Menu Section data ends***************/
 
 /**Applying Filters Section Starts here for - Book Online Section */
+var twoFloorBx = document.getElementById("item_1_1_checkbx");
+var threeFloorBx = document.getElementById("item_1_2_checkbx");
+var fourFloorBx = document.getElementById("item_1_3_checkbx");
+
 var twoSharingBx = document.getElementById("item_2_1_checkbx");
 var threeSharingBx = document.getElementById("item_2_2_checkbx");
 var fourSharingBx = document.getElementById("item_2_3_checkbx");
@@ -396,6 +408,18 @@ var nonacBx = document.getElementById("item_3_2_checkbx");
 
 var attachedBx = document.getElementById("item_4_1_checkbx");
 var commonBx = document.getElementById("item_4_2_checkbx");
+
+twoFloorBx.addEventListener('click', (e) => {
+    roomFloorFilters();
+});
+
+threeFloorBx.addEventListener('click', (e) => {
+    roomFloorFilters();
+});
+
+fourFloorBx.addEventListener('click', (e) => {
+    roomFloorFilters();
+});
 
 twoSharingBx.addEventListener('click', (e) => {
     roomTypeFilters();
@@ -424,6 +448,51 @@ attachedBx.addEventListener('click', (e) => {
 commonBx.addEventListener('click', (e) => {
     bathroomFilters();
 });
+
+function roomFloorFilters() {
+    roomFloorFilterValue = [];
+    console.log(roomFloorFilterValue);
+    var twoFloorFlag = twoFloorBx.checked;
+    var threeFloorFlag = threeFloorBx.checked;
+    var fourFloorFlag = fourFloorBx.checked;
+    if (twoFloorFlag == true && threeFloorFlag == false && fourFloorFlag == false) {
+        roomFloorFilterValue.push(twoFloorBx.value);
+        applyFilters();
+    }
+    else if (twoFloorFlag == false && threeFloorFlag == true && fourFloorFlag == false) {
+        roomFloorFilterValue.push(threeFloorBx.value);
+        applyFilters();
+    }
+    else if (twoFloorFlag == false && threeFloorFlag == false && fourFloorFlag == true) {
+        roomFloorFilterValue.push(fourFloorBx.value);
+        applyFilters();
+    }
+    else if (twoFloorFlag == true && threeFloorFlag == false && fourFloorFlag == true) {
+        roomFloorFilterValue.push(twoFloorBx.value);
+        roomFloorFilterValue.push(fourFloorBx.value);
+        applyFilters();
+    }
+    else if (twoFloorFlag == true && threeFloorFlag == true && fourFloorFlag == false) {
+        roomFloorFilterValue.push(twoFloorBx.value);
+        roomFloorFilterValue.push(threeFloorBx.value);
+        applyFilters();
+    }
+    else if (twoFloorFlag == false && threeFloorFlag == true && fourFloorFlag == true) {
+        roomFloorFilterValue.push(threeFloorBx.value);
+        roomFloorFilterValue.push(fourFloorBx.value);
+        applyFilters();
+    }
+    else if (twoFloorFlag == true && threeFloorFlag == true && fourFloorFlag == true) {
+        roomFloorFilterValue.push(twoFloorBx.value);
+        roomFloorFilterValue.push(threeFloorBx.value);
+        roomFloorFilterValue.push(fourFloorBx.value);
+        applyFilters();
+    }
+    else {
+        console.log("No Filter");
+        applyFilters();
+    }
+}
 
 function roomTypeFilters() {
     roomTypeFilterValue = [];
@@ -516,6 +585,10 @@ function bathroomFilters() {
 }
 
 filtersClrBtn.addEventListener('click', (e) => {
+    twoFloorBx.checked = false;
+    threeFloorBx.checked = false;
+    fourFloorBx.checked = false;
+
     twoSharingBx.checked = false;
     threeSharingBx.checked = false;
     fourSharingBx.checked = false;
@@ -526,6 +599,7 @@ filtersClrBtn.addEventListener('click', (e) => {
     attachedBx.checked = false;
     commonBx.checked = false;
 
+    roomFloorFilterValue = [];
     roomTypeFilterValue = [];
     airConditionFilterValue = [];
     bathroomFilterValue = [];
@@ -535,8 +609,8 @@ filtersClrBtn.addEventListener('click', (e) => {
 
 function applyFilters() {
     var data_filter = [];
-    console.log("Room Type Filters - " + roomTypeFilterValue.length + " AC filters - " + airConditionFilterValue.length + " Bathroom filter - " + bathroomFilterValue.length);
-    if (roomTypeFilterValue.length == 0 && airConditionFilterValue.length == 0 && bathroomFilterValue.length == 0) {
+    console.log("Room Floor Filters - "+roomFloorFilterValue+"Room Type Filters - " + roomTypeFilterValue.length + " AC filters - " + airConditionFilterValue.length + " Bathroom filter - " + bathroomFilterValue.length);
+    if (roomFloorFilterValue.length == 0 && roomTypeFilterValue.length == 0 && airConditionFilterValue.length == 0 && bathroomFilterValue.length == 0) {
         if (localStorage.getItem("total_filter_length") != 0) {
             removeCards(localStorage.getItem("total_filter_length"));
             localStorage.setItem("total_filter_length", 0);
@@ -547,6 +621,13 @@ function applyFilters() {
     }
     else {
         data_filter = hostelist;
+        if (roomFloorFilterValue.length != 0) {
+            roomFloorFilterValue.forEach(filterValue => {
+                data_filter = data_filter.filter(element =>
+                    element.floor.toLowerCase() == filterValue.toLowerCase()
+                );
+            });
+        }
         if (roomTypeFilterValue.length != 0) {
             roomTypeFilterValue.forEach(filterValue => {
                 data_filter = data_filter.filter(element =>
@@ -568,7 +649,7 @@ function applyFilters() {
                 );
             });
         }
-        if (roomTypeFilterValue.length != 0 || airConditionFilterValue.length != 0 || bathroomFilterValue.length != 0) {
+        if (roomFloorFilterValue.length != 0 || roomTypeFilterValue.length != 0 || airConditionFilterValue.length != 0 || bathroomFilterValue.length != 0) {
             if (localStorage.getItem("total_rooms_length") != 0) {
                 removeCards(localStorage.getItem("total_rooms_length"));
                 localStorage.setItem("total_rooms_length", 0);
