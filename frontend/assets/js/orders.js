@@ -32,13 +32,13 @@ function iterateOrderDetails() {
     ordersList.forEach(h => {
         console.log(h.key)
         h.forEach(r => {
-            addOrderDetailsCard(h.key,r.val().bedId, r.val().floor, r.val().paymenttransId, r.val().totalAmount,r.val().paymentDate);
+            addOrderDetailsCard(h.key,r.val().bedId, r.val().floor,r.val().roomType, r.val().paymenttransId, r.val().totalAmount,r.val().paymentDate);
 
         });
     });
 }
 const postContainer = document.getElementById('ul-orders');
-function addOrderDetailsCard(hostelName,bedId, floor, paymentId, totalAmount, paymentDate) {
+function addOrderDetailsCard(hostelName,bedId, floor,roomType, paymentId, totalAmount, paymentDate) {
     const elem = document.createElement('li');
     let date = paymentDate.split('T');
     elem.innerHTML = ` <div class="order-box">
@@ -50,7 +50,15 @@ function addOrderDetailsCard(hostelName,bedId, floor, paymentId, totalAmount, pa
                                         <div class="order-details">
                                             <div class="d-flex align-items-center justify-content-between w-100">
                                                 <h5 class="brand-name dark-text fw-medium">
-                                                ${hostelName}
+                                                Hostel - ${hostelName}
+                                                <br>
+                                                Room Details
+                                                <br>
+                                                <span class="fw-normal content-color">Floor:
+                                                </span> ${floor},
+                                                <br> 
+                                                <span class="fw-normal content-color">Room Type:
+                                                </span> ${roomType}
                                                 </h5>
                                                 <h6 class="fw-medium content-color text-end">
                                                 Payment Made on: ${date[0]}
