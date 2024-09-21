@@ -29,7 +29,12 @@ login.addEventListener('click', (e) => {
                 localStorage.setItem("userDetails", userdetails);
                 //comparing the firebase data and user input
                 if (usercomp == 0 && passcomp == 0) {
+                   if(localStorage.getItem('purposeToLogin') == 'checkout'){
+                    window.location.href = "././checkout.html";
+                   }
+                   else{
                     window.location.href = "././index.html";
+                   }
                 }
 
             } else {

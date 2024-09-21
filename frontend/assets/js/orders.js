@@ -6,8 +6,6 @@ import { userDeatilObj } from "./user-details.js";
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase();
-let hostelName = localStorage.getItem("hostel-name");
-let hostelAddress = localStorage.getItem("hostel-address");
 let userName = userDeatilObj.name;
 let ordersList = [];
 
@@ -16,9 +14,7 @@ function loadOderDetails() {
     onValue(dbref, (snapshot) => {
         ordersList = [];
         snapshot.forEach(h => {
-            h.forEach(x => {
-                ordersList.push((x.val()))
-            })
+            ordersList.push(h);
         })
         if (ordersList.length == 0) {
             document.getElementById("no-orders-msg").style.display = "block";
@@ -32,12 +28,17 @@ function loadOderDetails() {
     })
 }
 function iterateOrderDetails() {
-    ordersList.forEach(o => {
-        addOrderDetailsCard(o.bedId, o.floor, o.paymenttransId, o.totalAmount);
-    })
+
+    ordersList.forEach(h => {
+        console.log(h.key)
+        h.forEach(r => {
+            addOrderDetailsCard(h.key,r.val().bedId, r.val().floor, r.val().paymenttransId, r.val().totalAmount);
+
+        });
+    });
 }
 const postContainer = document.getElementById('ul-orders');
-function addOrderDetailsCard(bedId, floor, paymentId, totalAmount) {
+function addOrderDetailsCard(hostelName,bedId, floor, paymentId, totalAmount) {
     const elem = document.createElement('li');
     elem.innerHTML = ` <div class="order-box">
                                     <div class="order-box-content">
@@ -66,8 +67,8 @@ function addOrderDetailsCard(bedId, floor, paymentId, totalAmount) {
                                             <span class="fw-normal content-color">Total Amount :</span>
                                             ${totalAmount}
                                         </h6>
-                                        <a href="#order" class="btn theme-outline details-btn"
-                                            data-bs-toggle="modal">Details</a>
+                                        <!-- <a href="#order" class="btn theme-outline details-btn"
+                                            data-bs-toggle="modal">Details</a> -->
                                     </div>
                                 </div>`;
     postContainer.appendChild(elem);

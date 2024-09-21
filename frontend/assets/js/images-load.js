@@ -51,6 +51,7 @@ const iterateAllImageRecords = () => {
 }
 
 function addImageCard(imageUrl) {
+    console.log("..inside adding image card")
     const parentContainer = document.getElementById('ul-image');
     const elem = document.createElement('li');
     elem.innerHTML = `<a href="${imageUrl}" data-fancybox="images"data-type="image">
@@ -84,14 +85,15 @@ const loadDataFromDB = () => {
 }
 
 const iterateAllRecords = () => {
-    let imageArray = [];
+    console.log("...inside iterating records")
     let i = 0;
     //iterating thro the hostle obj fetched from DB.
     hostelist.forEach(iterator => {
+        let imageArray = [];//initializing images array for every iteration, then only images for that particular rooms will display.
         if (iterator.images != undefined) {
-            iterator.images.forEach(i => {
-                imageArray.push(i);
-                addImageCard(i);
+            iterator.images.forEach(j => {
+                imageArray.push(j);
+                 addImageCard(j);
             })
         }
         i++;
@@ -119,7 +121,7 @@ const addHostelRoomCard = (ac, amenities, bathroom, floor, roomprice, roomcount,
     elem.innerHTML = `<div class="product-details-box">
                                                             <div class="product-img">
                                                                 <img class="img-fluid img"
-                                                                    src="${imgURL}" alt="no room img">
+                                                                    src="${imgURL}" alt="no_room_img">
                                                             </div>
                                                             <div class="product-content">
                                                                 <div
@@ -129,8 +131,8 @@ const addHostelRoomCard = (ac, amenities, bathroom, floor, roomprice, roomcount,
                                                                             <h6 class="product-name">
                                                                                 Floor No: ${floor} 
                                                                             </h6>
-                                                                            <h6 class="customized">${roomcount} rooms available </h6>
                                                                         </div>
+                                                                        <h6 class="customized">${roomcount} rooms available </h6>
                                                                         <p>
                                                                             Air Condition : ${ac}
                                                                         </p>
@@ -250,7 +252,6 @@ function bedSelection(event) {
     }
     if (document.getElementById(bedId).style.backgroundColor != "red") {
         if (document.getElementById(bedId).style.backgroundColor == "white") {
-            console.log("inside iffff "+document.getElementById(bedId).style.backgroundColor);
             document.getElementById(bedId).style.backgroundColor = "lightgreen";
             localStorage.setItem("bedId", bedId);
             let text = localStorage.getItem("room-details");
@@ -395,9 +396,9 @@ window.addEventListener('load', loadMenuDataFromDB);
 /**********Loading Food Menu Section data ends***************/
 
 /**Applying Filters Section Starts here for - Book Online Section */
-var twoFloorBx = document.getElementById("item_1_1_checkbx");
-var threeFloorBx = document.getElementById("item_1_2_checkbx");
-var fourFloorBx = document.getElementById("item_1_3_checkbx");
+var oneFloorBx = document.getElementById("item_1_1_checkbx");
+var twoFloorBx = document.getElementById("item_1_2_checkbx");
+var threeFloorBx = document.getElementById("item_1_3_checkbx");
 
 var twoSharingBx = document.getElementById("item_2_1_checkbx");
 var threeSharingBx = document.getElementById("item_2_2_checkbx");
@@ -409,15 +410,15 @@ var nonacBx = document.getElementById("item_3_2_checkbx");
 var attachedBx = document.getElementById("item_4_1_checkbx");
 var commonBx = document.getElementById("item_4_2_checkbx");
 
+oneFloorBx.addEventListener('click', (e) => {
+    roomFloorFilters();
+});
+
 twoFloorBx.addEventListener('click', (e) => {
     roomFloorFilters();
 });
 
 threeFloorBx.addEventListener('click', (e) => {
-    roomFloorFilters();
-});
-
-fourFloorBx.addEventListener('click', (e) => {
     roomFloorFilters();
 });
 
@@ -452,40 +453,41 @@ commonBx.addEventListener('click', (e) => {
 function roomFloorFilters() {
     roomFloorFilterValue = [];
     console.log(roomFloorFilterValue);
+    var oneFloorFlag = oneFloorBx.checked;
     var twoFloorFlag = twoFloorBx.checked;
     var threeFloorFlag = threeFloorBx.checked;
-    var fourFloorFlag = fourFloorBx.checked;
-    if (twoFloorFlag == true && threeFloorFlag == false && fourFloorFlag == false) {
+    if (oneFloorFlag == false && twoFloorFlag == true && threeFloorFlag == false) {
         roomFloorFilterValue.push(twoFloorBx.value);
         applyFilters();
     }
-    else if (twoFloorFlag == false && threeFloorFlag == true && fourFloorFlag == false) {
+    else if (twoFloorFlag == false && threeFloorFlag == true && oneFloorFlag == false) {
         roomFloorFilterValue.push(threeFloorBx.value);
         applyFilters();
     }
-    else if (twoFloorFlag == false && threeFloorFlag == false && fourFloorFlag == true) {
-        roomFloorFilterValue.push(fourFloorBx.value);
+    else if (twoFloorFlag == false && threeFloorFlag == false && oneFloorFlag == true) {
+        roomFloorFilterValue.push(oneFloorBx.value);
         applyFilters();
     }
-    else if (twoFloorFlag == true && threeFloorFlag == false && fourFloorFlag == true) {
+    else if (twoFloorFlag == true && threeFloorFlag == false && oneFloorFlag == true) {
         roomFloorFilterValue.push(twoFloorBx.value);
-        roomFloorFilterValue.push(fourFloorBx.value);
+        roomFloorFilterValue.push(oneFloorBx.value);
         applyFilters();
     }
-    else if (twoFloorFlag == true && threeFloorFlag == true && fourFloorFlag == false) {
-        roomFloorFilterValue.push(twoFloorBx.value);
-        roomFloorFilterValue.push(threeFloorBx.value);
-        applyFilters();
-    }
-    else if (twoFloorFlag == false && threeFloorFlag == true && fourFloorFlag == true) {
-        roomFloorFilterValue.push(threeFloorBx.value);
-        roomFloorFilterValue.push(fourFloorBx.value);
-        applyFilters();
-    }
-    else if (twoFloorFlag == true && threeFloorFlag == true && fourFloorFlag == true) {
+    else if (twoFloorFlag == true && threeFloorFlag == true && oneFloorFlag == false) {
         roomFloorFilterValue.push(twoFloorBx.value);
         roomFloorFilterValue.push(threeFloorBx.value);
-        roomFloorFilterValue.push(fourFloorBx.value);
+        applyFilters();
+    }
+    else if (twoFloorFlag == false && threeFloorFlag == true && oneFloorFlag == true) {
+        roomFloorFilterValue.push(threeFloorBx.value);
+        roomFloorFilterValue.push(oneFloorBx.value);
+        applyFilters();
+    }
+    else if (twoFloorFlag == true && threeFloorFlag == true && oneFloorFlag == true) {
+        roomFloorFilterValue.push(oneFloorBx.value);
+        roomFloorFilterValue.push(twoFloorBx.value);
+        roomFloorFilterValue.push(threeFloorBx.value);
+        roomFloorFilterValue.push(oneFloorBx.value);
         applyFilters();
     }
     else {
@@ -587,7 +589,7 @@ function bathroomFilters() {
 filtersClrBtn.addEventListener('click', (e) => {
     twoFloorBx.checked = false;
     threeFloorBx.checked = false;
-    fourFloorBx.checked = false;
+    oneFloorBx.checked = false;
 
     twoSharingBx.checked = false;
     threeSharingBx.checked = false;
@@ -660,8 +662,8 @@ function applyFilters() {
             }
             //Adding fitler relevant room cards data.
             var i = 0;
-            let imageArray = [];
             data_filter.forEach(iterator => {
+                let imageArray = [];//initializing images array for every iteration, then only images for that particular rooms will display.
                 i++;
                 if (iterator.images != undefined) {
                     iterator.images.forEach(j => {
