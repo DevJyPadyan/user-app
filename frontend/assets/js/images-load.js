@@ -161,6 +161,7 @@ const addHostelRoomCard = (ac, amenities, bathroom, floor, roomprice, roomcount,
     // To add click event to the card
     elem.dataset.roomType = roomtype;
     elem.dataset.roomPrice = roomprice;
+    elem.dataset.ac = ac;
     elem.dataset.roomCount = roomcount;
     elem.dataset.roomFloor = floor;
     elem.addEventListener('click', handleCardClick);
@@ -176,7 +177,7 @@ const addHostelRoomCard = (ac, amenities, bathroom, floor, roomprice, roomcount,
 function handleCardClick(event) {
     const card = event.currentTarget;
     const hostelRoomType = card.dataset.roomType;
-    let roomDetails = card.dataset.roomType + "-" + card.dataset.roomPrice + "-" + card.dataset.roomCount + "-" + card.dataset.roomFloor;
+    let roomDetails = card.dataset.roomType + "-" + card.dataset.roomPrice + "-" + card.dataset.roomCount + "-" + card.dataset.roomFloor + "-"+card.dataset.ac;
     localStorage.setItem("room-details", roomDetails);
     if( card.dataset.roomCount > 1){
         document.getElementById("no-bed-msg").style.display='none';
