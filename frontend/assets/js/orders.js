@@ -32,14 +32,15 @@ function iterateOrderDetails() {
     ordersList.forEach(h => {
         console.log(h.key)
         h.forEach(r => {
-            addOrderDetailsCard(h.key,r.val().bedId, r.val().floor, r.val().paymenttransId, r.val().totalAmount);
+            addOrderDetailsCard(h.key,r.val().bedId, r.val().floor, r.val().paymenttransId, r.val().totalAmount,r.val().paymentDate);
 
         });
     });
 }
 const postContainer = document.getElementById('ul-orders');
-function addOrderDetailsCard(hostelName,bedId, floor, paymentId, totalAmount) {
+function addOrderDetailsCard(hostelName,bedId, floor, paymentId, totalAmount, paymentDate) {
     const elem = document.createElement('li');
+    let date = paymentDate.split('T');
     elem.innerHTML = ` <div class="order-box">
                                     <div class="order-box-content">
                                         <div class="brand-icon">
@@ -52,7 +53,7 @@ function addOrderDetailsCard(hostelName,bedId, floor, paymentId, totalAmount) {
                                                 ${hostelName}
                                                 </h5>
                                                 <h6 class="fw-medium content-color text-end">
-                                                    Today, 3:00 PM
+                                                Payment Made on: ${date[0]}
                                                 </h6>
                                             </div>
                                             <h6 class="fw-medium dark-text">

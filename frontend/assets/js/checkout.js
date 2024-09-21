@@ -141,7 +141,9 @@ function storeOrderDetails(paymentResponse) {
     console.log("User details/" + userName + '/Bookings/' + hostelName + '/RoomDetails/');
     update(ref(db, "User details/" + userName + '/Bookings/' + hostelName + '/RoomDetails/'), {
         bedId: bedId,
+        roomType: roomDetails[0],
         floor: roomDetails[3],
+        ac:roomDetails[4],
         paymentComplete: "yes",
         totalAmount: 5000,
         paymentDate:date,
