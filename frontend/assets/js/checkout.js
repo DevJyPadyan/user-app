@@ -69,12 +69,22 @@ function settingPurposeToLogin() {
                         document.getElementById("user-proof").innerHTML = "ID Proof : Submitted";
 
                     }
+                    if (snapshot.val().guardianDetails == "no") {
+                        document.getElementById("showAddGaurdianDetailsDiv").style.display = "block";
+                        document.getElementById("user-guardian").innerHTML = "Guardian Details : Not Submitted";
+                    }
+                    else {
+                        document.getElementById("showAddGaurdianDetailsDiv").style.display = "none";
+                        document.getElementById("user-guardian").innerHTML = "Guardian Details : "+snapshot.val().guardName + ", (M)" + snapshot.val().guardPhone;
+
+                    }
                 }
             })
             .catch((error) => {
                 alert(error)
             });
     }
+    console.log(localStorage.getItem('purposeToLogin'));
 }
 
 extra_chapati_check.addEventListener('click', (e) => {
@@ -126,14 +136,16 @@ document.getElementById("uploadImage").addEventListener("click", async function 
 });
 
 function storeOrderDetails(paymentResponse) {
-    console.log("payment - "+JSON.stringify(paymentResponse)+paymentResponse.razorpay_order_id);
-    console.log("User details/" + userName +'/Bookings/'+ hostelName + '/RoomDetails/');
-    update(ref(db, "User details/" + userName +'/Bookings/'+ hostelName + '/RoomDetails/'), {
-        bedId:bedId,
-        floor:roomDetails[3],
+    var date = new Date();
+    console.log("payment - " + JSON.stringify(paymentResponse) + paymentResponse.razorpay_order_id);
+    console.log("User details/" + userName + '/Bookings/' + hostelName + '/RoomDetails/');
+    update(ref(db, "User details/" + userName + '/Bookings/' + hostelName + '/RoomDetails/'), {
+        bedId: bedId,
+        floor: roomDetails[3],
         paymentComplete: "yes",
-        totalAmount:5000,
-        paymenttransId:paymentResponse.razorpay_payment_id
+        totalAmount: 5000,
+        paymentDate:date,
+        paymenttransId: paymentResponse.razorpay_payment_id
         // paymentOrderId:paymentResponse.razorpay_order_id
     })
         .then(() => {
@@ -147,3 +159,29 @@ function storeOrderDetails(paymentResponse) {
 
 
 export { storeOrderDetails };
+
+/**Storing Guardian Details Code */
+updateGuardianDetailsBtn.addEventListener('click',(e)=>{
+    var guardianName = document.getElementById('guardianName').value;
+    var guardianPhone = document.getElementById('guardianPhone').value;
+    if(guardianName != '' && guardianPhone != ''){
+        storeGuardianDetails(guardianName,guardianPhone);
+    }
+    else{
+        alert("Enter Guardian Details..");
+    }
+});
+function storeGuardianDetails(guardianName, guardianPhone) {
+    update(ref(db, "User details/" + userName), {
+        guardName:guardianName,
+        guardPhone:guardianPhone,
+        guardianDetails: "yes"
+    })
+        .then(() => {
+            alert("Guardian Details Updated successfully.");
+            window.location.reload();
+        })
+        .catch((error) => {
+            alert(error);
+        });
+}
