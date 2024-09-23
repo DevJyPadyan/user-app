@@ -38,6 +38,35 @@
     <link rel="stylesheet" id="change-link" type="text/css" href="assets/css/style.css">
 </head>
 
+<style>
+    .form-input {
+        display: flex;
+        align-items: center;
+    }
+
+    .form-control {
+        padding: 10px 40px;
+        /* Add padding to accommodate the icons */
+        flex: 1;
+        /* Make the input take up remaining space */
+        border: 1px solid #ccc;
+        /* Add border for visual separation */
+        border-radius: 4px;
+        /* Optional: rounded corners */
+    }
+
+    .ri-lock-password-line,
+    #togglePassword {
+        color: #888;
+        /* Icon color */
+    }
+
+    #togglePassword:hover {
+        color: #000;
+        /* Optional: change color on hover */
+    }
+</style>
+
 <body class="white-bg">
 
     <!-- Header section start -->
@@ -221,20 +250,31 @@
                                     <h3> User Details </h3>
                                     <hr>
                                     <div class="form-input">
-                                        <input type="text" class="form-control" placeholder="Enter your Name" id="username">
-                                        <i class="ri-user-3-line"><span id="mandatory-user" style="color: red;">*</span></i>
+                                        <input type="text" class="form-control" placeholder="Enter your Name"
+                                            id="username">
+                                        <i class="ri-user-3-line"><span id="mandatory-user"
+                                                style="color: red;">*</span></i>
                                     </div>
                                     <div class="form-input">
-                                        <input type="text" class="form-control" placeholder="Enter your Email" id="useremail">
-                                        <i class="ri-account-circle-fill icon"><span id="mandatory-email" style="color: red;">*</span></i>
+                                        <input type="text" class="form-control" placeholder="Enter your Email"
+                                            id="useremail">
+                                        <i class="ri-account-circle-fill icon"><span id="mandatory-email"
+                                                style="color: red;">*</span></i>
                                     </div>
                                     <div class="form-input">
-                                        <input type="tel" class="form-control" placeholder="Enter your Number" id="phone">
-                                        <i class="ri-phone-line"><span id="mandatory-phone" style="color: red;">*</span></i>
+                                        <input type="tel" class="form-control" placeholder="Enter your Number"
+                                            id="phone">
+                                        <i class="ri-phone-line"><span id="mandatory-phone"
+                                                style="color: red;">*</span></i>
                                     </div>
-                                    <div class="form-input">
-                                        <input type="password" class="form-control" placeholder="Enter your Password" id="password">
-                                        <i class="ri-lock-password-line"><span id="mandatory-pwd" style="color: red;">*</span></i>
+                                    <div class="form-input"
+                                        style="display: flex; align-items: center; position: relative;">
+                                        <i class="ri-lock-password-line"><span id="mandatory-pwd"
+                                                style="color: red;">*</span></i>
+                                        <input type="password" class="form-control" placeholder="Enter your password"
+                                            id="password" style="flex: 1;">
+                                        <i class="ri-eye-off-line" id="togglePassword"
+                                            style="cursor: pointer; margin-left: 400px;"></i>
                                     </div>
                                 </div>
                                 <!-- <div class="col-lg-12 col-6">
@@ -251,7 +291,8 @@
                                 </div> -->
 
                             </div>
-                            <button type="button" id="register" class="btn theme-btn submit-btn w-100 rounded-2">Register</button>
+                            <button type="button" id="register"
+                                class="btn theme-btn submit-btn w-100 rounded-2">Register</button>
                             <!--<a href="otp.html" class="btn theme-btn submit-btn w-100 rounded-2">CONTINUE</a>-->
                             <p class="fw-normal content-color">
                                 By creating an account, I accept the

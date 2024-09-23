@@ -5,6 +5,19 @@ import { firebaseConfig } from "./firebase-config.js";
 const app = initializeApp(firebaseConfig);
 const db = getDatabase();
 
+const passwordInput = document.getElementById('password');
+const togglePasswordIcon = document.getElementById('togglePassword');
+
+togglePasswordIcon.addEventListener('click', function () {
+    // Toggle between password and text input types
+    const currentType = passwordInput.getAttribute('type');
+    passwordInput.setAttribute('type', currentType === 'password' ? 'text' : 'password');
+
+    // Toggle between the eye and eye-off icons
+    this.classList.toggle('ri-eye-off-line');
+    this.classList.toggle('ri-eye-line');
+});
+
 register.addEventListener('click', (e) => {
     var user = document.getElementById("username").value;
     var phone = document.getElementById("phone").value;

@@ -34,6 +34,28 @@
     <!-- Theme css -->
     <link rel="stylesheet" id="change-link" type="text/css" href="assets/css/style.css">
 </head>
+<style>
+.form-input {
+    display: flex;
+    align-items: center;
+}
+
+.form-control {
+    padding: 10px 40px; /* Add padding to accommodate the icons */
+    flex: 1; /* Make the input take up remaining space */
+    border: 1px solid #ccc; /* Add border for visual separation */
+    border-radius: 4px; /* Optional: rounded corners */
+}
+
+.ri-lock-password-line,
+#togglePassword {
+    color: #888; /* Icon color */
+}
+
+#togglePassword:hover {
+    color: #000; /* Optional: change color on hover */
+}
+</style>
 
 <body class="white-bg">
 
@@ -217,12 +239,13 @@
                                 <input type="text" class="form-control" placeholder="Enter your username" id="username">
                                 <i class="ri-user-line"></i>
                             </div>
-                            <div class="form-input">
-                                <input type="password" class="form-control" placeholder="Enter your password"
-                                    id="password">
-                                <i class="ri-lock-password-line"></i>
+                            <div class="form-input" style="display: flex; align-items: center; position: relative;">
+                                <i class="ri-lock-password-line" style="margin-right: 10px;"></i>
+                                <input type="password" class="form-control" placeholder="Enter your password" id="password" style="flex: 1;">
+                                <i class="ri-eye-off-line" id="togglePassword" style="cursor: pointer; margin-left: 400px;"></i>
                             </div>
-                            <a href="forgot-password.html" style="position: relative; text-align: end;"><span class="theme-color">Forgot Password ?</span></a>
+                            <a href="forgot-password.html" style="position: relative; text-align: end;"><span
+                                    class="theme-color">Forgot Password ?</span></a>
                             <button type="button" id="login"
                                 class="btn theme-btn submit-btn w-100 rounded-2">Login</button>
                             <!--<a href="index.html" class="btn theme-btn submit-btn w-100 rounded-2">CONTINUE</a>-->
@@ -444,7 +467,7 @@
             <i id="themeIcon" class="ri-moon-line icon mode-icon"></i>
             <span class="text-value">Dark</span>
         </button>
-        <button type="button"  style="display: none;" id="rtl-btn" class="btntheme rtlBtnEl">
+        <button type="button" style="display: none;" id="rtl-btn" class="btntheme rtlBtnEl">
             <i class="ri-repeat-line icon"></i>
             <span class="text-value">RTL</span>
         </button>
