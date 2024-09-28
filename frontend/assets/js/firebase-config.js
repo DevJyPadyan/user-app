@@ -3,6 +3,7 @@
 const firebaseConfig = {
   apiKey: "AIzaSyD7rBZx0bdZziXKC3qY1yhBPQTjxS6VFPY",
   authDomain: "hostel-user-app.firebaseapp.com",
+  databaseURL: "https://hostel-user-app-default-rtdb.firebaseio.com",
   projectId: "hostel-user-app",
   storageBucket: "hostel-user-app.appspot.com",
   messagingSenderId: "909444802101",
