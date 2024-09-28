@@ -1,6 +1,8 @@
 /**
  * Loading All images dynamically from firebase
  * Shown in Photos Section of menu-listing.html 
+ * 
+ * Adding Room cards in Booking section of menu-listing.html
  */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getDatabase, ref, get, set, onValue, child, update, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"
@@ -72,16 +74,29 @@ const loadDataFromDB = () => {
     localStorage.setItem("total_rooms_length", 0);
     localStorage.setItem('bedCount', 0);//number of bed in room selected.
     localStorage.setItem("bedId", 0);//selected Bed ID by the user.
-    const dbref = ref(db, 'Hostel details/' + hostelName + "/rooms");
+    const dbref = ref(db, 'Hostel details/' + hostelName + "/rooms/");
     onValue(dbref, (snapshot) => {
 
         hostelist = [];
 
-        snapshot.forEach(iterator => {
-            hostelist.push(iterator.val());
-        })
+        const roomsData = snapshot.val();
+
+        // Loop through each floor and its rooms
+        Object.keys(roomsData).forEach((floorKey) => {
+            const floorData = roomsData[floorKey];
+            const floorNumber = floorKey.replace('floor', ''); // Extract only the floor number
+
+            Object.keys(floorData).forEach((roomKey) => {
+                const roomData = floorData[roomKey];
+                const roomNumber = roomKey.replace('room', ''); // Extract only the room number
+
+                hostelist.push(roomData);
+            });
+        });
+
         iterateAllRecords();
     })
+
 }
 
 const iterateAllRecords = () => {
@@ -93,12 +108,12 @@ const iterateAllRecords = () => {
         if (iterator.images != undefined) {
             iterator.images.forEach(j => {
                 imageArray.push(j);
-                 addImageCard(j);
+                addImageCard(j);
             })
         }
         i++;
         addHostelRoomCard(iterator.ac, iterator.amenities, iterator.bathroom, iterator.floor,
-            iterator.price, iterator.roomCount, iterator.roomType, imageArray[0], i)
+            iterator.room, iterator.price, iterator.roomCount, iterator.roomType, imageArray[0], i)
     });
     localStorage.setItem("total_rooms_length", hostelist.length);
     if (hostelist.length == 0) {
@@ -113,7 +128,7 @@ const iterateAllRecords = () => {
 }
 
 const postContainer = document.getElementById('item-3');
-const addHostelRoomCard = (ac, amenities, bathroom, floor, roomprice, roomcount, roomtype, imgURL, card_number) => {
+const addHostelRoomCard = (ac, amenities, bathroom, floor, roomNumber, roomprice, roomcount, roomtype, imgURL, card_number) => {
 
     const elem = document.createElement('div');
     elem.setAttribute('id', card_number);
@@ -129,7 +144,8 @@ const addHostelRoomCard = (ac, amenities, bathroom, floor, roomprice, roomcount,
                                                                     <div>
                                                                         <div class="d-flex align-items-center gap-2">
                                                                             <h6 class="product-name">
-                                                                                Floor No: ${floor} 
+                                                                                Floor No: ${floor} ,  
+                                                                                Room No: ${roomNumber}
                                                                             </h6>
                                                                         </div>
                                                                         <h6 class="customized">${roomcount} rooms available </h6>
@@ -164,6 +180,7 @@ const addHostelRoomCard = (ac, amenities, bathroom, floor, roomprice, roomcount,
     elem.dataset.ac = ac;
     elem.dataset.roomCount = roomcount;
     elem.dataset.roomFloor = floor;
+    elem.dataset.roomNumber = roomNumber;
     elem.addEventListener('click', handleCardClick);
 
     postContainer.appendChild(elem);
@@ -177,10 +194,10 @@ const addHostelRoomCard = (ac, amenities, bathroom, floor, roomprice, roomcount,
 function handleCardClick(event) {
     const card = event.currentTarget;
     const hostelRoomType = card.dataset.roomType;
-    let roomDetails = card.dataset.roomType + "-" + card.dataset.roomPrice + "-" + card.dataset.roomCount + "-" + card.dataset.roomFloor + "-"+card.dataset.ac;
+    let roomDetails = card.dataset.roomType + "-" + card.dataset.roomPrice + "-" + card.dataset.roomCount + "-" + card.dataset.roomFloor + "-" + card.dataset.roomNumber + "-" + card.dataset.ac;
     localStorage.setItem("room-details", roomDetails);
-    if( card.dataset.roomCount > 1){
-        document.getElementById("no-bed-msg").style.display='none';
+    if (card.dataset.roomCount > 0) {
+        document.getElementById("no-bed-msg").style.display = 'none';
         if (localStorage.getItem('bedCount') != 0) {
             for (i = 1; i <= localStorage.getItem('bedCount'); i++) {
                 let cardId = 'b' + i;
@@ -188,9 +205,9 @@ function handleCardClick(event) {
             }
             localStorage.setItem('bedCount', 0);
         }
-    
+
         // Using match with regEx
-    
+
         //need for regex since when user clicks on room , 
         //the room type is "2 Sharing","3 Sharing","10 Sharing" to extract the number from the string we use REGEX.
         let matches = hostelRoomType.match(/(\d+)/);
@@ -203,9 +220,9 @@ function handleCardClick(event) {
             }
         }
     }
-    else{
-        document.getElementById("no-bed-msg").style.display='block';
-        alert("no rooms available");
+    else {
+        document.getElementById("no-bed-msg").style.display = 'block';
+        alert("Sorry, No rooms available");
     }
 }
 
@@ -264,7 +281,7 @@ function bedSelection(event) {
             document.getElementById("cart-bed-number").innerHTML = "Selected Bed - " + bedId;
         }
         else {
-            console.log("inside elseee "+document.getElementById(bedId).style.backgroundColor)
+            console.log("inside elseee " + document.getElementById(bedId).style.backgroundColor)
             document.getElementById(bedId).style.backgroundColor = "white";
             localStorage.setItem("bedId", 0);
             document.getElementById("cart-title").innerHTML = "Empty Cart";
@@ -314,22 +331,22 @@ window.addEventListener('load', loadDataFromDB);
 
 /**********Loading Food Menu Section data starts***************/
 const loadMenuDataFromDB = () => {
-    for(i=1;i<=5;i++){
-        loadMenuWeekWise("week"+i);
+    for (i = 1; i <= 5; i++) {
+        loadMenuWeekWise("week" + i);
     }
 };
 const loadMenuWeekWise = (weekNumber) => {
     const dbRef = ref(db, `Hostel details/${hostelName}/weeks/${weekNumber}`);
     onValue(dbRef, (snapshot) => {
-        const weekData = snapshot.val();        
+        const weekData = snapshot.val();
         if (weekData) {
-            document.getElementById(weekNumber+"_no_menu_msg").style.display="none";
-            ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'].forEach(day => {
+            document.getElementById(weekNumber + "_no_menu_msg").style.display = "none";
+            ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].forEach(day => {
                 const dayData = weekData[day] || {};
                 addFoodMealCard(weekNumber, day, dayData);
             });
         } else {
-            document.getElementById(weekNumber+"_no_menu_msg").style.display="block";
+            document.getElementById(weekNumber + "_no_menu_msg").style.display = "block";
         }
     });
 };
@@ -337,14 +354,14 @@ const loadMenuWeekWise = (weekNumber) => {
 function addFoodMealCard(weekNumber, day, dayData) {
     const postContainer = document.getElementById(weekNumber);
     const mainParentElem = document.createElement('div');
-    mainParentElem.id = weekNumber+'-'+day;
+    mainParentElem.id = weekNumber + '-' + day;
     mainParentElem.innerHTML = `<div style="padding-top:10px;" class="filter-title">
                                     <h2 class="fw-medium dark-text">${day}</h2>
                                 </div>
                                 <br>`;
-                                
+
     const mainELem = document.createElement('div');
-    mainELem.setAttribute("style","display: grid;gap: 20px;grid-template-columns:1fr 1fr 1fr;");
+    mainELem.setAttribute("style", "display: grid;gap: 20px;grid-template-columns:1fr 1fr 1fr;");
     ['Morning', 'Afternoon', 'Night'].forEach(mealTime => {
         const mealData = dayData[mealTime] || {};
         const elem = document.createElement('div');
@@ -362,34 +379,34 @@ function addFoodMealCard(weekNumber, day, dayData) {
         mainParentElem.appendChild(mainELem);
     });
     postContainer.appendChild(mainParentElem);
-    
+
 }
-function showHideFoodWeek(week){
-    document.getElementById("weekNumber").innerHTML ="Menu for Week - "+week;
-    for(i=1;i<=5;i++){
-        if(i == week){
-            document.getElementById("week"+i).style.display="block";
-            document.getElementById("nav_week"+i).classList.add("active");
+function showHideFoodWeek(week) {
+    document.getElementById("weekNumber").innerHTML = "Menu for Week - " + week;
+    for (i = 1; i <= 5; i++) {
+        if (i == week) {
+            document.getElementById("week" + i).style.display = "block";
+            document.getElementById("nav_week" + i).classList.add("active");
         }
-        else{
-            document.getElementById("week"+i).style.display="none";
-            document.getElementById("nav_week"+i).classList.remove("active");
+        else {
+            document.getElementById("week" + i).style.display = "none";
+            document.getElementById("nav_week" + i).classList.remove("active");
         }
     }
 }
-nav_week1.addEventListener('click',(e)=>{
+nav_week1.addEventListener('click', (e) => {
     showHideFoodWeek(1);
 })
-nav_week2.addEventListener('click',(e)=>{
+nav_week2.addEventListener('click', (e) => {
     showHideFoodWeek(2);
 })
-nav_week3.addEventListener('click',(e)=>{
+nav_week3.addEventListener('click', (e) => {
     showHideFoodWeek(3);
 })
-nav_week4.addEventListener('click',(e)=>{
+nav_week4.addEventListener('click', (e) => {
     showHideFoodWeek(4);
 })
-nav_week5.addEventListener('click',(e)=>{
+nav_week5.addEventListener('click', (e) => {
     showHideFoodWeek(5);
 })
 window.addEventListener('load', loadMenuDataFromDB);
@@ -612,7 +629,7 @@ filtersClrBtn.addEventListener('click', (e) => {
 
 function applyFilters() {
     var data_filter = [];
-    console.log("Room Floor Filters - "+roomFloorFilterValue+"Room Type Filters - " + roomTypeFilterValue.length + " AC filters - " + airConditionFilterValue.length + " Bathroom filter - " + bathroomFilterValue.length);
+    console.log("Room Floor Filters - " + roomFloorFilterValue + "Room Type Filters - " + roomTypeFilterValue.length + " AC filters - " + airConditionFilterValue.length + " Bathroom filter - " + bathroomFilterValue.length);
     if (roomFloorFilterValue.length == 0 && roomTypeFilterValue.length == 0 && airConditionFilterValue.length == 0 && bathroomFilterValue.length == 0) {
         if (localStorage.getItem("total_filter_length") != 0) {
             removeCards(localStorage.getItem("total_filter_length"));
