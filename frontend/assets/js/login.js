@@ -1,9 +1,11 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getDatabase, ref, get, set, child, update, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"
 import { firebaseConfig } from "./firebase-config.js";
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase();
+const auth = getAuth(app);
 
 const passwordField = document.getElementById('password');
 const togglePassword = document.getElementById('togglePassword');
@@ -21,46 +23,50 @@ togglePassword.addEventListener('click', function () {
 
 login.addEventListener('click', (e) => {
     const dbref = ref(db);
-    var user = document.getElementById('username').value;
+    var email = document.getElementById('useremail').value;
     var passwd = document.getElementById('password').value;
 
-    if(user != '' && passwd != ''){
-        get(child(dbref, "User details/" + user + '/'))
-        .then((snapshot) => {
-            if (snapshot.exists()) {
+    if (email != '' && passwd != '') {
+        signInWithEmailAndPassword(auth, email, passwd)
+            .then((userCredential) => {
+                // Signed in 
+                get(child(dbref, "User details/" + userCredential.user.uid + '/'))
+                    .then((snapshot) => {
+                        if (snapshot.exists()) {
 
-                let usname = snapshot.val().userName;
-                let password = snapshot.val().password1;
-                let phone = snapshot.val().userPhone;
-                let proofSubmission = snapshot.val().proofSubmission;
-                let usercomp = usname.localeCompare(user);
-                let passcomp = password.localeCompare(passwd);
+                            let usname = snapshot.val().userName;
+                            let email = snapshot.val().userEmail;
+                            let password = snapshot.val().password1;
+                            let phone = snapshot.val().userPhone;
+                            let proofSubmission = snapshot.val().proofSubmission;
 
-                //storing the user details data in an array list
-                const userdetailList = [usname, password, phone, proofSubmission];
-                //converting array to string(for setting in localstorage).
-                let userdetails = JSON.stringify(userdetailList);
-                localStorage.setItem("userDetails", userdetails);
-                //comparing the firebase data and user input
-                if (usercomp == 0 && passcomp == 0) {
-                   if(localStorage.getItem('purposeToLogin') == 'checkout'){
-                    window.location.href = "././checkout.html";
-                   }
-                   else{
-                    window.location.href = "././index.html";
-                   }
-                }
+                            //storing the user details data in an array list
+                            const userdetailList = [usname,email, password, phone, proofSubmission];
+                            //converting array to string(for setting in localstorage).
+                            let userdetails = JSON.stringify(userdetailList);
 
-            } else {
-                alert("Incorrect Username or Password");
-            }
-        })
-        .catch((error) => {
-            alert(error)
-        });
+                            localStorage.setItem("userDetails", userdetails);
+                            if (localStorage.getItem('purposeToLogin') == 'checkout') {
+                                window.location.href = "././checkout.html";
+                            }
+                            else {
+                                window.location.href = "././index.html";
+                            }
+
+                        }
+                    })
+                    .catch((error) => {
+                        alert(error);
+                    });
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                alert("Please check Useremail and Password - "+errorCode);
+            });
     }
-    else{
-        alert("Please check Username and Password")
+    else {
+        alert("Please check Useremail and Password");
     }
 
 });
