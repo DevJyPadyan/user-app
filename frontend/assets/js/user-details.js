@@ -8,12 +8,10 @@ let userDetailsArray = JSON.parse(userDetails);
 let userDeatilObj = new Object();
 if (userDetails != null) {
     userDeatilObj = {
-        name: userDetailsArray[0],
-        email: userDetailsArray[1],
-        phoneNumber: userDetailsArray[2],
-        photoURL: userDetailsArray[3],
-        accessToken: userDetailsArray[4],
-        proofSubmission:userDetailsArray[5]
+        userUid: userDetailsArray[0],
+        name: userDetailsArray[1],
+        email: userDetailsArray[2],
+        phoneNumber: userDetailsArray[3]
     }
 }
 
@@ -23,10 +21,10 @@ if (document.getElementById("user-name2") != null) {
     document.getElementById("user-name2").innerHTML = userDeatilObj.name == undefined ? "User" : userDeatilObj.name;
 }
 //if user is not logged-in , then logout btn name will be shown as Sign In
-if(userDeatilObj.name == undefined){
+if (userDeatilObj.name == undefined) {
     document.getElementById("logoutBtn").innerHTML = "Sign In";
 }
-  
+
 //setting user-details in profile.html 
 if (document.getElementById("profile-user-name") != null) {
     document.getElementById("profile-user-name").innerHTML = userDeatilObj.name == undefined ? "User" : userDeatilObj.name;

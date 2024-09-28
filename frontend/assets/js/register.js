@@ -45,7 +45,7 @@ register.addEventListener('click', (e) => {
                     userEmail: email,
                     proofSubmission: "no",
                     guardianDetails: "no",
-                    userId: userCredential.user.uid
+                    userUid: userCredential.user.uid
                     // gaurdianName: gaurdianName,
                     // gaurdianPhone: gaurdianPhone
                 })

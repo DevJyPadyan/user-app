@@ -17,7 +17,7 @@ googleLogin.addEventListener('click', (e) => {
 
             //Storing the user details into an array.
             const user = result.user;
-            const userDetailsArray = [user.displayName, user.email, user.phoneNumber, user.photoURL, user.acessToken];
+            const userDetailsArray = [user.uid, user.displayName, user.email, user.phoneNumber];
             const dbref = ref(db);
             get(child(dbref, "User details/" + userDetailsArray[0] + '/'))
                 .then((snapshot) => {
@@ -27,11 +27,13 @@ googleLogin.addEventListener('click', (e) => {
                         userDetailsArray.push(snapshot.val().proofSubmission);
                     } else {
                         set(ref(db, "User details/" + userDetailsArray[0]), {
-                            userName: userDetailsArray[0],
-                            userPhone: userDetailsArray[2],
+                            userName: userDetailsArray[1],
+                            userPhone: userDetailsArray[3],
                             password1: "used by google login",
-                            userEmail: userDetailsArray[1],
-                            proofSubmission: "no"
+                            userEmail: userDetailsArray[2],
+                            proofSubmission: "no",
+                            userUid:userDetailsArray[0],
+                            guardianDetails:"no"
                         })
                             .catch((error) => {
                                 alert(error);

@@ -7,10 +7,11 @@ import { userDeatilObj } from "./user-details.js";
 const app = initializeApp(firebaseConfig);
 const db = getDatabase();
 let userName = userDeatilObj.name;
+let userUid = userDeatilObj.userUid;
 let ordersList = [];
 
 function loadOderDetails() {
-    const dbref = ref(db, "User details/" + userName + '/Bookings/');
+    const dbref = ref(db, "User details/" + userUid + '/Bookings/');
     onValue(dbref, (snapshot) => {
         ordersList = [];
         snapshot.forEach(h => {
@@ -32,13 +33,13 @@ function iterateOrderDetails() {
     ordersList.forEach(h => {
         console.log(h.key)
         h.forEach(r => {
-            addOrderDetailsCard(h.key,r.val().bedId, r.val().floor,r.val().roomType, r.val().paymenttransId, r.val().totalAmount,r.val().paymentDate);
+            addOrderDetailsCard(h.key, r.val().bedId, r.val().floor, r.val().roomType, r.val().paymenttransId, r.val().totalAmount, r.val().paymentDate);
 
         });
     });
 }
 const postContainer = document.getElementById('ul-orders');
-function addOrderDetailsCard(hostelName,bedId, floor,roomType, paymentId, totalAmount, paymentDate) {
+function addOrderDetailsCard(hostelName, bedId, floor, roomType, paymentId, totalAmount, paymentDate) {
     const elem = document.createElement('li');
     let date = paymentDate.split('T');
     elem.innerHTML = ` <div class="order-box">
