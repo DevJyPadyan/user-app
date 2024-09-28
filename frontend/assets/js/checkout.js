@@ -17,6 +17,7 @@ let text = localStorage.getItem("room-details");
 let roomDetails = text.split("-");
 let bedId = localStorage.getItem("bedId");
 let userName = userDeatilObj.name;
+let userUid = userDeatilObj.userUid;
 
 const loadBillDetails = () => {
     settingPurposeToLogin();
@@ -24,7 +25,7 @@ const loadBillDetails = () => {
     document.getElementById("hostel-address").innerHTML = hostelAddress;
     document.getElementById("cart-room-price").innerHTML = roomDetails[1];
     // document.getElementById("cart-room-floor").innerHTML = "Floor - " + roomDetails[3] + " Room - " + roomDetails[2] + " Bed Number - " + bedId;
-    document.getElementById("cart-room-floor").innerHTML = "Floor - " + roomDetails[3] + " Bed Number - " + bedId;
+    document.getElementById("cart-room-floor").innerHTML = "Floor - " + roomDetails[3] + "<br> Room - " + roomDetails[4] + " Bed Number - " + bedId;
 
     document.getElementById("extra-chapati").innerHTML = extraChapatiCost;
     let chapatiChecked = document.getElementById('extra_chapati_check').checked;
@@ -57,7 +58,7 @@ function settingPurposeToLogin() {
 
         //hitting DB, to check whether the user has submitted proof submission.
         const dbref = ref(db);
-        get(child(dbref, "User details/" + userDeatilObj.name + '/'))
+        get(child(dbref, "User details/" + userDeatilObj.userUid + '/'))
             .then((snapshot) => {
                 if (snapshot.exists()) {
                     if (snapshot.val().proofSubmission == "no") {
@@ -75,7 +76,7 @@ function settingPurposeToLogin() {
                     }
                     else {
                         document.getElementById("showAddGaurdianDetailsDiv").style.display = "none";
-                        document.getElementById("user-guardian").innerHTML = "Guardian Details : "+snapshot.val().guardName + ", (M)" + snapshot.val().guardPhone;
+                        document.getElementById("user-guardian").innerHTML = "Guardian Details : " + snapshot.val().guardName + ", (M)" + snapshot.val().guardPhone;
 
                     }
                 }
@@ -104,23 +105,24 @@ document.getElementById("files").addEventListener("change", function (e) {
 document.getElementById("uploadImage").addEventListener("click", async function () {
 
     var userName = userDeatilObj.name;
+    var userUid = userDeatilObj.userUid;
     //checks if files are selected
     if (files.length != 0) {
         //Loops through all the selected files
         for (let i = 0; i < files.length; i++) {
-            const storageRef = ref2(storage, 'userProof/' + userName + '/govtProof/' + files[i].name);
+            const storageRef = ref2(storage, 'userProof/' + userUid + '/govtProof/' + files[i].name);
             const upload = await uploadBytes(storageRef, files[i]);
             const imageUrl = await getDownloadURL(storageRef);
             imagelink.push(imageUrl);
         }
         alert("Uploading image");
-        const imageRef = ref(db, 'User details/' + userName + '/proofData/' + '/');
+        const imageRef = ref(db, 'User details/' + userUid + '/proofData/' + '/');
         set(imageRef, imagelink)
             .then(() => {
                 alert("Image is uploading..");
                 console.log('Image URLs have been successfully stored!');
             })
-        update(ref(db, "User details/" + userName + '/'), {
+        update(ref(db, "User details/" + userUid + '/'), {
             proofSubmission: "yes"
         })
             .then(() => {
@@ -138,21 +140,29 @@ document.getElementById("uploadImage").addEventListener("click", async function 
 function storeOrderDetails(paymentResponse) {
     var date = new Date();
     console.log("payment - " + JSON.stringify(paymentResponse) + paymentResponse.razorpay_order_id);
-    console.log("User details/" + userName + '/Bookings/' + hostelName + '/RoomDetails/');
-    update(ref(db, "User details/" + userName + '/Bookings/' + hostelName + '/RoomDetails/'), {
+    update(ref(db, "User details/" + userUid + '/Bookings/' + hostelName + '/RoomDetails/'), {
         bedId: bedId,
         roomType: roomDetails[0],
         floor: roomDetails[3],
-        ac:roomDetails[4],
+        ac: roomDetails[5],
         paymentComplete: "yes",
         totalAmount: 5000,
-        paymentDate:date,
+        paymentDate: date,
         paymenttransId: paymentResponse.razorpay_payment_id
         // paymentOrderId:paymentResponse.razorpay_order_id
     })
         .then(() => {
-            alert("Room Booked");
-            window.location.href = "././confirm-order.html";
+            alert("Click to continue");
+            update(ref(db, "Hostel details/" + hostelName + '/rooms/' + "floor" + roomDetails[3] + '/' + "room" + roomDetails[4] + '/'), {
+                roomCount: (Number(roomDetails[2]) - 1)
+            })
+                .then(() => {
+                    alert("Room Booked Successfully");
+                    window.location.href = "././confirm-order.html";
+                })
+                .catch((error) => {
+                    alert(error);
+                });
         })
         .catch((error) => {
             alert(error);
@@ -163,20 +173,20 @@ function storeOrderDetails(paymentResponse) {
 export { storeOrderDetails };
 
 /**Storing Guardian Details Code */
-updateGuardianDetailsBtn.addEventListener('click',(e)=>{
+updateGuardianDetailsBtn.addEventListener('click', (e) => {
     var guardianName = document.getElementById('guardianName').value;
     var guardianPhone = document.getElementById('guardianPhone').value;
-    if(guardianName != '' && guardianPhone != ''){
-        storeGuardianDetails(guardianName,guardianPhone);
+    if (guardianName != '' && guardianPhone != '') {
+        storeGuardianDetails(guardianName, guardianPhone);
     }
-    else{
+    else {
         alert("Enter Guardian Details..");
     }
 });
 function storeGuardianDetails(guardianName, guardianPhone) {
-    update(ref(db, "User details/" + userName), {
-        guardName:guardianName,
-        guardPhone:guardianPhone,
+    update(ref(db, "User details/" + userUid), {
+        guardName: guardianName,
+        guardPhone: guardianPhone,
         guardianDetails: "yes"
     })
         .then(() => {

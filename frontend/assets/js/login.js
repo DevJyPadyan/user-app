@@ -36,12 +36,11 @@ login.addEventListener('click', (e) => {
 
                             let usname = snapshot.val().userName;
                             let email = snapshot.val().userEmail;
-                            let password = snapshot.val().password1;
+                            let userUid = userCredential.user.uid;
                             let phone = snapshot.val().userPhone;
-                            let proofSubmission = snapshot.val().proofSubmission;
 
                             //storing the user details data in an array list
-                            const userdetailList = [usname,email, password, phone, proofSubmission];
+                            const userdetailList = [userUid,usname,email, phone];
                             //converting array to string(for setting in localstorage).
                             let userdetails = JSON.stringify(userdetailList);
 
