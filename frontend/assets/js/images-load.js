@@ -105,15 +105,15 @@ const iterateAllRecords = () => {
     //iterating thro the hostle obj fetched from DB.
     hostelist.forEach(iterator => {
         let imageArray = [];//initializing images array for every iteration, then only images for that particular rooms will display.
-        if (iterator.images != undefined) {
-            iterator.images.forEach(j => {
+        if (iterator.imagesLink != undefined) {
+            iterator.imagesLink.forEach(j => {
                 imageArray.push(j);
                 addImageCard(j);
             })
         }
         i++;
         addHostelRoomCard(iterator.ac, iterator.amenities, iterator.bathroom, iterator.floor,
-            iterator.room, iterator.price, iterator.roomCount, iterator.roomType, imageArray[0], i)
+            iterator.roomNumber, iterator.price, iterator.roomCount, iterator.roomType, imageArray[0], i)
     });
     localStorage.setItem("total_rooms_length", hostelist.length);
     if (hostelist.length == 0) {
@@ -362,7 +362,7 @@ function addFoodMealCard(weekNumber, day, dayData) {
 
     const mainELem = document.createElement('div');
     mainELem.setAttribute("style", "display: grid;gap: 20px;grid-template-columns:1fr 1fr 1fr;");
-    ['Morning', 'Afternoon', 'Night'].forEach(mealTime => {
+    ['morning', 'afternoon', 'night'].forEach(mealTime => {
         const mealData = dayData[mealTime] || {};
         const elem = document.createElement('div');
         elem.classList.add('card');
@@ -683,8 +683,8 @@ function applyFilters() {
             data_filter.forEach(iterator => {
                 let imageArray = [];//initializing images array for every iteration, then only images for that particular rooms will display.
                 i++;
-                if (iterator.images != undefined) {
-                    iterator.images.forEach(j => {
+                if (iterator.imagesLink != undefined) {
+                    iterator.imagesLink.forEach(j => {
                         imageArray.push(j);
                         // addImageCard(i);
                     })
