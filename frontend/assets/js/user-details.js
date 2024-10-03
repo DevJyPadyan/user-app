@@ -28,10 +28,10 @@ if (userDeatilObj.name == undefined) {
 //setting user-details in profile.html 
 if (document.getElementById("profile-user-name") != null) {
     document.getElementById("profile-user-name").innerHTML = userDeatilObj.name == undefined ? "User" : userDeatilObj.name;
-    document.getElementById("profile-user-name2").innerHTML = userDeatilObj.name == undefined ? "User" : userDeatilObj.name;
+    //document.getElementById("profile-user-name2").innerHTML = userDeatilObj.name == undefined ? "User" : userDeatilObj.name;
     document.getElementById("profile-user-email").innerHTML = userDeatilObj.email == undefined ? "E-Mail Address" : userDeatilObj.email;
-    document.getElementById("profile-user-email2").innerHTML = userDeatilObj.email == undefined ? "E-Mail Address" : userDeatilObj.email;
-    document.getElementById("profile-user-phone").innerHTML = userDeatilObj.phone == undefined ? "-" : userDeatilObj.phone;
+    // document.getElementById("profile-user-email2").innerHTML = userDeatilObj.email == undefined ? "E-Mail Address" : userDeatilObj.email;
+    // document.getElementById("profile-user-phone").innerHTML = userDeatilObj.phone == undefined ? "-" : userDeatilObj.phone;
 }
 
 //setting user-details in my-oder.html 
