@@ -18,6 +18,7 @@
     <meta name="msapplication-TileImage" content="assets/images/logo/favicon.png">
     <meta name="msapplication-TileColor" content="#FFFFFF">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="mobile-web-app-capable" content="yes">
 
     <!--Google font-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -426,39 +427,12 @@
                                                 <p id="user-proof"> ID Proof :</p>
                                                 <p id="user-guardian">Guardian Details :</p>
                                             </div>
-                                        </div>
-                                        <br>
-                                        <div id="showCompleteProofDiv" style="text-align: left;">
-                                            <hr>
-                                            <div class="input-box"
-                                                style=" display: flex; flex-direction: row;gap: 4px;">
-                                                <h6>Upload Government Proof ID:</h6>
-                                                <input type="file" id="files" multiple>
-                                                <br>
-                                            </div>
-                                            <button type="button" id="uploadImage"
-                                                class="btn theme-btn restaurant-btn">Upload
-                                                Image</button>
-                                        </div>
-                                        <br>
-                                        <div id="showAddGaurdianDetailsDiv" style="text-align: left;">
-                                            <hr>
-                                            Add Mandatory Guardian Details:
-                                            <div class="input-box"
-                                                style=" display: flex; flex-direction: row;gap: 4px;">
-                                                <div class="form-input"
-                                                    style=" display: flex; flex-direction: row;gap: 4px;">
-                                                    <input type="text" class="form-control"
-                                                        placeholder="Enter Guardian Name" id="guardianName">
-                                                </div>
-                                                <div class="form-input"
-                                                    style=" display: flex; flex-direction: row;gap: 4px;">
-                                                    <input type="text" class="form-control"
-                                                        placeholder="Enter Guardian Phone" id="guardianPhone">
-                                                </div>
-                                                <br>
-                                                <button type="button" id="updateGuardianDetailsBtn"
-                                                    class="btn theme-btn restaurant-btn">Update Details</button>
+                                            <br>
+                                            <div id="showRegistrationDiv" style="display: none;">
+                                                <hr style="width: 50%;">
+                                                <p>Complete User registration to Proceed Checkout</p>
+                                                <button type="button" id="userRegistrationBtn"
+                                                    class="btn theme-btn restaurant-btn">Complete Registration</button>
                                             </div>
                                         </div>
                                     </div>

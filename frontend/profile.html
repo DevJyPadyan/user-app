@@ -18,6 +18,7 @@
     <meta name="msapplication-TileImage" content="assets/images/logo/favicon.png">
     <meta name="msapplication-TileColor" content="#FFFFFF">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="mobile-web-app-capable" content="yes">
 
     <!--Google font-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,6 +38,34 @@
     <!-- Theme css -->
     <link rel="stylesheet" id="change-link" type="text/css" href="assets/css/style.css">
 </head>
+<style>
+    .form-input {
+        display: flex;
+        align-items: center;
+    }
+
+    .form-control {
+        padding: 10px 40px;
+        /* Add padding to accommodate the icons */
+        flex: 1;
+        /* Make the input take up remaining space */
+        border: 1px solid #ccc;
+        /* Add border for visual separation */
+        border-radius: 4px;
+        /* Optional: rounded corners */
+    }
+
+    .ri-lock-password-line,
+    #togglePassword {
+        color: #888;
+        /* Icon color */
+    }
+
+    #togglePassword:hover {
+        color: #000;
+        /* Optional: change color on hover */
+    }
+</style>
 
 <body>
 
@@ -401,53 +430,205 @@
                     <div class="change-profile-content">
                         <div class="title">
                             <div class="loader-line"></div>
-                            <h3>Change Profile</h3>
+                            <h3>Update Profile</h3>
                         </div>
-                        <ul class="profile-details-list">
-                            <li>
-                                <div class="profile-content">
-                                    <div class="d-flex align-items-center gap-sm-2 gap-1">
-                                        <i class="ri-user-3-fill"></i>
-                                        <span>Name :</span>
-                                    </div>
-                                    <h6><span id="profile-user-name2"></span></h6>
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Personal Information</h5>
                                 </div>
-                                <a href="#name" class="btn theme-outline" data-bs-toggle="modal">Edit</a>
-                            </li>
-                            <li>
-                                <div class="profile-content">
-                                    <div class="d-flex align-items-center gap-sm-2 gap-1">
-                                        <i class="ri-mail-fill"></i>
-                                        <span>Email :</span>
+                                <form autocomplete="off">
+                                    <div class="card-body">
+                                        <div class="input-items">
+                                            <div class="row gy-3">
+                                                <div class="col-xl-6">
+                                                    <div class="input-items">
+                                                        <h6>User Name</h6>
+                                                        <input readonly type="text" class="form-control"
+                                                            placeholder="Enter User Name" id="username">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-6">
+                                                    <div class="input-box">
+                                                        <h6>Email address</h6>
+                                                        <input readonly type="email" class="form-control"
+                                                            placeholder="Enter Email address" id="usermail">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-6">
+                                                    <div class="input-box">
+                                                        <h6>Gender</h6>
+                                                        <select id="usergender" class="form-control">
+                                                            <option>Men</option>
+                                                            <option>Women</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-6">
+                                                    <div class="input-box">
+                                                        <h6>Phone number</h6>
+                                                        <input type="tel" class="form-control"
+                                                            placeholder="Enter Phone number" id="userphone">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-6">
+                                                    <div class="input-box">
+                                                        <h6>Full Name</h6>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="Enter Full Name" id="userfullname">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-6">
+                                                    <div class="input-box">
+                                                        <h6>Address Line 1</h6>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="Address line 1" id="useradd1">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-6">
+                                                    <div class="input-box">
+                                                        <h6>Address Line 2</h6>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="Address line 2" id="useradd2">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-6">
+                                                    <div class="input-box">
+                                                        <h6>City</h6>
+                                                        <input type="text" class="form-control" placeholder="Enter City"
+                                                            id="usercity">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-6">
+                                                    <div class="input-box">
+                                                        <h6>State</h6>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="Enter State" id="userstate">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-6">
+                                                    <div class="input-box">
+                                                        <h6>Pincode</h6>
+                                                        <input type="number" class="form-control"
+                                                            placeholder="Enter Pincode" id="userpin">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-6" style="padding-top:6px;">
+                                                    <div class="input-box">
+                                                        <h6>Upload Govternment Proof</h6>
+                                                        <hr>
+                                                        <input type="file" id="files" multiple>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-6" style="padding-top:6px;">
+                                                    <div class="input-box">
+                                                        <h6>Sbumitted Document:</h6>
+                                                        <hr>
+                                                        <div id="userImageContainer">
+                                                            <h5 style="display: none;" id="noproofmsg"> No Proof
+                                                                Submitted </h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- <div class="col-xl-6">
+                                                <div class="input-box">
+                                                    <h6>Password<span class="required">*</span></h6>
+                                                    <input type="password" class="form-control" placeholder="Enter Pasword"
+                                                        id="pwd1">
+                                                </div>
+                                            </div> -->
+                                            </div>
+                                        </div>
                                     </div>
-                                    <h6><span id="profile-user-email2"></span></h6>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-12" style="padding-top: 16px;">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Guardian Details</h5>
                                 </div>
-                                <a href="#email" class="btn theme-outline" data-bs-toggle="modal">Change</a>
-                            </li>
-                            <li>
-                                <div class="profile-content">
-                                    <div class="d-flex align-items-center gap-sm-2 gap-1">
-                                        <i class="ri-phone-fill"></i>
-                                        <span>Phone Number :</span>
+                                <form autocomplete="off">
+                                    <div class="card-body">
+                                        <div class="input-items">
+                                            <div class="row gy-3">
+                                                <div class="col-xl-6">
+                                                    <div class="input-box">
+                                                        <h6>Full Name</h6>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="Enter Full Name" id="guardname">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-6">
+                                                    <div class="input-box">
+                                                        <h6>Relationship</h6>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="Enter Relationship" id="guardrel" required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-6">
+                                                    <div class="input-box">
+                                                        <h6>Phone number </h6>
+                                                        <input type="tel" class="form-control"
+                                                            placeholder="Enter Phone number" id="guardphone" required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-6">
+                                                    <div class="input-box">
+                                                        <h6>Email address</h6>
+                                                        <input type="email" class="form-control"
+                                                            placeholder="Enter Email address" id="guardmail">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-6">
+                                                    <div class="input-box">
+                                                        <h6>Address Line 1</h6>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="Address line 1" id="guardadd1">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-6">
+                                                    <div class="input-box">
+                                                        <h6>Address Line 2</h6>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="Address line 2" id="guardadd2">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-6">
+                                                    <div class="input-box">
+                                                        <h6>City</h6>
+                                                        <input type="text" class="form-control" placeholder="Enter City"
+                                                            id="guardcity">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-6">
+                                                    <div class="input-box">
+                                                        <h6>State</h6>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="Enter State" id="guardstate">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-6">
+                                                    <div class="input-box">
+                                                        <h6>Pincode</h6>
+                                                        <input type="number" class="form-control"
+                                                            placeholder="Enter Pincode" id="guardpin">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="col-12 mb-5">
+                                                <button type="button" id="updateUser">Update</button>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <h6><span id="profile-user-phone"></span></h6>
-                                </div>
-                                <a href="#number" class="btn theme-outline mt-0" data-bs-toggle="modal">Change</a>
-                            </li>
-                            <li>
-                                <div class="profile-content">
-                                    <div class="d-flex align-items-center gap-sm-2 gap-1">
-                                        <i class="ri-lock-2-fill"></i>
-                                        <span>Password :</span>
-                                    </div>
-                                    <h6>********</h6>
-                                </div>
-                                <a href="#password" class="btn theme-outline mt-0" data-bs-toggle="modal">Change</a>
-                            </li>
-                        </ul>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </section>
     <!-- profile section end -->
@@ -882,6 +1063,9 @@
 
     <!-- user-details js -->
     <script src="assets/js/user-details.js" defer type="module"></script>
+
+    <!-- profile js -->
+    <script src="assets/js/profile.js" defer type="module"></script>
 
     <!-- logout js -->
     <script src="assets/js/logout.js" defer type="module"></script>

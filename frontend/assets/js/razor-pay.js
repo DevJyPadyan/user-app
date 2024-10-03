@@ -34,8 +34,7 @@ rzp1.on('payment.failed', function (response) {
 });
 document.getElementById('rzp-button1').onclick = function (e) {
     if (document.getElementById("showAccountInfoDiv").style.display == "block"
-        && document.getElementById("showCompleteProofDiv").style.display == "none"
-        && document.getElementById("showAddGaurdianDetailsDiv").style.display == "none") {
+        && document.getElementById("showRegistrationDiv").style.display == "none") {
         rzp1.open();
         e.preventDefault();
         document.getElementById("account-li").classList.remove("active");
@@ -48,12 +47,8 @@ document.getElementById('rzp-button1').onclick = function (e) {
         // },1000);
     }
     else if (document.getElementById("showAccountInfoDiv").style.display == "block"
-        && document.getElementById("showCompleteProofDiv").style.display == "block") {
+        && document.getElementById("showRegistrationDiv").style.display == "block") {
         alert("Complete Government Proof Submission");
-    }
-    else if(document.getElementById("showAccountInfoDiv").style.display == "block"
-    && document.getElementById("showAddGaurdianDetailsDiv").style.display == "block"){
-        alert("Complete Guardian Details Submission");
     }
     else {
         alert("Login to make payment");
