@@ -81,7 +81,8 @@ const loadDataFromDB = () => {
 
         const roomsData = snapshot.val();
 
-        // Loop through each floor and its rooms
+        if(roomsData != undefined || roomsData != null){
+            // Loop through each floor and its rooms
         Object.keys(roomsData).forEach((floorKey) => {
             const floorData = roomsData[floorKey];
             const floorNumber = floorKey.replace('floor', ''); // Extract only the floor number
@@ -93,6 +94,7 @@ const loadDataFromDB = () => {
                 hostelist.push(roomData);
             });
         });
+        }
 
         iterateAllRecords();
     })
@@ -235,6 +237,7 @@ function addBed(i) {
     const parentContainer = document.getElementById('bedParent');
     const elem = document.createElement('div');
     elem.classList.add('card');
+    elem.style.cursor="pointer";
     elem.style.backgroundColor = "white";
     let bedId = 'b' + i;
     elem.setAttribute("id", bedId);
