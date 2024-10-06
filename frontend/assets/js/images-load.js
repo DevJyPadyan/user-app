@@ -21,6 +21,7 @@ let roomFloorFilterValue = [];
 let roomTypeFilterValue = [];
 let airConditionFilterValue = [];
 let bathroomFilterValue = [];
+let hosteFloorCount = 0;
 
 /**********Loading Image data in - Photos Section - starts***************/
 const loadImagesDataFromDB = () => {
@@ -78,22 +79,20 @@ const loadDataFromDB = () => {
     onValue(dbref, (snapshot) => {
 
         hostelist = [];
-
         const roomsData = snapshot.val();
 
-        if(roomsData != undefined || roomsData != null){
+        if (roomsData != undefined || roomsData != null) {
             // Loop through each floor and its rooms
-        Object.keys(roomsData).forEach((floorKey) => {
-            const floorData = roomsData[floorKey];
-            const floorNumber = floorKey.replace('floor', ''); // Extract only the floor number
+            Object.keys(roomsData).forEach((floorKey) => {
+                const floorData = roomsData[floorKey];
+                const floorNumber = floorKey.replace('floor', ''); // Extract only the floor number
 
-            Object.keys(floorData).forEach((roomKey) => {
-                const roomData = floorData[roomKey];
-                const roomNumber = roomKey.replace('room', ''); // Extract only the room number
-
-                hostelist.push(roomData);
+                Object.keys(floorData).forEach((roomKey) => {
+                    const roomData = floorData[roomKey];
+                    const roomNumber = roomKey.replace('room', ''); // Extract only the room number
+                    hostelist.push(roomData);
+                });
             });
-        });
         }
 
         iterateAllRecords();
@@ -237,7 +236,7 @@ function addBed(i) {
     const parentContainer = document.getElementById('bedParent');
     const elem = document.createElement('div');
     elem.classList.add('card');
-    elem.style.cursor="pointer";
+    elem.style.cursor = "pointer";
     elem.style.backgroundColor = "white";
     let bedId = 'b' + i;
     elem.setAttribute("id", bedId);
@@ -417,9 +416,6 @@ window.addEventListener('load', loadMenuDataFromDB);
 /**********Loading Food Menu Section data ends***************/
 
 /**Applying Filters Section Starts here for - Book Online Section */
-var oneFloorBx = document.getElementById("item_1_1_checkbx");
-var twoFloorBx = document.getElementById("item_1_2_checkbx");
-var threeFloorBx = document.getElementById("item_1_3_checkbx");
 
 var twoSharingBx = document.getElementById("item_2_1_checkbx");
 var threeSharingBx = document.getElementById("item_2_2_checkbx");
@@ -430,18 +426,6 @@ var nonacBx = document.getElementById("item_3_2_checkbx");
 
 var attachedBx = document.getElementById("item_4_1_checkbx");
 var commonBx = document.getElementById("item_4_2_checkbx");
-
-oneFloorBx.addEventListener('click', (e) => {
-    roomFloorFilters();
-});
-
-twoFloorBx.addEventListener('click', (e) => {
-    roomFloorFilters();
-});
-
-threeFloorBx.addEventListener('click', (e) => {
-    roomFloorFilters();
-});
 
 twoSharingBx.addEventListener('click', (e) => {
     roomTypeFilters();
@@ -470,52 +454,6 @@ attachedBx.addEventListener('click', (e) => {
 commonBx.addEventListener('click', (e) => {
     bathroomFilters();
 });
-
-function roomFloorFilters() {
-    roomFloorFilterValue = [];
-    console.log(roomFloorFilterValue);
-    var oneFloorFlag = oneFloorBx.checked;
-    var twoFloorFlag = twoFloorBx.checked;
-    var threeFloorFlag = threeFloorBx.checked;
-    if (oneFloorFlag == false && twoFloorFlag == true && threeFloorFlag == false) {
-        roomFloorFilterValue.push(twoFloorBx.value);
-        applyFilters();
-    }
-    else if (twoFloorFlag == false && threeFloorFlag == true && oneFloorFlag == false) {
-        roomFloorFilterValue.push(threeFloorBx.value);
-        applyFilters();
-    }
-    else if (twoFloorFlag == false && threeFloorFlag == false && oneFloorFlag == true) {
-        roomFloorFilterValue.push(oneFloorBx.value);
-        applyFilters();
-    }
-    else if (twoFloorFlag == true && threeFloorFlag == false && oneFloorFlag == true) {
-        roomFloorFilterValue.push(twoFloorBx.value);
-        roomFloorFilterValue.push(oneFloorBx.value);
-        applyFilters();
-    }
-    else if (twoFloorFlag == true && threeFloorFlag == true && oneFloorFlag == false) {
-        roomFloorFilterValue.push(twoFloorBx.value);
-        roomFloorFilterValue.push(threeFloorBx.value);
-        applyFilters();
-    }
-    else if (twoFloorFlag == false && threeFloorFlag == true && oneFloorFlag == true) {
-        roomFloorFilterValue.push(threeFloorBx.value);
-        roomFloorFilterValue.push(oneFloorBx.value);
-        applyFilters();
-    }
-    else if (twoFloorFlag == true && threeFloorFlag == true && oneFloorFlag == true) {
-        roomFloorFilterValue.push(oneFloorBx.value);
-        roomFloorFilterValue.push(twoFloorBx.value);
-        roomFloorFilterValue.push(threeFloorBx.value);
-        roomFloorFilterValue.push(oneFloorBx.value);
-        applyFilters();
-    }
-    else {
-        console.log("No Filter");
-        applyFilters();
-    }
-}
 
 function roomTypeFilters() {
     roomTypeFilterValue = [];
@@ -608,9 +546,7 @@ function bathroomFilters() {
 }
 
 filtersClrBtn.addEventListener('click', (e) => {
-    twoFloorBx.checked = false;
-    threeFloorBx.checked = false;
-    oneFloorBx.checked = false;
+    clearFloorFilters();
 
     twoSharingBx.checked = false;
     threeSharingBx.checked = false;
@@ -632,7 +568,7 @@ filtersClrBtn.addEventListener('click', (e) => {
 
 function applyFilters() {
     var data_filter = [];
-    console.log("Room Floor Filters - " + roomFloorFilterValue + "Room Type Filters - " + roomTypeFilterValue.length + " AC filters - " + airConditionFilterValue.length + " Bathroom filter - " + bathroomFilterValue.length);
+    console.log("Room Floor Filters - " + roomFloorFilterValue.length + " Room Type Filters - " + roomTypeFilterValue.length + " AC filters - " + airConditionFilterValue.length + " Bathroom filter - " + bathroomFilterValue.length);
     if (roomFloorFilterValue.length == 0 && roomTypeFilterValue.length == 0 && airConditionFilterValue.length == 0 && bathroomFilterValue.length == 0) {
         if (localStorage.getItem("total_filter_length") != 0) {
             removeCards(localStorage.getItem("total_filter_length"));
@@ -693,7 +629,7 @@ function applyFilters() {
                     })
                 }
                 addHostelRoomCard(iterator.ac, iterator.amenities, iterator.bathroom, iterator.floor,
-                    iterator.price, iterator.roomCount, iterator.roomType, imageArray[0], i)
+                    iterator.roomNumber, iterator.price, iterator.roomCount, iterator.roomType, imageArray[0], i)
             });
             localStorage.setItem("total_filter_length", i);
             if (data_filter.length == 0) {
@@ -725,3 +661,106 @@ function removeCards(length) {
     }
 }
 /**Applying Filters Section ends here for - Book Online Section */
+
+/** Dynamic Checkboxes are loaded based on the HosteFloor count for paritcular hostel - starts here */
+function clearFloorFilters() {
+    roomFloorFilterValue = [];
+    var checkboxes = document.getElementsByName("floorCheckBox");
+    var checkboxesChecked = [];
+    // loop over them all
+    for (var i = 0; i < checkboxes.length; i++) {
+        // And stick the checked ones onto an array...
+        if (checkboxes[i].checked) {
+            checkboxes[i].checked = false;
+        }
+    }
+}
+
+/**
+ * When floor filter is checked, this function will trigger to check.
+ * which checked boxes are checked and will push it to the array.
+ * @returns 
+ */
+function getCheckedBoxes() {
+    roomFloorFilterValue = [];
+    var checkboxes = document.getElementsByName("floorCheckBox");
+    var checkboxesChecked = [];
+    // loop over them all
+    for (var i = 0; i < checkboxes.length; i++) {
+        // And stick the checked ones onto an array...
+        if (checkboxes[i].checked) {
+            checkboxesChecked.push(checkboxes[i]);
+            roomFloorFilterValue.push(checkboxes[i].value);
+        }
+    }
+    applyFilters();//calls the filter method , for the selected checkboxes in floor filters.
+    // Return the array if it is non-empty, or null
+    return checkboxesChecked.length > 0 ? checkboxesChecked : null;
+}
+
+/**
+ * Function dynamically create the checkboxes and append it to the filter section.
+ * @param {*} floorCount 
+ */
+function loadCheckboxesForFilter(floorCount) {
+    let ulContainer = document.getElementById("floorFilters");
+    roomFloorFilterValue = [];
+    if (floorCount > 0) {
+        document.getElementById('noFloorFilterMsg').style.display = "none";
+        for (var i = 1; i <= floorCount; i++) {
+            //creating li element
+            let libox = document.createElement('li');
+            libox.style.display = "flex";
+            libox.style.gap = "4px";
+
+            // creating checkbox element
+            let checkbox = document.createElement('input');
+
+            // Assigning the attributes and click event for the created checkbox
+            checkbox.type = "checkbox";
+            checkbox.name = "floorCheckBox";
+            checkbox.value = String(i);
+            checkbox.id = "item_1_" + String(i) + "_checkbx";
+            checkbox.addEventListener('click', getCheckedBoxes);
+
+            // creating label for checkbox
+            let label = document.createElement('label');
+
+            // assigning attributes for the created label tag 
+            label.htmlFor = checkbox.id;
+
+            // appending the created text to 
+            // the created label tag 
+            label.appendChild(document.createTextNode(String(i)));
+
+            libox.appendChild(checkbox);
+            libox.appendChild(label);
+            ulContainer.appendChild(libox);
+        }
+    }
+    else {
+        //when there is no floor count, empty message will be displayed.
+        document.getElementById('noFloorFilterMsg').style.display = "block";
+    }
+}
+/**
+ * Function which loads initially to fetch the hostel floor number count.
+ */
+async function loadFloorCountForCheckBoxes() {
+    console.log("..inside load checkboxes")
+    const dbref = ref(db, 'Hostel details/' + hostelName);
+    try {
+        const snapshot = await get(dbref);
+        if (snapshot.exists()) {
+            hosteFloorCount = snapshot.val().hostelFloor;
+            loadCheckboxesForFilter(hosteFloorCount);//function is called to dynamically create the checkbox.
+        } else {
+            console.log('No floor count.');
+        }
+    } catch (error) {
+        console.error('Error fetching floor:', error);
+    }
+}
+
+window.addEventListener('load', loadFloorCountForCheckBoxes);
+/** Dynamic Checkboxes are loaded based on the HosteFloor count for paritcular hostel - ends here */
