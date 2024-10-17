@@ -471,6 +471,8 @@
                                         <span class="content-color dark-text fw-normal" id="cart-room-floor"></span>
                                     </h6>
                                 </div>
+                                <a href="#customized" class="btn theme-outline add-btn mt-0"
+                                data-bs-toggle="modal">Click To Add Extras Food</a>
                                 <h5 class="bill-details-title fw-semibold dark-text">
                                     Bill Details
                                 </h5>
@@ -480,10 +482,9 @@
                                 </div>
                                 <div class="sub-total">
                                     <h6 class="content-color fw-normal">
-                                        <input type="checkbox" id="extra_chapati_check">
-                                        Extra Chapati
+                                        Extras Food Charges
                                     </h6>
-                                    <h6 class="fw-semibold" id="extra-chapati">0</h6>
+                                    <h6 class="fw-semibold" id="extra-selected-items-total">0</h6>
                                 </div>
                                 <div class="grand-total">
                                     <h6 class="fw-semibold dark-text">To Pay</h6>
@@ -757,6 +758,37 @@
         </div>
     </div>
     <!-- location offcanvas end -->
+
+
+    <!-- customized modal starts -->
+    <div class="modal customized-modal" id="customized" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="container">
+                    <div class="filter-header">
+                        <h5 class="title">Extra Menu Selection</h5>
+                        <a id="extrasCloseModalBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></a>
+                    </div>
+                    <div class="filter-body">
+                        <div class="filter-title">
+                            <h5 class="fw-medium dark-text">Choose Extras -<span> Click on food to select.</span></h5>
+                        </div>
+                        <br>
+                        <div id="extrasParent" >
+                            <!-- all other contents are Generated from JS  -->
+                            <ul id="extrasUl" style="display: grid;gap: 20px;grid-template-columns:1fr 1fr 1fr;">
+                                <li id="noExtrasMsg" style="display: none;">No Extras in menu.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="filter-footer">
+                        <a id="extrasBtn" class="btn theme-btn add-btn w-100 mt-0" data-bs-dismiss="modal">Proceed</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- customized modal end -->
 
     <!-- theme btn start -->
     <div class="theme-btns">
