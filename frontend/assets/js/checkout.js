@@ -20,20 +20,19 @@ let userName = userDeatilObj.name;
 let userUid = userDeatilObj.userUid;
 let guardianDeatils = "no";
 let proofSubmission = "no";
+let extrasSelectedMenuCost = [];
+let extrasSelectedFoodNames = [];
+let total = Number(roomDetails[1])
 
 const loadBillDetails = () => {
     settingPurposeToLogin();
-    localStorage.setItem("userRegistrationStatus","no");
+    localStorage.setItem("userRegistrationStatus", "no");
     document.getElementById("hostel-name").innerHTML = hostelName;
     document.getElementById("hostel-address").innerHTML = hostelAddress;
     document.getElementById("cart-room-price").innerHTML = roomDetails[1];
     // document.getElementById("cart-room-floor").innerHTML = "Floor - " + roomDetails[3] + " Room - " + roomDetails[2] + " Bed Number - " + bedId;
     document.getElementById("cart-room-floor").innerHTML = "Floor - " + roomDetails[3] + "<br> Room - " + roomDetails[4] + " Bed Number - " + bedId;
-
-    document.getElementById("extra-chapati").innerHTML = extraChapatiCost;
-    let chapatiChecked = document.getElementById('extra_chapati_check').checked;
-    extraChapatiCost = chapatiChecked ? 1000 : 0;
-    document.getElementById("total-payment").innerHTML = Number(roomDetails[1]) + extraChapatiCost;
+    document.getElementById("total-payment").innerHTML = Number(roomDetails[1]);
 };
 
 window.addEventListener('load', loadBillDetails());
@@ -68,7 +67,7 @@ function settingPurposeToLogin() {
                     guardianDeatils = snapshot.val().guardianDetails;
                     if (snapshot.val().proofSubmission == "no" || snapshot.val().guardianDetails == "no") {
                         document.getElementById("showRegistrationDiv").style.display = "block";
-                        localStorage.setItem("userRegistrationStatus","checkout");
+                        localStorage.setItem("userRegistrationStatus", "checkout");
                         if (snapshot.val().proofSubmission == "no") {
                             document.getElementById("user-proof").innerHTML = "ID Proof : <strong>Not Submitted</strong>";
                         }
@@ -85,7 +84,7 @@ function settingPurposeToLogin() {
                         alert("Kindly, Complete User Registration Process")
                     }
                     else {
-                        localStorage.setItem("userRegistrationStatus","normal");
+                        localStorage.setItem("userRegistrationStatus", "normal");
                         document.getElementById("user-proof").innerHTML = "ID Proof : Submitted";
                         document.getElementById("user-guardian").innerHTML = "Guardian Details : " + snapshot.val().guardName + ", (M)" + snapshot.val().guardPhone;
                         document.getElementById("showRegistrationDiv").style.display = "none";
@@ -99,22 +98,151 @@ function settingPurposeToLogin() {
     console.log(localStorage.getItem('purposeToLogin'));
 }
 
-extra_chapati_check.addEventListener('click', (e) => {
-    let chapatiChecked = document.getElementById('extra_chapati_check').checked;
-    extraChapatiCost = chapatiChecked ? 1000 : 0;
-    document.getElementById("total-payment").innerHTML = Number(roomDetails[1]) + extraChapatiCost;
-})
-
 userRegistrationBtn.addEventListener('click', (e) => {
-    if(proofSubmission == "no" && guardianDeatils == "no"){
-        localStorage.setItem("userRegistrationStatus","checkout");
-        window.location.href = "././profile.html";   
+    if (proofSubmission == "no" && guardianDeatils == "no") {
+        localStorage.setItem("userRegistrationStatus", "checkout");
+        window.location.href = "././profile.html";
     }
-    else{
-        localStorage.setItem("userRegistrationStatus","normal");
+    else {
+        localStorage.setItem("userRegistrationStatus", "normal");
     }
 });
 
+
+/** Dynamic Checkboxes are loaded based on the Extras food for paritcular hostel - starts here */
+
+function totalExtrasMenu(extrasSelectedMenuCost) {
+    total = Number(roomDetails[1]);
+    let subTotal = 0;
+    for (var i = 0; i < extrasSelectedMenuCost.length; i++) {
+        total += Number(extrasSelectedMenuCost[i]);
+        subTotal += Number(extrasSelectedMenuCost[i]);
+    }
+    document.getElementById("total-payment").innerHTML = total;
+    document.getElementById("extra-selected-items-total").innerHTML = subTotal;
+}
+/**
+ * When extra food menu is checked, this function will trigger to check.
+ * which checked boxes are checked and will push it to the array.
+ * @returns 
+ */
+function getCheckedBoxes() {
+    extrasSelectedMenuCost = [];
+    extrasSelectedFoodNames = [];
+    var checkboxes = document.getElementsByName("extrasCheckBox");
+    var checkboxesChecked = [];
+    // loop over them all
+    for (var i = 0; i < checkboxes.length; i++) {
+        // And stick the checked ones onto an array...
+        if (checkboxes[i].checked) {
+            checkboxesChecked.push(checkboxes[i]);
+            extrasSelectedMenuCost.push(checkboxes[i].value);
+            extrasSelectedFoodNames.push(checkboxes[i].id);
+        }
+    }
+    totalExtrasMenu(extrasSelectedMenuCost);//calls the filter method , for the selected checkboxes in floor filters.
+}
+
+/**
+ * Function which loads initially to fetch the hostel extras menu.
+ */
+async function loadExtrasCheckBoxes() {
+    console.log("..inside load checkboxes");
+    let foodList;
+    const dbref = ref(db, 'Hostel details/' + hostelName + '/extras/');
+    try {
+        const snapshot = await get(dbref);
+        if (snapshot.exists()) {
+            document.getElementById('noExtrasMsg').style.display = "none";
+            let ulContainer = document.getElementById("extrasUl");
+            foodList = snapshot.val();
+            foodList.forEach(element => {
+
+                //creating li element
+                let libox = document.createElement('li');
+                libox.style.display = "flex";
+                libox.style.gap = "4px";
+
+                // creating checkbox element
+                let checkbox = document.createElement('input');
+
+                // Assigning the attributes and click event for the created checkbox
+                checkbox.type = "checkbox";
+                checkbox.name = "extrasCheckBox";
+                checkbox.value = element.foodPrice;
+                checkbox.id = element.foodName;
+                checkbox.addEventListener('click', getCheckedBoxes);
+
+                // creating label for checkbox
+                let label = document.createElement('label');
+
+                // assigning attributes for the created label tag 
+                label.htmlFor = checkbox.id;
+
+                // appending the created text to 
+                // the created label tag 
+                label.appendChild(document.createTextNode(element.foodName + " - Rs." + element.foodPrice));
+
+                libox.appendChild(checkbox);
+                libox.appendChild(label);
+                ulContainer.appendChild(libox);
+            });
+        } else {
+            document.getElementById('noExtrasMsg').style.display = "block";
+        }
+    } catch (error) {
+        console.error('Error fetching floor:', error);
+    }
+}
+
+window.addEventListener('load', loadExtrasCheckBoxes);
+/** Dynamic Checkboxes are loaded based on the Extras food for paritcular hostel - ends here */
+
+function storeOrderDetails(paymentResponse) {
+    var date = new Date();
+    console.log("payment - " + JSON.stringify(paymentResponse) + paymentResponse.razorpay_order_id);
+    var extrasMenu = {};
+    for (var i = 0; i < extrasSelectedFoodNames.length; i++) {
+        extrasMenu[i] = {
+            foodName: extrasSelectedFoodNames[i],
+            foodPrice: extrasSelectedMenuCost[i]
+        };
+    }
+    update(ref(db, "User details/" + userUid + '/Bookings/' + hostelName + '/RoomDetails/'), {
+        bedId: bedId,
+        roomType: roomDetails[0],
+        floor: roomDetails[3],
+        ac: roomDetails[5],
+        paymentComplete: "yes",
+        totalAmount: total,
+        paymentDate: date,
+        paymenttransId: paymentResponse.razorpay_payment_id,
+        extras: extrasMenu
+        // paymentOrderId:paymentResponse.razorpay_order_id
+    })
+        .then(() => {
+            alert("Click to continue");
+            update(ref(db, "Hostel details/" + hostelName + '/rooms/' + "floor" + roomDetails[3] + '/' + "room" + roomDetails[4] + '/'), {
+                roomCount: (Number(roomDetails[2]) - 1)
+            })
+                .then(() => {
+                    alert("Room Booked Successfully");
+                    window.location.href = "././confirm-order.html";
+                })
+                .catch((error) => {
+                    alert(error);
+                });
+        })
+        .catch((error) => {
+            alert(error);
+        });
+}
+
+
+export { storeOrderDetails };
+
+
+/** Storing Image proof submission */
 // var files = [];
 // let imagelink = [];
 // document.getElementById("files").addEventListener("change", function (e) {
@@ -157,41 +285,6 @@ userRegistrationBtn.addEventListener('click', (e) => {
 //         alert("No file chosen");
 //     }
 // });
-
-function storeOrderDetails(paymentResponse) {
-    var date = new Date();
-    console.log("payment - " + JSON.stringify(paymentResponse) + paymentResponse.razorpay_order_id);
-    update(ref(db, "User details/" + userUid + '/Bookings/' + hostelName + '/RoomDetails/'), {
-        bedId: bedId,
-        roomType: roomDetails[0],
-        floor: roomDetails[3],
-        ac: roomDetails[5],
-        paymentComplete: "yes",
-        totalAmount: 5000,
-        paymentDate: date,
-        paymenttransId: paymentResponse.razorpay_payment_id
-        // paymentOrderId:paymentResponse.razorpay_order_id
-    })
-        .then(() => {
-            alert("Click to continue");
-            update(ref(db, "Hostel details/" + hostelName + '/rooms/' + "floor" + roomDetails[3] + '/' + "room" + roomDetails[4] + '/'), {
-                roomCount: (Number(roomDetails[2]) - 1)
-            })
-                .then(() => {
-                    alert("Room Booked Successfully");
-                    window.location.href = "././confirm-order.html";
-                })
-                .catch((error) => {
-                    alert(error);
-                });
-        })
-        .catch((error) => {
-            alert(error);
-        });
-}
-
-
-export { storeOrderDetails };
 
 /**Storing Guardian Details Code */
 // updateGuardianDetailsBtn.addEventListener('click', (e) => {
