@@ -215,6 +215,7 @@ function storeOrderDetails(paymentResponse) {
         ac: roomDetails[5],
         paymentComplete: "yes",
         totalAmount: total,
+        roomRent:roomDetails[1],
         paymentDate: date,
         paymenttransId: paymentResponse.razorpay_payment_id,
         extras: extrasMenu
