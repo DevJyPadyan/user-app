@@ -149,7 +149,7 @@ const addHostelRoomCard = (ac, amenities, bathroom, floor, roomNumber, roomprice
                                                                                 Room No: ${roomNumber}
                                                                             </h6>
                                                                         </div>
-                                                                        <h6 class="customized">${roomcount} rooms available </h6>
+                                                                        <h6 class="customized">${roomcount} beds available </h6>
                                                                         <p>
                                                                             Air Condition : ${ac}
                                                                         </p>
@@ -201,7 +201,7 @@ function handleCardClick(event) {
         document.getElementById("no-bed-msg").style.display = 'none';
         if (localStorage.getItem('bedCount') != 0) {
             for (i = 1; i <= localStorage.getItem('bedCount'); i++) {
-                let cardId = 'b' + i;
+                let cardId = 'bed ' + i;
                 document.getElementById(cardId).remove();
             }
             localStorage.setItem('bedCount', 0);
@@ -217,13 +217,13 @@ function handleCardClick(event) {
             let bedCount = parseInt(matches[0]);
             localStorage.setItem("bedCount", bedCount);
             for (i = 1; i <= bedCount; i++) {
-                addBed(i);
+                addBed(i, roomDetails);
             }
         }
     }
     else {
         document.getElementById("no-bed-msg").style.display = 'block';
-        alert("Sorry, No rooms available");
+        alert("Sorry, No beds available");
     }
 }
 
@@ -232,13 +232,29 @@ function handleCardClick(event) {
  * @param {*} i - counter of the bed
  * Bed card is added dynamically based on the Room's bed count clicked by user.
  */
-function addBed(i) {
+function addBed(i, roomDetails) {
+    roomDetails = roomDetails.split('-')
+    const dbref = ref(db, 'Hostel details/' + hostelName + '/rooms/' + "floor" + roomDetails[3] + '/' + "room" + roomDetails[4] + '/beds');
+    let hostelBedAvailability = []
+    onValue(dbref, (snapshot) => {
+        hostelBedAvailability = [];
+        snapshot.forEach(iterator => {
+            hostelBedAvailability.push(iterator.val());
+        })
+    })
     const parentContainer = document.getElementById('bedParent');
     const elem = document.createElement('div');
     elem.classList.add('card');
     elem.style.cursor = "pointer";
     elem.style.backgroundColor = "white";
-    let bedId = 'b' + i;
+
+    //if room is already booked, then blocking the user not to select the room.
+    if (hostelBedAvailability[i - 1] == 'booked') {
+        elem.style.backgroundColor = "#FF7F7F";
+        elem.style.pointerEvents = "none";
+    }
+
+    let bedId = 'bed ' + i;
     elem.setAttribute("id", bedId);
     elem.innerHTML = `<div class="card-body">Bed ${i}</div>`;
     elem.dataset.bedId = bedId;
@@ -257,7 +273,7 @@ function bedSelection(event) {
     bedId = bed.dataset.bedId;
     console.log("inside bed click")
     for (i = 1; i <= localStorage.getItem('bedCount'); i++) {
-        let bedId2 = 'b' + i;
+        let bedId2 = 'bed ' + i;
         console.log("inside for color - " + document.getElementById(bedId2).style.backgroundColor);
         if (bedId != bedId2) {
             if (document.getElementById(bedId2).style.backgroundColor != "red" && document.getElementById(bedId2).style.backgroundColor == "lightgreen") {

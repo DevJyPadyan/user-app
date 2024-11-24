@@ -18,6 +18,7 @@
     <meta name="msapplication-TileImage" content="assets/images/logo/favicon.png">
     <meta name="msapplication-TileColor" content="#FFFFFF">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="mobile-web-app-capable" content="yes">
 
     <!--Google font-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -54,16 +55,16 @@
                 <a href="index.html">
                     <img class="img-fluid logo" src="assets/images/svg/logo.svg" alt="logo">
                 </a>
-                <a target="_blank" href="#!" data-bs-toggle="modal" data-bs-target="#location"
+                <!-- <a style="display: none;" target="_blank" href="#!" data-bs-toggle="modal" data-bs-target="#location"
                     class="btn btn-sm theme-btn location-btn mt-0 ms-3 d-flex align-content-center gap-1">
-                    <i class="ri-map-pin-line"></i> Location
-                </a>
+                    <i style="display: none;" class="ri-map-pin-line"></i> Location
+                </a> -->
                 <div class="nav-option order-md-2">
                     <div class="dropdown-button">
-                        <div class="cart-button">
+                        <!-- <div class="cart-button">
                             <span>5</span>
                             <i class="ri-shopping-cart-line text-white cart-bag"></i>
-                        </div>
+                        </div> -->
                         <div class="onhover-box">
                             <ul class="cart-list">
                                 <li class="product-box-contain">
@@ -169,17 +170,11 @@
                                     <a class="dropdown-item" href="profile.html">Profile</a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" href="my-order.html">My orders</a>
+                                    <a class="dropdown-item" href="my-order.html">My Bookings</a>
                                 </li>
-                                <li>
+                                <!-- <li>
                                     <a class="dropdown-item" href="saved-address.html">Saved Address</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="saved-card.html">Saved cards</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="setting.html">Settings</a>
-                                </li>
+                                </li> -->
                             </ul>
                             <div class="bottom-btn">
                                 <a id="logoutBtn" class="theme-color fw-medium d-flex"><i
@@ -195,7 +190,7 @@
                     </div>
                     <div class="offcanvas-body">
                         <ul class="navbar-nav justify-content-center flex-grow-1">
-                            <li class="nav-item dropdown mega-menu">
+                            <!-- <li class="nav-item dropdown mega-menu">
                                 <a class="nav-link dropdown-toggle" href="#!" id="accountDropdown" role="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">Home</a>
                                 <div class="dropdown-menu mt-0 border-0 bsb-zoomIn" aria-labelledby="accountDropdown">
@@ -323,6 +318,15 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="contact.html">Contact</a>
+                            </li> -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.html">Home</a>
+                            </li>
+                            <!-- <li class="nav-item">
+                                <a class="nav-link" href="restaurant-listing.html">Hostel List</a>
+                            </li> -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="profile.html">Profile</a>
                             </li>
                         </ul>
                     </div>
@@ -332,17 +336,18 @@
     </header>
     <!-- Header Section end -->
 
+
     <!-- page head section starts -->
     <section class="page-head-section">
         <div class="container page-heading">
-            <h2 class="h3 mb-3 text-white text-center">Saved Address</h2>
+            <h2 class="h3 mb-3 text-white text-center">Edit Booking</h2>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb flex-lg-nowrap justify-content-center justify-content-lg-star">
                     <li class="breadcrumb-item">
                         <a href="index.html"><i class="ri-home-line"></i>Home</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                        Saved Address
+                        Edit Booking
                     </li>
                 </ol>
             </nav>
@@ -365,31 +370,8 @@
                         </div>
                         <ul class="profile-list">
                             <li>
-                                <i class="ri-user-3-line"></i>
-                                <a href="profile.html">Change Profile</a>
-                            </li>
-                            <li>
                                 <i class="ri-shopping-bag-3-line"></i>
                                 <a href="my-order.html">My Order</a>
-                            </li>
-                            <li class="active">
-                                <i class="ri-map-pin-line"></i>
-                                <a href="saved-address.html">Saved Address</a>
-                            </li>
-                            <li>
-                                <i class="ri-bank-card-line"></i>
-                                <a href="saved-card.html">Saved Card</a>
-                            </li>
-                            <li>
-                                <i class="ri-question-line"></i><a href="faq.html">Help</a>
-                            </li>
-                            <li>
-                                <i class="ri-settings-3-line"></i>
-                                <a href="setting.html">Setting</a>
-                            </li>
-                            <li>
-                                <i class="ri-logout-box-r-line"></i>
-                                <a href="#log-out" data-bs-toggle="modal">Log Out</a>
                             </li>
                         </ul>
                     </div>
@@ -398,7 +380,7 @@
                     <div class="address-section bg-color h-100 mt-0">
                         <div class="title">
                             <div class="loader-line"></div>
-                            <h3>Saved Address</h3>
+                            <h3>Edit Booking</h3>
                         </div>
                         <div class="row g-3">
                             <div class="col-md-6">
@@ -406,15 +388,14 @@
                                     <div class="address-title">
                                         <div class="d-flex align-items-center gap-2">
                                             <i class="ri-home-4-fill icon"></i>
-                                            <h6>Home</h6>
+                                            <h6>Hostel Room Details</h6>
                                         </div>
-                                        <a href="#edit-address" class="edit-btn" data-bs-toggle="modal">Edit</a>
+                                        <a class="edit-btn" data-bs-toggle="modal">Edit</a>
                                     </div>
                                     <div class="address-details">
-                                        <h6>
-                                            93, Songbird Cir, Blackville, South Carolina, USA-29817
-                                        </h6>
-                                        <h6 class="phone-number">+33 (907) 555-0101</h6>
+                                        <h6 id="hostelDetails"></h6>
+                                        <hr>
+                                        <h6 class="phone-number" id="roomDetails"></h6>
                                     </div>
                                 </div>
                             </div>
@@ -422,25 +403,23 @@
                                 <div class="address-box white-bg">
                                     <div class="address-title">
                                         <div class="d-flex align-items-center gap-2">
-                                            <i class="ri-briefcase-4-fill icon"></i>
-                                            <h6>Office</h6>
+                                            <i class="ri-menu-4-fill icon"></i>
+                                            <h6>Extra Menu Given</h6>
                                         </div>
                                         <a href="#edit-address" class="edit-btn" data-bs-toggle="modal">Edit</a>
                                     </div>
-                                    <div class="address-details">
-                                        <h6>703 Elizabeth Barcus Way, USA-95540</h6>
-                                        <h6 class="phone-number">+33 (907) 555-3456</h6>
+                                    <div class="address-details" id="extraMenuDetails">
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <!-- <div class="col-md-6">
                                 <div class="address-box white-bg">
                                     <div class="address-title">
                                         <div class="d-flex align-items-center gap-2">
                                             <i class="ri-account-circle-fill icon"></i>
                                             <h6>Smith Jones</h6>
                                         </div>
-                                        <a href="#edit-address" class="edit-btn" data-bs-toggle="modal">Edit</a>
+                                        <a href="" class="edit-btn" data-bs-toggle="modal">Edit</a>
                                     </div>
                                     <div class="address-details">
                                         <h6>13th Street 47 W 13th St, New York, USA-10011</h6>
@@ -453,7 +432,7 @@
                                     <a href="#address-details" class="btn new-address-btn theme-outline rounded-2 mt-0"
                                         data-bs-toggle="modal">Add New Address</a>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -561,18 +540,8 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="wishlist.html">
-                                            <h6>Wishlist</h6>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="checkout.html">
-                                            <h6>Shopping Cart</h6>
-                                        </a>
-                                    </li>
-                                    <li>
                                         <a href="saved-address.html">
-                                            <h6>Saved Address</h6>
+                                            <h6>Edit Booking</h6>
                                         </a>
                                     </li>
                                 </ul>
@@ -792,52 +761,25 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalAdress">
-                        Address Details
+                        Edit Extra menu Details
                     </h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="row g-3">
-                        <div class="col-md-6">
-                            <label for="editFirstname" class="form-label">First Name</label>
-                            <input type="text" class="form-control" id="editFirstname" value="Smith"
-                                placeholder="Enter your fist name">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="editLastname" class="form-label">Last Name</label>
-                            <input type="text" class="form-control" id="editLastname" value="Jones"
-                                placeholder="Enter your last name">
-                        </div>
-                        <div class="col-12">
-                            <label for="editAddress" class="form-label">Address</label>
-                            <input type="text" class="form-control" id="editAddress"
-                                value="93, Songbird Cir, Blackville," placeholder="Enter your address">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="editCity" class="form-label">City</label>
-                            <input type="text" class="form-control" id="editCity" value="South Carolina"
-                                placeholder="Enter your city">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="editCountry" class="form-label">Country</label>
-                            <input type="text" class="form-control" id="editCountry" value="USA"
-                                placeholder="Enter your country">
-                        </div>
-                        <div class="col-md-8">
-                            <label for="editPhone" class="form-label">Phone Number</label>
-                            <input type="tel" class="form-control" id="editPhone" value="+33 (907) 555-0101"
-                                placeholder="Enter your number">
-                        </div>
-                        <div class="col-md-4">
-                            <label for="editZip" class="form-label">Zip</label>
-                            <input type="text" class="form-control" id="editZip" value="29817"
-                                placeholder="Enter your zip">
-                        </div>
-                    </form>
+                    <div class="filter-title">
+                        <h5 class="fw-medium dark-text">Edit -<span> Click on food to select.</span></h5>
+                    </div>
+                    <br>
+                    <div id="extrasParent" >
+                        <!-- all other contents are Generated from JS  -->
+                        <ul id="extrasUl" style="display: grid;gap: 20px;grid-template-columns:1fr 1fr 1fr;">
+                            <li id="noExtrasMsg" style="display: none;">No Extras in menu.</li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <a href="address.html" class="btn gray-btn mt-0" data-bs-dismiss="modal">CANCEL</a>
-                    <a href="address.html" class="btn theme-btn mt-0">SUBMIT</a>
+                    <a id="updateExtrasBtn" class="btn theme-btn mt-0">UPDATE</a>
                 </div>
             </div>
         </div>
@@ -866,7 +808,7 @@
     <!-- logout modal end -->
 
     <!-- theme btn start -->
-    <div class="theme-btns">
+    <div class="theme-btns" style="display:none;">
         <button type="button" class="btntheme mode-change-button">
             <i id="themeIcon" class="ri-moon-line icon mode-icon"></i>
             <span class="text-value">Dark</span>
@@ -902,6 +844,9 @@
 
     <!-- logout js -->
     <script src="assets/js/logout.js" defer type="module"></script>
+
+    <!-- edit-order js -->
+    <script src="assets/js/edit-order.js" defer type="module"></script>
 </body>
 
 </html>
