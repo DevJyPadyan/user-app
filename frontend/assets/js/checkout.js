@@ -157,35 +157,38 @@ async function loadExtrasCheckBoxes() {
             let ulContainer = document.getElementById("extrasUl");
             foodList = snapshot.val();
             foodList.forEach(element => {
+                //checks the availability of the extras menu
+                if (element.available == "yes") {
 
-                //creating li element
-                let libox = document.createElement('li');
-                libox.style.display = "flex";
-                libox.style.gap = "4px";
+                    //creating li element
+                    let libox = document.createElement('li');
+                    libox.style.display = "flex";
+                    libox.style.gap = "4px";
 
-                // creating checkbox element
-                let checkbox = document.createElement('input');
+                    // creating checkbox element
+                    let checkbox = document.createElement('input');
 
-                // Assigning the attributes and click event for the created checkbox
-                checkbox.type = "checkbox";
-                checkbox.name = "extrasCheckBox";
-                checkbox.value = element.foodPrice;
-                checkbox.id = element.foodName;
-                checkbox.addEventListener('click', getCheckedBoxes);
+                    // Assigning the attributes and click event for the created checkbox
+                    checkbox.type = "checkbox";
+                    checkbox.name = "extrasCheckBox";
+                    checkbox.value = element.foodPrice;
+                    checkbox.id = element.foodName;
+                    checkbox.addEventListener('click', getCheckedBoxes);
 
-                // creating label for checkbox
-                let label = document.createElement('label');
+                    // creating label for checkbox
+                    let label = document.createElement('label');
 
-                // assigning attributes for the created label tag 
-                label.htmlFor = checkbox.id;
+                    // assigning attributes for the created label tag 
+                    label.htmlFor = checkbox.id;
 
-                // appending the created text to 
-                // the created label tag 
-                label.appendChild(document.createTextNode(element.foodName + " - Rs." + element.foodPrice));
+                    // appending the created text to 
+                    // the created label tag 
+                    label.appendChild(document.createTextNode(element.foodName + " - Rs." + element.foodPrice));
 
-                libox.appendChild(checkbox);
-                libox.appendChild(label);
-                ulContainer.appendChild(libox);
+                    libox.appendChild(checkbox);
+                    libox.appendChild(label);
+                    ulContainer.appendChild(libox);
+                }
             });
         } else {
             document.getElementById('noExtrasMsg').style.display = "block";
@@ -215,7 +218,7 @@ function storeOrderDetails(paymentResponse) {
         ac: roomDetails[5],
         paymentComplete: "yes",
         totalAmount: total,
-        roomRent:roomDetails[1],
+        roomRent: roomDetails[1],
         paymentDate: date,
         paymenttransId: paymentResponse.razorpay_payment_id,
         extras: extrasMenu
@@ -227,8 +230,18 @@ function storeOrderDetails(paymentResponse) {
                 roomCount: (Number(roomDetails[2]) - 1)
             })
                 .then(() => {
-                    alert("Room Booked Successfully");
-                    window.location.href = "././confirm-order.html";
+                    console.log(db, 'Hostel details/' + hostelName + '/rooms/' + "floor" + roomDetails[3] + '/' + "room" + roomDetails[4] + '/beds/');
+                    alert("Click to place booking");
+                    update(ref(db, 'Hostel details/' + hostelName + '/rooms/' + "floor" + roomDetails[3] + '/' + "room" + roomDetails[4] + '/beds/'), {
+                        [bedId]: "booked"
+                    })
+                        .then(() => {
+                            alert("Room Booked Successfully");
+                            window.location.href = "././confirm-order.html";
+                        })
+                        .catch((error) => {
+                            alert(error);
+                        });
                 })
                 .catch((error) => {
                     alert(error);

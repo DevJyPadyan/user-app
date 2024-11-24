@@ -11,6 +11,7 @@ let userUid = userDeatilObj.userUid;
 let ordersList = [];
 
 function loadOderDetails() {
+    localStorage.setItem("edit-order-details","empty");
     const dbref = ref(db, "User details/" + userUid + '/Bookings/');
     onValue(dbref, (snapshot) => {
         ordersList = [];
@@ -57,7 +58,7 @@ function addOrderDetailsCard(hostelName, bedId, floor, roomType, paymentId, tota
                                                 Room Details
                                                 <br>
                                                 <span class="fw-normal content-color">Floor:
-                                                </span> ${floor},
+                                                </span> ${floor}
                                                 <br> 
                                                 <span class="fw-normal content-color">Room Type:
                                                 </span> ${roomType}
@@ -98,6 +99,7 @@ window.addEventListener('load', loadOderDetails());
 
 function loadDetailsInModal(event) {
     const orderDetails = event.currentTarget;
+    localStorage.setItem("edit-order-details",orderDetails.dataset.hostelName);
     document.getElementById('modal-hostel-name').innerHTML = orderDetails.dataset.hostelName;
     document.getElementById('modal-hostel-booking-status').innerHTML = "Booked";
     document.getElementById('modal-grandTotal').innerHTML = orderDetails.dataset.totalAmount;
@@ -108,10 +110,10 @@ function loadDetailsInModal(event) {
     onValue(dbref, (snapshot) => {
         document.getElementById('modal-hostelAddress').innerHTML = snapshot.val().hostelAddress1 + " , " + snapshot.val().hostelCity;
     });
-    
+
     clearingExistingValue()//Before adding the data , if i do not empty the existing , again n again the loop run and it gets redudantly added with the existing li's.
     // so i will be removing the existing li's and add the li's again, since im looping from the begining no data will be missed.
-    
+
     const dbref2 = ref(db, "User details/" + userUid + '/Bookings/' + orderDetails.dataset.hostelName + '/RoomDetails/extras');
     onValue(dbref2, (snapshot) => {
         let ulContainer = document.getElementById("modal-ul-bill-list");
@@ -151,7 +153,11 @@ function loadDetailsInModal(event) {
  * but NEW alternate approach is UL ill be accessing it with an ID , so under that parent UL , all the Child li's are not required
  * just access that parent UL and give that parent Ul elem.innterHTML=""
  */
-function clearingExistingValue(){
+function clearingExistingValue() {
     const element = document.getElementById("modal-ul-bill-list");
-    element.innerHTML='';
+    element.innerHTML = '';
 }
+
+editBookingBtn.addEventListener("click",()=>{
+    window.location.href = "././saved-address.html";
+});
