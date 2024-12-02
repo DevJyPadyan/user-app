@@ -32,15 +32,16 @@ function loadOderDetails() {
 function iterateOrderDetails() {
 
     ordersList.forEach(h => {
-        console.log(h.key)
+        console.log(h.key)//in key:value, it gives the key of the object
         h.forEach(r => {
-            addOrderDetailsCard(h.key, r.val().bedId, r.val().floor, r.val().roomType, r.val().paymenttransId, r.val().totalAmount, r.val().paymentDate, r.val().roomRent);
+            addOrderDetailsCard(r.val().hostelName, r.val().bedId, r.val().floor, r.val().roomType, 
+                                r.val().paymenttransId, r.val().totalAmount, r.val().paymentDate, r.val().roomRent,h.key,r.val().status);
 
         });
     });
 }
 const postContainer = document.getElementById('ul-orders');
-function addOrderDetailsCard(hostelName, bedId, floor, roomType, paymentId, totalAmount, paymentDate, roomRent) {
+function addOrderDetailsCard(hostelName, bedId, floor, roomType, paymentId, totalAmount, paymentDate, roomRent, key,status) {
     const elem = document.createElement('li');
     let date = paymentDate.split('T');
     let time = date[1].split('Z');
@@ -92,6 +93,8 @@ function addOrderDetailsCard(hostelName, bedId, floor, roomType, paymentId, tota
     elem.dataset.paymentTime = time[0];
     elem.dataset.roomType = roomType;
     elem.dataset.roomRent = roomRent;
+    elem.dataset.key=key;
+    elem.dataset.status=status;
     elem.addEventListener('click', loadDetailsInModal);
     postContainer.appendChild(elem);
 }
@@ -99,9 +102,9 @@ window.addEventListener('load', loadOderDetails());
 
 function loadDetailsInModal(event) {
     const orderDetails = event.currentTarget;
-    localStorage.setItem("edit-order-details",orderDetails.dataset.hostelName);
+    localStorage.setItem("edit-order-details",orderDetails.dataset.key);
     document.getElementById('modal-hostel-name').innerHTML = orderDetails.dataset.hostelName;
-    document.getElementById('modal-hostel-booking-status').innerHTML = "Booked";
+    document.getElementById('modal-hostel-booking-status').innerHTML = orderDetails.dataset.status;
     document.getElementById('modal-grandTotal').innerHTML = orderDetails.dataset.totalAmount;
     document.getElementById('modal-transId').innerHTML = orderDetails.dataset.paymentId;
     document.getElementById('modal-transDate').innerHTML = orderDetails.dataset.paymentDate + " & " + orderDetails.dataset.paymentTime;
@@ -111,6 +114,12 @@ function loadDetailsInModal(event) {
         document.getElementById('modal-hostelAddress').innerHTML = snapshot.val().hostelAddress1 + " , " + snapshot.val().hostelCity;
     });
 
+    if(orderDetails.dataset.status.toLowerCase() != 'booked'){
+        document.getElementById('editBookingBtn').style.display='none';
+    }else{
+        document.getElementById('editBookingBtn').style.display='block';
+
+    }
     clearingExistingValue()//Before adding the data , if i do not empty the existing , again n again the loop run and it gets redudantly added with the existing li's.
     // so i will be removing the existing li's and add the li's again, since im looping from the begining no data will be missed.
 
