@@ -7,7 +7,8 @@ import { userDeatilObj } from "./user-details.js";
 const app = initializeApp(firebaseConfig);
 const db = getDatabase();
 let userUid = userDeatilObj.userUid;
-let hostelName = localStorage.getItem('edit-order-details');
+let hostelName;
+let bookingkey = localStorage.getItem('edit-order-details');
 let extrasMenuList = [];
 let userSelectedExtrasMenu = [];
 let roomString = "";
@@ -19,16 +20,17 @@ async function loadOrderDetails() {
     if (hostelName != 'empty') {
 
         //fetching user details room booking details.
-        const dbref = await ref(db, "User details/" + userUid + '/Bookings/' + hostelName + '/RoomDetails');
+        const dbref = await ref(db, "User details/" + userUid + '/Bookings/' + bookingkey + '/RoomDetails');
         try {
             const h = await get(dbref);
             roomString = "Floor - " + h.val().floor + "<br> Room - " + h.val().room + ", " + h.val().bedId + "<br> Rent - " + h.val().roomRent + " (" + h.val().ac + " room)";
+            hostelName = h.val().hostelName;
         } catch (error) {
             console.error('Error fetching floor:', error);
         }
 
         //fetching user details extras menu details.
-        const dbref4 = await ref(db, "User details/" + userUid + '/Bookings/' + hostelName + '/RoomDetails/extras');
+        const dbref4 = await ref(db, "User details/" + userUid + '/Bookings/' + bookingkey + '/RoomDetails/extras');
         try {
             const snapshot = await get(dbref4);
             snapshot.forEach(h => {
@@ -220,3 +222,7 @@ updateExtrasBtn.addEventListener('click', () => {
             location.reload();
         })
 })
+
+updateRoomBtn.addEventListener('click',()=>{
+    window.location.href = "././menu-listing-2.html";
+});

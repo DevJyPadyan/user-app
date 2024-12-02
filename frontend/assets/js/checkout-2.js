@@ -24,6 +24,10 @@ let extrasSelectedMenuCost = [];
 let extrasSelectedFoodNames = [];
 let total = Number(roomDetails[1])
 
+let editOrderKey = localStorage.getItem('edit-order-details');
+let previousFloor;
+let previousRoomNo;
+let previousBedId;
 const loadBillDetails = () => {
     settingPurposeToLogin();
     localStorage.setItem("userRegistrationStatus", "no");
@@ -33,6 +37,19 @@ const loadBillDetails = () => {
     // document.getElementById("cart-room-floor").innerHTML = "Floor - " + roomDetails[3] + " Room - " + roomDetails[2] + " Bed Number - " + bedId;
     document.getElementById("cart-room-floor").innerHTML = "Floor - " + roomDetails[3] + "<br> Room - " + roomDetails[4] + " Bed Number - " + bedId;
     document.getElementById("total-payment").innerHTML = Number(roomDetails[1]);
+
+    const dbref = ref(db);
+    get(child(dbref, "User details/" + userDeatilObj.userUid + '/Bookings/' + editOrderKey + '/RoomDetails'))
+        .then((snapshot) => {
+            if (snapshot.exists()) {
+                previousFloor = snapshot.val().floor;
+                previousRoomNo = snapshot.val().room;
+                previousBedId = snapshot.val().bedId;
+            }
+        })
+        .catch((error) => {
+            alert(error)
+        });
 };
 
 window.addEventListener('load', loadBillDetails());
@@ -201,9 +218,11 @@ async function loadExtrasCheckBoxes() {
 window.addEventListener('load', loadExtrasCheckBoxes);
 /** Dynamic Checkboxes are loaded based on the Extras food for paritcular hostel - ends here */
 
+//editing of the old room record and adding of new room record functionality is maintained here.
 function storeOrderDetails(paymentResponse) {
     var date = new Date();
-    console.log("payment - " + JSON.stringify(paymentResponse) + paymentResponse.razorpay_order_id);
+    let previousRoomCount;
+    const dbref = ref(db);
     var extrasMenu = {};
     for (var i = 0; i < extrasSelectedFoodNames.length; i++) {
         extrasMenu[i] = {
@@ -216,31 +235,73 @@ function storeOrderDetails(paymentResponse) {
         roomType: roomDetails[0],
         floor: roomDetails[3],
         ac: roomDetails[5],
-        room:roomDetails[4],
+        room: roomDetails[4],
         paymentComplete: "yes",
         totalAmount: total,
         roomRent: roomDetails[1],
         paymentDate: date,
         paymenttransId: paymentResponse.razorpay_payment_id,
-        hostelName:hostelName,
+        hostelName: hostelName,
         extras: extrasMenu,
-        status:'Booked'
+        status: 'booked'
         // paymentOrderId:paymentResponse.razorpay_order_id
     })
         .then(() => {
             alert("Click to continue");
+            //decreasing the count of vaccancy for the new place opted by the user by editing the previous booking.
             update(ref(db, "Hostel details/" + hostelName + '/rooms/' + "floor" + roomDetails[3] + '/' + "room" + roomDetails[4] + '/'), {
                 roomCount: (Number(roomDetails[2]) - 1)
             })
                 .then(() => {
-                    console.log(db, 'Hostel details/' + hostelName + '/rooms/' + "floor" + roomDetails[3] + '/' + "room" + roomDetails[4] + '/beds/');
-                    alert("Click to place booking");
+                    alert("Click to edit booking");
+                    //Changing the newly selected bed/room as booked 
                     update(ref(db, 'Hostel details/' + hostelName + '/rooms/' + "floor" + roomDetails[3] + '/' + "room" + roomDetails[4] + '/beds/'), {
                         [bedId]: "booked"
                     })
                         .then(() => {
-                            alert("Room Booked Successfully");
-                            window.location.href = "././confirm-order.html";
+                            alert("Updating..")
+                            console.log("Hostel details/" + hostelName + '/rooms/' + "floor" + previousFloor + '/' + "room" + previousRoomNo + '/')
+                            //fetching the current room count status for the user booked room previously and adding +1 with that live count
+                            get(child(dbref, "Hostel details/" + hostelName + '/rooms/' + "floor" + previousFloor + '/' + "room" + previousRoomNo + '/'))
+                                .then((snapshot) => {
+                                    alert("continue..")
+                                    if (snapshot.exists()) {
+                                        previousRoomCount = snapshot.val().roomCount;
+                                    }
+                                    //increasing the roomcount for the room which user blocked and now, is changing to different room/bed
+                                    update(ref(db, "Hostel details/" + hostelName + '/rooms/' + "floor" + previousFloor + '/' + "room" + previousRoomNo + '/'), {
+                                        roomCount: (Number(previousRoomCount) + 1)
+                                    })
+                                        .then(() => {
+                                            alert("Click continue to update");
+                                            //changing the previous bedId to not booked, when user edits
+                                            update(ref(db, 'Hostel details/' + hostelName + '/rooms/' + "floor" + previousFloor + '/' + "room" + previousRoomNo + '/beds/'), {
+                                                [previousBedId]: "not booked"
+                                            })
+                                                .then(() => {
+                                                    //setting the previous booking record as updated, so that 'updated' status bookings cannot be again re-edited.
+                                                    update(ref(db, "User details/" + userDeatilObj.userUid + '/Bookings/' + editOrderKey + '/RoomDetails/'), {
+                                                        status: "Updated"
+                                                    })
+                                                        .then(() => {
+                                                            alert("Room Updated Successfully");
+                                                            window.location.href = "././confirm-order.html";
+                                                        })
+                                                        .catch((error) => {
+                                                            alert(error);
+                                                        });
+                                                })
+                                                .catch((error) => {
+                                                    alert(error);
+                                                });
+                                        })
+                                        .catch((error) => {
+                                            alert(error);
+                                        });
+                                })
+                                .catch((error) => {
+                                    alert(error)
+                                });
                         })
                         .catch((error) => {
                             alert(error);
