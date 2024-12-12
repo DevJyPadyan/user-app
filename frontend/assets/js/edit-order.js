@@ -14,6 +14,9 @@ let userSelectedExtrasMenu = [];
 let roomString = "";
 let hostelString = "";
 let total = 0;
+let roomDetails = [];
+let previousFromDate = "";
+let previousToDate = "";
 
 async function loadOrderDetails() {
 
@@ -23,12 +26,35 @@ async function loadOrderDetails() {
         const dbref = await ref(db, "User details/" + userUid + '/Bookings/' + bookingkey + '/RoomDetails');
         try {
             const h = await get(dbref);
+            roomDetails = [];
             roomString = "Floor - " + h.val().floor + "<br> Room - " + h.val().room + ", " + h.val().bedId + "<br> Rent - " + h.val().roomRent + " (" + h.val().ac + " room)";
             hostelName = h.val().hostelName;
+            roomDetails.push(h.val().hostelName);
+            roomDetails.push(h.val().floor);
+            roomDetails.push(h.val().room);
+            roomDetails.push(h.val().roomType);
+            roomDetails.push(h.val().roomRent);
+            roomDetails.push(h.val().bedId);
+            roomDetails.push(h.val().ac);
         } catch (error) {
             console.error('Error fetching floor:', error);
         }
 
+        //fething user vacation details for this room.
+        const dbref5 = await ref(db, "User details/" + userUid + '/Bookings/' + bookingkey + '/RoomDetails/Vacation');
+        try {
+            const h = await get(dbref5);
+            //if vacation status is available edit logics are applied , else its considered as adding vacation from the start.
+             if(h.val().vacationstatus == 'Available'){
+                previousFromDate = h.val().fromDate;
+                previousToDate =  h.val().toDate;
+                //function to change the headings and modal contents if the user as already given vacation details and 
+                //want to alter/cancel the vacation, we are using same modal.
+                 vacationFormIsNowEdit(h.val().fromDate,h.val().toDate,h.val().vacationstatus);   
+            }
+        } catch (error) {
+            console.error('Error fetching floor:', error);
+        }
         //fetching user details extras menu details.
         const dbref4 = await ref(db, "User details/" + userUid + '/Bookings/' + bookingkey + '/RoomDetails/extras');
         try {
@@ -223,6 +249,152 @@ updateExtrasBtn.addEventListener('click', () => {
         })
 })
 
-updateRoomBtn.addEventListener('click',()=>{
+updateRoomBtn.addEventListener('click', () => {
     window.location.href = "././menu-listing-2.html";
 });
+
+/**
+ * Vacation room button click event
+ */
+vacationRoomBtn.addEventListener('click', () => {
+    let fromDate = document.getElementById('fromdate').value;
+    let toDate = document.getElementById('todate').value;
+    console.log(fromDate + "  " + toDate)
+    if (fromDate == '' || toDate == '') {
+        alert("Enter vacation period From and To");
+    }
+    else {
+        storeVacationDetails(fromDate,toDate);
+    }
+});
+
+//storing all the vacation details
+function storeVacationDetails(fromDate,toDate) {
+    //storing it in hostel details side
+    update(ref(db, "Hostel details/" + hostelName + '/Rooms on Vacation/' + 'floor' + roomDetails[1] + '/room' + roomDetails[2] + '/'), {
+        hostelName: roomDetails[0],
+        floor: roomDetails[1],
+        room: roomDetails[2],
+        roomType: roomDetails[3],
+        roomRent: roomDetails[4],
+        bedId: roomDetails[5],
+        ac: roomDetails[6],
+        userIdOnVacation: userUid,
+        vacationstatus: 'Available',
+        fromDate: fromDate,
+        toDate: toDate
+    })
+        // .then(() => {
+        //     alert("Vacation updation is on process, click ok");
+        //     update(ref(db, "User details/" + userUid + '/Vacation/' + hostelName + '/floor' + roomDetails[1] + '/room' + roomDetails[2] + '/'), {
+        //         hostelName: roomDetails[0],
+        //         floor: roomDetails[1],
+        //         room: roomDetails[2],
+        //         roomType: roomDetails[3],
+        //         roomRent: roomDetails[4],
+        //         bedId: roomDetails[5],
+        //         ac: roomDetails[6],
+        //         fromDate: fromDate,
+        //         toDate: toDate
+        //     })
+                .then(() => {
+                    //storing in user details side
+                    alert("Vacation updation is on process, click ok");
+                    update(ref(db, "User details/" + userUid + '/Bookings/' + bookingkey + '/RoomDetails/Vacation/'), {
+                        fromDate: fromDate,
+                        toDate: toDate,
+                        vacationstatus: 'Available',
+                    })
+                        .then(() => {
+                            alert("Vacation updated");
+                            location.reload();
+                        })
+                        .catch((error) => {
+                            alert(error);
+                        });
+                })
+                .catch((error) => {
+                    alert(error);
+                });
+        // })
+        // .catch((error) => {
+        //     alert(error);
+        // });
+}
+
+//function to check whether vacation is already present, then modal will be in editing format ,else will be in new entry vacation form.
+function vacationFormIsNowEdit(fromDate,toDate,status){
+    document.getElementById('vacation-title-btn').innerHTML='Edit Vacation';
+    document.getElementById('vacation-title-msg').innerHTML='Change Vacation details ?';
+    document.getElementById('vacationRoomBtn').style.display="none";
+    document.getElementById('vacationRoomEditBtn').style.display="block"; 
+    document.getElementById('fromdate').value=(fromDate);
+    document.getElementById('todate').value=(toDate);
+    if(status=='Available'){
+        document.getElementById('cancelVacationDiv').style.display="block";    
+    }
+    else{
+        document.getElementById('cancelVacationDiv').style.display="none";    
+    }
+}
+
+vacationRoomEditBtn.addEventListener('click',()=>{
+    let fromDate = document.getElementById('fromdate').value;
+    let toDate = document.getElementById('todate').value;
+    console.log(fromDate + "  " + toDate)
+    if (fromDate == previousFromDate || toDate == previousToDate) {
+        alert("From and To are not changed.");
+    }
+    else {
+        editVacationDetails(fromDate,toDate,"Available");
+    }
+})
+vacationRoomCancelBtn.addEventListener('click',()=>{
+    let fromDate = document.getElementById('fromdate').value;
+    let toDate = document.getElementById('todate').value;
+    editVacationDetails(fromDate,toDate,"Not Available");
+})
+
+//editing the vacation previously entered by user either channg date or canceling the vacation.
+function editVacationDetails(fromDate,toDate,status) {
+    update(ref(db, "Hostel details/" + hostelName + '/Rooms on Vacation/' + 'floor' + roomDetails[1] + '/room' + roomDetails[2] + '/'), {
+        vacationstatus: status,
+        fromDate: fromDate,
+        toDate: toDate
+    })
+        // .then(() => {
+        //     alert("Vacation updation is on process, click ok");
+        //     update(ref(db, "User details/" + userUid + '/Vacation/' + hostelName + '/floor' + roomDetails[1] + '/room' + roomDetails[2] + '/'), {
+        //         hostelName: roomDetails[0],
+        //         floor: roomDetails[1],
+        //         room: roomDetails[2],
+        //         roomType: roomDetails[3],
+        //         roomRent: roomDetails[4],
+        //         bedId: roomDetails[5],
+        //         ac: roomDetails[6],
+        //         fromDate: fromDate,
+        //         toDate: toDate
+        //     })
+                .then(() => {
+                    alert("Vacation updation is on process, click ok");
+                    update(ref(db, "User details/" + userUid + '/Bookings/' + bookingkey + '/RoomDetails/Vacation/'), {
+                        fromDate: fromDate,
+                        toDate: toDate,
+                        vacationstatus: status,
+                    })
+                        .then(() => {
+                            alert("Vacation updated");
+                            location.reload();
+                        })
+                        .catch((error) => {
+                            alert(error);
+                        });
+                })
+                .catch((error) => {
+                    alert(error);
+                });
+        // })
+        // .catch((error) => {
+        //     alert(error);
+        // });
+}

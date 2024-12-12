@@ -768,7 +768,7 @@ async function loadFloorCountForCheckBoxes() {
     try {
         const snapshot = await get(dbref);
         if (snapshot.exists()) {
-            hosteFloorCount = snapshot.val().hostelFloor;
+            hosteFloorCount = snapshot.val().hostelFloors;
             loadCheckboxesForFilter(hosteFloorCount);//function is called to dynamically create the checkbox.
         } else {
             console.log('No floor count.');
