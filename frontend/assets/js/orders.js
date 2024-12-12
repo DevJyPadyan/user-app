@@ -59,14 +59,16 @@ function addOrderDetailsCard(hostelName, bedId, floor, roomType, paymentId, tota
                                                 Room Details
                                                 <br>
                                                 <span class="fw-normal content-color">Floor:
-                                                </span> ${floor}
-                                                <br> 
-                                                <span class="fw-normal content-color">Room Type:
+                                                </span> ${floor} , <span class="fw-normal content-color">Sharing:
                                                 </span> ${roomType}
+                                                <br> 
+                                                <span class="fw-normal content-color">Status:
+                                                </span> ${status}
                                                 </h5>
                                                 <h6 class="fw-medium content-color text-end">
                                                 Payment Made on: ${date[0]}
                                                 </h6>
+
                                             </div>
                                             <h6 class="fw-medium dark-text">
                                                 <span class="fw-normal content-color">Transaction Id :

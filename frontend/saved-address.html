@@ -391,8 +391,9 @@
                                     <div class="address-title">
                                         <div class="d-flex align-items-center gap-2">
                                             <i class="ri-home-4-fill icon"></i>
-                                            <h6>Hostel Room Details</h6>
+                                            <h6>Room Details</h6>
                                         </div>
+                                        <a href="#vacation-room" id="vacation-title-btn" class="edit-btn" data-bs-toggle="modal">Vacation</a>
                                         <a href="#edit-room-booking" class="edit-btn" data-bs-toggle="modal">Edit</a>
                                     </div>
                                     <div class="address-details">
@@ -789,7 +790,7 @@
     </div>
     <!-- edit address modal end -->
 
-    <!-- edit room bookingss modal starts -->
+    <!-- edit room bookings modal starts -->
     <div class="modal address-details-modal fade" id="edit-room-booking" tabindex="-1" aria-labelledby="exampleModalAdress"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -812,6 +813,46 @@
         </div>
     </div>
     <!-- edit room bookings modal end -->
+
+    <!-- vacation room bookingss modal starts -->
+    <div class="modal address-details-modal fade" id="vacation-room" tabindex="-1" aria-labelledby="exampleModalAdress"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="vacation-title-msg">
+                         Out for Vacation!
+                    </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Set date for Vacaation.</p>
+                </div>
+                <div class="row" style="padding-left:20px">
+                    <div class="col-5">
+                        <label for="fromdate" class="form-label">From</label>
+                        <input type="date" class="form-control" id="fromdate">
+                    </div>
+                    <div class="col-5">
+                        <label for="todate" class="form-label">To</label>
+                        <input type="date" class="form-control" id="todate">
+                    </div>
+                    <div id="cancelVacationDiv" style="display: none;">
+                        <br>
+                        <br>
+                        or Cancel Vacation ?
+                        <a id="vacationRoomCancelBtn" class="btn theme-btn mt-0">Cancel Vacation</a>    
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a  class="btn gray-btn mt-0" data-bs-dismiss="modal">Cancel</a>
+                    <a id="vacationRoomBtn" style="display: block;" class="btn theme-btn mt-0">Vacate now</a>
+                    <a id="vacationRoomEditBtn"style="display: none;" class="btn theme-btn mt-0">EDIT</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- vacation room bookings modal end -->
 
     <!-- logout modal starts -->
     <div class="modal address-details-modal fade" id="log-out" tabindex="-1" aria-labelledby="exampleModalLogout"
