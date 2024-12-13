@@ -591,6 +591,14 @@ function applyFilters() {
             localStorage.setItem("total_filter_length", 0);
         }
         if (localStorage.getItem("total_rooms_length") == 0) {
+            if (localStorage.getItem('bedCount') != 0) {
+                //while applying filters, we recieved duplicates beds adding, so we again empty the no.of bed container.
+                for (i = 1; i <= localStorage.getItem('bedCount'); i++) {
+                    let cardId = 'bed ' + i;
+                    document.getElementById(cardId).remove();
+                }
+                localStorage.setItem('bedCount', 0);
+            }
             loadDataFromDB();
         }
     }
