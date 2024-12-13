@@ -45,12 +45,13 @@ async function loadOrderDetails() {
         try {
             const h = await get(dbref5);
             //if vacation status is 'yes vacation' edit logics are applied , else its considered as adding vacation from the start.
-            if (h.val().vacationstatus == 'yes vacation') {
+            let statusArray = h.val().vacationstatus.split('/')
+            if (statusArray[0] == 'yes vacation') {
                 previousFromDate = h.val().fromDate;
                 previousToDate = h.val().toDate;
                 //function to change the headings and modal contents if the user as already given vacation details and 
                 //want to alter/cancel the vacation, we are using same modal.
-                vacationFormIsNowEdit(h.val().fromDate, h.val().toDate, h.val().vacationstatus);
+                vacationFormIsNowEdit(h.val().fromDate, h.val().toDate, statusArray[0]);
             }
         } catch (error) {
             console.error('Error fetching floor:', error);
@@ -280,8 +281,7 @@ function storeVacationDetails(fromDate, toDate) {
         roomType: roomDetails[3],
         roomRent: roomDetails[4],
         ac: roomDetails[6],
-        userIdOnVacation: userUid,
-        vacationstatus: 'yes vacation',
+        vacationstatus: 'yes vacation'+'/'+userUid,
         fromDate: fromDate,
         toDate: toDate
     })
@@ -304,11 +304,11 @@ function storeVacationDetails(fromDate, toDate) {
             update(ref(db, "User details/" + userUid + '/Bookings/' + bookingkey + '/RoomDetails/Vacation/'), {
                 fromDate: fromDate,
                 toDate: toDate,
-                vacationstatus: 'yes vacation',
+                vacationstatus: 'yes vacation'+'/'+userUid,
             })
                 .then(() => {
                     update(ref(db, "Hostel details/" + hostelName + '/Rooms on Vacation/' + 'floor' + roomDetails[1] + '/room' + roomDetails[2] + '/beds/'), {
-                        [bedId]: 'yes vacation',
+                        [bedId]: 'yes vacation'+'/'+userUid,
                     })
                         .then(() => {
                             alert("Vacation updated");
@@ -339,7 +339,8 @@ function vacationFormIsNowEdit(fromDate, toDate, status) {
     document.getElementById('vacationRoomEditBtn').style.display = "block";
     document.getElementById('fromdate').value = (fromDate);
     document.getElementById('todate').value = (toDate);
-    if (status == 'yes vacation') {
+    let statusArray = status.split('/');
+    if (statusArray[0] == 'yes vacation') {
         document.getElementById('cancelVacationDiv').style.display = "block";
     }
     else {
@@ -350,7 +351,7 @@ function vacationFormIsNowEdit(fromDate, toDate, status) {
 vacationRoomEditBtn.addEventListener('click', () => {
     let fromDate = document.getElementById('fromdate').value;
     let toDate = document.getElementById('todate').value;
-    if (fromDate == previousFromDate || toDate == previousToDate) {
+    if (fromDate == previousFromDate && toDate == previousToDate) {
         alert("From and To are not changed.");
     }
     else {
@@ -394,7 +395,7 @@ function editVacationDetails(fromDate, toDate, status) {
             })
                 .then(() => {
                     update(ref(db, "Hostel details/" + hostelName + '/Rooms on Vacation/' + 'floor' + roomDetails[1] + '/room' + roomDetails[2] + '/beds/'), {
-                        [bedId]: status,
+                        [bedId]: status+'/'+userUid,
                     })
                         .then(() => {
                             alert("Vacation updated");
