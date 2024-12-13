@@ -281,7 +281,7 @@ function storeVacationDetails(fromDate, toDate) {
         roomType: roomDetails[3],
         roomRent: roomDetails[4],
         ac: roomDetails[6],
-        vacationstatus: 'yes vacation'+'/'+userUid,
+        vacationstatus: 'yes vacation'+'/'+userUid+'/'+fromDate+'/'+toDate,
         fromDate: fromDate,
         toDate: toDate
     })
@@ -304,11 +304,11 @@ function storeVacationDetails(fromDate, toDate) {
             update(ref(db, "User details/" + userUid + '/Bookings/' + bookingkey + '/RoomDetails/Vacation/'), {
                 fromDate: fromDate,
                 toDate: toDate,
-                vacationstatus: 'yes vacation'+'/'+userUid,
+                vacationstatus: 'yes vacation'+'/'+userUid+'/'+fromDate+'/'+toDate,
             })
                 .then(() => {
                     update(ref(db, "Hostel details/" + hostelName + '/Rooms on Vacation/' + 'floor' + roomDetails[1] + '/room' + roomDetails[2] + '/beds/'), {
-                        [bedId]: 'yes vacation'+'/'+userUid,
+                        [bedId]: 'yes vacation'+'/'+userUid+'/'+fromDate+'/'+toDate,
                     })
                         .then(() => {
                             alert("Vacation updated");
@@ -369,7 +369,7 @@ function editVacationDetails(fromDate, toDate, status) {
     let bedId = roomDetails[5];
 
     update(ref(db, "Hostel details/" + hostelName + '/Rooms on Vacation/' + 'floor' + roomDetails[1] + '/room' + roomDetails[2] + '/'), {
-        vacationstatus: status,
+        vacationstatus: status+'/'+userUid+'/'+fromDate+'/'+toDate,
         fromDate: fromDate,
         toDate: toDate
     })
@@ -391,11 +391,11 @@ function editVacationDetails(fromDate, toDate, status) {
             update(ref(db, "User details/" + userUid + '/Bookings/' + bookingkey + '/RoomDetails/Vacation/'), {
                 fromDate: fromDate,
                 toDate: toDate,
-                vacationstatus: status,
+                vacationstatus: status+'/'+userUid+'/'+fromDate+'/'+toDate,
             })
                 .then(() => {
                     update(ref(db, "Hostel details/" + hostelName + '/Rooms on Vacation/' + 'floor' + roomDetails[1] + '/room' + roomDetails[2] + '/beds/'), {
-                        [bedId]: status+'/'+userUid,
+                        [bedId]: status+'/'+userUid+'/'+fromDate+'/'+toDate,
                     })
                         .then(() => {
                             alert("Vacation updated");
