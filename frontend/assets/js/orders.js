@@ -20,9 +20,11 @@ function loadOderDetails() {
         })
         if (ordersList.length == 0) {
             document.getElementById("no-orders-msg").style.display = "block";
+            document.getElementById("whatsapp").style.display = "none";
         }
         else {
             document.getElementById("no-orders-msg").style.display = "none";
+            document.getElementById("whatsapp").style.display = "block";
             iterateOrderDetails();
 
         }
