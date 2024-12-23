@@ -37,6 +37,67 @@
 
     <!-- Theme css -->
     <link rel="stylesheet" id="change-link" type="text/css" href="assets/css/style.css">
+    <style>
+        .loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+
+        }
+
+        /* Creating the dots */
+        .loader span {
+            height: 25px;
+            width: 25px;
+            margin-right: 10px;
+            border-radius: 50%;
+            background-color: orangered;
+            animation: loading 1s linear infinite;
+        }
+
+        /* Creating the loading animation*/
+        @keyframes loading {
+            0% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(15px);
+            }
+
+            50% {
+                transform: translateX(-15px);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
+
+        }
+
+        span:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        span:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        span:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        span:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+    </style>
 </head>
 
 <body class="bg-color position-relative">
@@ -425,16 +486,15 @@
                                                 Filters </span>
                                             <nav id="navbar" class="product-items pb-0">
                                                 <ul class="nav nav-pills">
-                                                    <!-- <li>
-                                                        <a class="nav-link" href="#item-1">Best Seller</a>
-                                                    </li> -->
-                                                    <li></li>
-                                                        <a class="nav-link" href="#item-1">Floor</a>
+                                                    <li>
+                                                    <a class="nav-link" href="#item-1">Floor</a>
                                                     </li>
                                                     <li>
                                                         <nav class="nav nav-pills sub-nav-pills">
-                                                            <ul id="floorFilters">
-                                                                <li id="noFloorFilterMsg" style="display: none;">No floor filter</li>
+                                                            <ul id="floorFilters"
+                                                                style="display:grid;gap:4px;grid-template-columns:1fr 1fr 1fr 1fr;">
+                                                                <li id="noFloorFilterMsg" style="display: none;">No
+                                                                    floor filter</li>
                                                             </ul>
                                                         </nav>
                                                     </li>
@@ -445,20 +505,20 @@
                                                         <nav class="nav nav-pills sub-nav-pills">
                                                             <ul>
                                                                 <li>
-                                                                    <a class="nav-link" href="#item-2-1">
-                                                                        <input type="checkbox" id="item_2_1_checkbx"
+                                                                    <a class="nav-link">
+                                                                        <input type="checkbox" name="sharingCheckBox" id="item_2_1_checkbx"
                                                                             value="2 sharing"> 2 Sharing
                                                                     </a>
                                                                 </li>
                                                                 <li>
-                                                                    <a class="nav-link" href="#item-2-2">
-                                                                        <input type="checkbox" id="item_2_2_checkbx"
+                                                                    <a class="nav-link">
+                                                                        <input type="checkbox" name="sharingCheckBox" id="item_2_2_checkbx"
                                                                             value="3 sharing"> 3 Sharing
                                                                     </a>
                                                                 </li>
                                                                 <li>
-                                                                    <a class="nav-link" href="#item-2-3">
-                                                                        <input type="checkbox" id="item_2_3_checkbx"
+                                                                    <a class="nav-link">
+                                                                        <input type="checkbox" name="sharingCheckBox" id="item_2_3_checkbx"
                                                                             value="4 sharing"> 4 Sharing
                                                                     </a>
                                                                 </li>
@@ -466,50 +526,53 @@
                                                         </nav>
                                                     </li>
 
-                                                    <li>
-                                                        <a class="nav-link" href="#item-3">Air Condition</a>
-                                                    </li>
-                                                    <li>
-                                                        <nav class="nav nav-pills sub-nav-pills">
-                                                            <ul>
-                                                                <li>
-                                                                    <a class="nav-link" href="#item-3-1">
-                                                                        <input type="checkbox" id="item_3_1_checkbx"
-                                                                            value="ac"> AC
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a class="nav-link" href="#item-3-2">
-                                                                        <input type="checkbox" id="item_3_2_checkbx"
-                                                                            value="non-ac"> Non-AC
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </nav>
-                                                    </li>
-                                                    <li>
-                                                        <a class="nav-link" href="#item-4">Bathroom</a>
-                                                    </li>
-                                                    <li>
-                                                        <nav class="nav nav-pills sub-nav-pills">
-                                                            <ul>
-                                                                <li>
-                                                                    <a class="nav-link" href="#item-4-1">
-                                                                        <input type="checkbox" id="item_4_1_checkbx"
-                                                                            name="item-4-1-checkbx" value="common">
-                                                                        Common
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a class="nav-link" href="#item-4-2">
-                                                                        <input type="checkbox" id="item_4_2_checkbx"
-                                                                            name="item-4-2-checkbx" value="attached">
-                                                                        Attached
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </nav>
-                                                    </li>
+                                                    <div id="roomDivFilters" style="display: none;">
+                                                        <li>
+                                                            <a class="nav-link" href="#item-3">Air Condition</a>
+                                                        </li>
+                                                        <li>
+                                                            <nav class="nav nav-pills sub-nav-pills">
+                                                                <ul>
+                                                                    <li>
+                                                                        <a class="nav-link" href="#item-3-1">
+                                                                            <input type="checkbox"  name="acCheckBox" id="item_3_1_checkbx"
+                                                                                value="ac"> AC
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a class="nav-link" href="#item-3-2">
+                                                                            <input type="checkbox"  name="acCheckBox" id="item_3_2_checkbx"
+                                                                                value="non-ac"> Non-AC
+                                                                        </a>
+                                                                    </li>
+                                                                </ul>
+                                                            </nav>
+                                                        </li>
+                                                        <li>
+                                                            <a class="nav-link" href="#item-4">Bathroom</a>
+                                                        </li>
+                                                        <li>
+                                                            <nav class="nav nav-pills sub-nav-pills">
+                                                                <ul>
+                                                                    <li>
+                                                                        <a class="nav-link" href="#item-4-1">
+                                                                            <input type="checkbox"  name="bathroomCheckBox" id="item_4_1_checkbx"
+                                                                                name="item-4-1-checkbx" value="common">
+                                                                            Common
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a class="nav-link" href="#item-4-2">
+                                                                            <input type="checkbox"  name="bathroomCheckBox" id="item_4_2_checkbx"
+                                                                                name="item-4-2-checkbx" value="attached">
+                                                                            Attached
+                                                                        </a>
+                                                                    </li>
+                                                                </ul>
+                                                            </nav>
+                                                        </li>
+                                                    </div>
+                                    
                                                 </ul>
                                             </nav>
                                         </div>
@@ -518,191 +581,34 @@
                                         <div class="product-box-section section-b-space">
                                             <div data-bs-spy="scroll" data-bs-target="#navbar"
                                                 data-bs-smooth-scroll="true" class="scrollspy-example-2" tabindex="0">
-                                                <div class="product-details-box-list">
-                                                    <!-- <div class="product-details-box-title pt-0">
-                                                        Best Seller
-                                                    </div>
-                                                    <div id="item-1">
-                                                        <div class="product-details-box">
-                                                            <div class="product-img">
-                                                                <img class="img-fluid img"
-                                                                    src="assets/images/menu/13.jpg" alt="rp1">
-                                                            </div>
-                                                            <div class="product-content">
-                                                                <div
-                                                                    class="description d-flex align-items-center justify-content-between">
-                                                                    <div>
-                                                                        <div class="d-flex align-items-center gap-2">
-                                                                            <img class="img-fluid"
-                                                                                src="assets/images/svg/veg.svg"
-                                                                                alt="non-veg">
-                                                                            <h6 class="product-name">
-                                                                                Room Details
-                                                                            </h6>
-                                                                        </div>
-                                                                        <div class="rating-section">
-                                                                            <ul class="rating-star">
-                                                                                <li>
-                                                                                    <i class="ri-star-fill star"></i>
-                                                                                </li>
-                                                                                <li>
-                                                                                    <i class="ri-star-fill star"></i>
-                                                                                </li>
-                                                                                <li>
-                                                                                    <i class="ri-star-fill star"></i>
-                                                                                </li>
-                                                                                <li>
-                                                                                    <i class="ri-star-fill star"></i>
-                                                                                </li>
-                                                                                <li>
-                                                                                    <i class="ri-star-fill star"></i>
-                                                                                </li>
-                                                                            </ul>
-                                                                            <h6 class="rating-amount">
-                                                                                1k+ Ratings
-                                                                            </h6>
-                                                                        </div>
-                                                                        <p>
-                                                                            Rooms Amenities
-                                                                        </p>
-                                                                    </div>
-                                                                    <div class="product-box-price">
-                                                                        <h2 class="theme-color fw-semibold">
-                                                                            $40
-                                                                        </h2>
-                                                                        <a href="#customized"
-                                                                            class="btn theme-outline add-btn mt-0"
-                                                                            data-bs-toggle="modal">+Add</a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div> -->
-                                                    <!-- <div class="product-details-box-title">
-                                                        Special Combos
-                                                    </div>
-                                                    <div id="item-2">
-                                                        <div class="product-details-box">
-                                                            <div class="product-img">
-                                                                <img class="img-fluid img"
-                                                                    src="assets/images/menu/1.jpg" alt="rp1">
-                                                            </div>
-                                                            <div class="product-content">
-                                                                <div
-                                                                    class="description d-flex align-items-center justify-content-between">
-                                                                    <div>
-                                                                        <div class="d-flex align-items-center gap-2">
-                                                                            <img class="img-fluid"
-                                                                                src="assets/images/svg/veg.svg"
-                                                                                alt="non-veg">
-                                                                            <h6 class="product-name">
-                                                                                Burger & French fried combo
-                                                                            </h6>
-                                                                            <h6 class="customized">Customized</h6>
-                                                                        </div>
-                                                                        <div class="rating-section">
-                                                                            <ul class="rating-star">
-                                                                                <li>
-                                                                                    <i class="ri-star-fill star"></i>
-                                                                                </li>
-                                                                                <li>
-                                                                                    <i class="ri-star-fill star"></i>
-                                                                                </li>
-                                                                                <li>
-                                                                                    <i class="ri-star-fill star"></i>
-                                                                                </li>
-                                                                                <li>
-                                                                                    <i class="ri-star-fill star"></i>
-                                                                                </li>
-                                                                                <li>
-                                                                                    <i class="ri-star-fill star"></i>
-                                                                                </li>
-                                                                            </ul>
-                                                                            <h6 class="rating-amount">
-                                                                                1k+ Ratings
-                                                                            </h6>
-                                                                        </div>
-                                                                        <p>
-                                                                            Your burger dish looks perfect
-                                                                            combination of flavors and textures.
-                                                                        </p>
-                                                                    </div>
-                                                                    <div class="product-box-price">
-                                                                        <h2 class="theme-color fw-semibold">
-                                                                            $30 <span>/ <del>$60</del></span>
-                                                                        </h2>
-                                                                        <a href="#customized"
-                                                                            class="btn theme-outline add-btn mt-0"
-                                                                            data-bs-toggle="modal">+Add</a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div> -->
+                                                <div class="product-details-box-list" id="floorDiv">
+                                                    
                                                     <div class="product-details-box-title">
                                                         Room Details
                                                     </div>
+                                                    <span id="no_room_msg" style="display: none;"> No Rooms </span>
                                                     <!-- for scroll we need to give properly the ID as we have given in <a> tags </a> -->
-                                                    <div id="item-3">
-                                                        <span id="no_room_msg" style="display: none;"> No Rooms </span>
-                                                        <!-- <div class="product-details-box">
-                                                            <div class="product-img">
-                                                                <img class="img-fluid img"
-                                                                    src="assets/images/menu/2.jpg" alt="rp1">
-                                                            </div>
-                                                            <div class="product-content">
-                                                                <div
-                                                                    class="description d-flex align-items-center justify-content-between gap-1">
-                                                                    <div>
-                                                                        <div class="d-flex align-items-center gap-2">
-                                                                            <img class="img-fluid"
-                                                                                src="assets/images/svg/nonveg.svg"
-                                                                                alt="non-veg">
-                                                                            <h6 class="product-name">
-                                                                                Smoked Salmon Bagel
-                                                                            </h6>
-                                                                            <h6 class="customized">Customized</h6>
-                                                                        </div>
-                                                                        <div class="rating-section">
-                                                                            <ul class="rating-star">
-                                                                                <li>
-                                                                                    <i class="ri-star-fill star"></i>
-                                                                                </li>
-                                                                                <li>
-                                                                                    <i class="ri-star-fill star"></i>
-                                                                                </li>
-                                                                                <li>
-                                                                                    <i class="ri-star-fill star"></i>
-                                                                                </li>
-                                                                                <li>
-                                                                                    <i class="ri-star-fill star"></i>
-                                                                                </li>
-                                                                                <li>
-                                                                                    <i class="ri-star-fill star"></i>
-                                                                                </li>
-                                                                            </ul>
-                                                                            <h6 class="rating-amount">
-                                                                                1k+ Ratings
-                                                                            </h6>
-                                                                        </div>
-                                                                        <p>
-                                                                            This sandwich is a delightful
-                                                                            combination of fresh crisp lettuce,
-                                                                            juicy tomato,nestled two slices of
-                                                                            toasted whole wheat bread.
-                                                                        </p>
-                                                                    </div>
-                                                                    <div class="product-box-price">
-                                                                        <h2 class="theme-color fw-semibold">
-                                                                            $20
-                                                                        </h2>
-                                                                        <a href="#customized"
-                                                                            class="btn theme-outline add-btn mt-0"
-                                                                            data-bs-toggle="modal">+Add</a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div> -->
+                                                    <div id="item-1">
+                                                        <!-- content are loaded dynamically from js -->
+                                                    </div>
+                                                </div>
+                                                <!-- transition loader -->
+                                                <div class="loader" id="transition_loader" style="display:none;">
+                                                    <span></span>
+                                                    <span></span>
+                                                    <span></span>
+                                                    <span></span>
+                                                    <span></span>
+                                                    <span></span>
+                                                </div>
+                                                <div class="product-details-box-list" id="roomDiv" style="display: none;">
+                                                    <div class="product-details-box-title">
+                                                        Bed Details
+                                                    </div>
+                                                    <span id="no_bed_msg" style="display: none;"> No Rooms </span>
+                                                    <!-- for scroll we need to give properly the ID as we have given in <a> tags </a> -->
+                                                    <div id="item-5">
+                                                        <!-- content are loaded dynamically from js -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -725,7 +631,8 @@
                                                     </li>
                                                     <hr>
                                                     <li>
-                                                        <a class="active nav-link" id="nav_week1" href="#item-2">Week 1</a>
+                                                        <a class="active nav-link" id="nav_week1" href="#item-2">Week
+                                                            1</a>
                                                     </li>
                                                     <li>
                                                         <a class="nav-link" id="nav_week2" href="#item-3">Week 2</a>
@@ -757,27 +664,32 @@
                                                     </div>
                                                     <div id="week1">
                                                         <div id="right-menu-tab">
-                                                            <span id="week1_no_menu_msg" style="display: none;"> No Menu Available. </span>
+                                                            <span id="week1_no_menu_msg" style="display: none;"> No Menu
+                                                                Available. </span>
                                                         </div>
                                                     </div>
                                                     <div id="week2" style="display: none;">
                                                         <div id="right-menu-tab">
-                                                            <span id="week2_no_menu_msg" style="display: none;"> No Menu Available. </span>
+                                                            <span id="week2_no_menu_msg" style="display: none;"> No Menu
+                                                                Available. </span>
                                                         </div>
                                                     </div>
-                                                    <div id="week3"style="display: none;">
+                                                    <div id="week3" style="display: none;">
                                                         <div id="right-menu-tab">
-                                                            <span id="week3_no_menu_msg" style="display: none;"> No Menu Available. </span>
+                                                            <span id="week3_no_menu_msg" style="display: none;"> No Menu
+                                                                Available. </span>
                                                         </div>
                                                     </div>
                                                     <div id="week4" style="display: none;">
                                                         <div id="right-menu-tab">
-                                                            <span id="week4_no_menu_msg" style="display: none;"> No Menu Available. </span>
+                                                            <span id="week4_no_menu_msg" style="display: none;"> No Menu
+                                                                Available. </span>
                                                         </div>
                                                     </div>
-                                                    <div id="week5"style="display: none;">
+                                                    <div id="week5" style="display: none;">
                                                         <div id="right-menu-tab">
-                                                            <span id="week5_no_menu_msg" style="display: none;"> No Menu Available. </span>
+                                                            <span id="week5_no_menu_msg" style="display: none;"> No Menu
+                                                                Available. </span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -790,58 +702,6 @@
                                 <div class="photos-section ratio_landscape">
                                     <ul class="photos-list" id="ul-image">
                                         <span id="loading-photos-msg">Loading..</span>
-                                        <!-- <li>
-                                            <a href="assets/images/service/6.jpg" data-fancybox="images"
-                                                data-type="image">
-                                                <img class="img-fluid bg-img" src="assets/images/service/6.jpg" alt="6">
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="assets/images/service/7.jpg" data-fancybox="images"
-                                                data-type="image">
-                                                <img class="img-fluid bg-img" src="assets/images/service/7.jpg" alt="7">
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="assets/images/service/8.jpg" data-fancybox="images"
-                                                data-type="image">
-                                                <img class="img-fluid bg-img" src="assets/images/service/8.jpg" alt="8">
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="assets/images/service/9.jpg" data-fancybox="images"
-                                                data-type="image">
-                                                <img class="img-fluid bg-img" src="assets/images/service/9.jpg" alt="9">
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="assets/images/service/10.jpg" data-fancybox="images"
-                                                data-type="image">
-                                                <img class="img-fluid bg-img" src="assets/images/service/10.jpg"
-                                                    alt="10">
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="assets/images/service/11.jpg" data-fancybox="images"
-                                                data-type="image">
-                                                <img class="img-fluid bg-img" src="assets/images/service/11.jpg"
-                                                    alt="11">
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="assets/images/service/12.jpg" data-fancybox="images"
-                                                data-type="image">
-                                                <img class="img-fluid bg-img" src="assets/images/service/12.jpg"
-                                                    alt="12">
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="assets/images/service/13.jpg" data-fancybox="images"
-                                                data-type="image">
-                                                <img class="img-fluid bg-img" src="assets/images/service/13.jpg"
-                                                    alt="13">
-                                            </a>
-                                        </li> -->
                                     </ul>
                                 </div>
                             </div>
@@ -1094,7 +954,8 @@
                                         </div> -->
                                     </div>
                                 </div>
-                                <a id="proceedPaymentBtn" style="display: none;" class="btn theme-btn restaurant-btn w-100 rounded-2">Proceed to
+                                <a id="proceedPaymentBtn" style="display: none;"
+                                    class="btn theme-btn restaurant-btn w-100 rounded-2">Proceed to
                                     payment</a>
                                 <img class="dots-design" src="assets/images/svg/dots-design.svg" alt="dots">
                             </div>
@@ -1351,7 +1212,8 @@
                 <div class="container">
                     <div class="filter-header">
                         <h5 class="title">Bed Selection</h5>
-                        <a  id="bedSelectionCloseModalBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></a>
+                        <a id="bedSelectionCloseModalBtn" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></a>
                     </div>
                     <div class="filter-body">
                         <div class="filter-title">
