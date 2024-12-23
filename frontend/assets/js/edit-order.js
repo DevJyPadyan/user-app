@@ -251,6 +251,7 @@ updateExtrasBtn.addEventListener('click', () => {
 })
 
 updateRoomBtn.addEventListener('click', () => {
+    localStorage.setItem('hostel-name',hostelName);
     window.location.href = "././menu-listing-2.html";
 });
 

@@ -28,6 +28,8 @@ let editOrderKey = localStorage.getItem('edit-order-details');
 let previousFloor;
 let previousRoomNo;
 let previousBedId;
+let previousRoomType;
+let previousRoomAc;
 const loadBillDetails = () => {
     settingPurposeToLogin();
     localStorage.setItem("userRegistrationStatus", "no");
@@ -45,6 +47,8 @@ const loadBillDetails = () => {
                 previousFloor = snapshot.val().floor;
                 previousRoomNo = snapshot.val().room;
                 previousBedId = snapshot.val().bedId;
+                previousRoomType = snapshot.val().roomType;
+                previousRoomAc = snapshot.val().ac;
             }
         })
         .catch((error) => {
@@ -172,6 +176,7 @@ async function loadExtrasCheckBoxes() {
         if (snapshot.exists()) {
             document.getElementById('noExtrasMsg').style.display = "none";
             let ulContainer = document.getElementById("extrasUl");
+            ulContainer.innerHTML='';
             foodList = snapshot.val();
             foodList.forEach(element => {
                 //checks the availability of the extras menu
@@ -221,7 +226,8 @@ window.addEventListener('load', loadExtrasCheckBoxes);
 //editing of the old room record and adding of new room record functionality is maintained here.
 function storeOrderDetails(paymentResponse) {
     var date = new Date();
-    let previousRoomCount;
+    let previousbedsAvailable;
+    let previousTotalbedsAvailable;
     const dbref = ref(db);
     var extrasMenu = {};
     for (var i = 0; i < extrasSelectedFoodNames.length; i++) {
@@ -249,33 +255,34 @@ function storeOrderDetails(paymentResponse) {
         .then(() => {
             alert("Click to continue");
             //decreasing the count of vaccancy for the new place opted by the user by editing the previous booking.
-            update(ref(db, "Hostel details/" + hostelName + '/rooms/' + "floor" + roomDetails[3] + '/' + "room" + roomDetails[4] + '/'), {
-                roomCount: (Number(roomDetails[2]) - 1)
+            update(ref(db, 'Hostel details/' + hostelName + '/rooms/' + "floor" + roomDetails[3] + '/' + roomDetails[0] + '/rooms/' + roomDetails[5] + '/' + roomDetails[4]), {
+                bedsAvailable: (Number(roomDetails[2]) - 1)
             })
                 .then(() => {
                     alert("Click to edit booking");
                     //Changing the newly selected bed/room as booked 
-                    update(ref(db, 'Hostel details/' + hostelName + '/rooms/' + "floor" + roomDetails[3] + '/' + "room" + roomDetails[4] + '/beds/'), {
+                    update(ref(db, 'Hostel details/' + hostelName + '/rooms/' + "floor" + roomDetails[3] + '/' + roomDetails[0] + '/rooms/' + roomDetails[5] + '/' + roomDetails[4] + '/beds/'), {
                         [bedId]: "booked"
                     })
                         .then(() => {
                             alert("Updating..")
-                            console.log("Hostel details/" + hostelName + '/rooms/' + "floor" + previousFloor + '/' + "room" + previousRoomNo + '/')
+
+                            console.log("Hostel details/" + hostelName + '/rooms/' + "floor" + previousFloor + '/' + previousRoomType + '/rooms/' + previousRoomAc + "/" + previousRoomNo + '/')
                             //fetching the current room count status for the user booked room previously and adding +1 with that live count
-                            get(child(dbref, "Hostel details/" + hostelName + '/rooms/' + "floor" + previousFloor + '/' + "room" + previousRoomNo + '/'))
+                            get(child(dbref, "Hostel details/" + hostelName + '/rooms/' + "floor" + previousFloor + '/' + previousRoomType + '/rooms/' + previousRoomAc + "/" + previousRoomNo + '/'))
                                 .then((snapshot) => {
                                     alert("continue..")
                                     if (snapshot.exists()) {
-                                        previousRoomCount = snapshot.val().roomCount;
+                                        previousbedsAvailable = snapshot.val().bedsAvailable;
                                     }
-                                    //increasing the roomcount for the room which user blocked and now, is changing to different room/bed
-                                    update(ref(db, "Hostel details/" + hostelName + '/rooms/' + "floor" + previousFloor + '/' + "room" + previousRoomNo + '/'), {
-                                        roomCount: (Number(previousRoomCount) + 1)
+                                    //increasing the bedsavailable for the room which user blocked and now, is changing to different room/bed
+                                    update(ref(db, "Hostel details/" + hostelName + '/rooms/' + "floor" + previousFloor + '/' + previousRoomType + '/rooms/' + previousRoomAc + "/" + previousRoomNo + '/'), {
+                                        bedsAvailable: (Number(previousbedsAvailable) + 1)
                                     })
                                         .then(() => {
                                             alert("Click continue to update");
                                             //changing the previous bedId to not booked, when user edits
-                                            update(ref(db, 'Hostel details/' + hostelName + '/rooms/' + "floor" + previousFloor + '/' + "room" + previousRoomNo + '/beds/'), {
+                                            update(ref(db, "Hostel details/" + hostelName + '/rooms/' + "floor" + previousFloor + '/' + previousRoomType + '/rooms/' + previousRoomAc + "/" + previousRoomNo + '/beds/'), {
                                                 [previousBedId]: "not booked"
                                             })
                                                 .then(() => {
@@ -284,8 +291,37 @@ function storeOrderDetails(paymentResponse) {
                                                         status: "Updated"
                                                     })
                                                         .then(() => {
-                                                            alert("Room Updated Successfully");
-                                                            window.location.href = "././confirm-order.html";
+                                                            //setting the bedsavailable -1 inside type(sharing node) bedsAvailable
+                                                            update(ref(db, 'Hostel details/' + hostelName + '/rooms/' + "floor" + roomDetails[3] + '/' + roomDetails[0]), {
+                                                                bedsAvailable: (Number(roomDetails[6]) - 1)
+                                                            })
+                                                                .then(() => {
+                                                                    //getting the bedsavialable in the sharing node to +1 it of the previous booking
+                                                                    get(child(dbref, "Hostel details/" + hostelName + '/rooms/' + "floor" + previousFloor + '/' + previousRoomType))
+                                                                        .then((snapshot) => {
+                                                                            alert("continue..")
+                                                                            if (snapshot.exists()) {
+                                                                                previousTotalbedsAvailable = snapshot.val().bedsAvailable;
+                                                                            }
+                                                                            //increasing the bedavailable for the room which user blocked and now, is changing to different room/bed
+                                                                            update(ref(db, "Hostel details/" + hostelName + '/rooms/' + "floor" + previousFloor + '/' + previousRoomType), {
+                                                                                bedsAvailable: (Number(previousTotalbedsAvailable) + 1)
+                                                                            })
+                                                                                .then(() => {
+                                                                                    alert("Room Updated Successfully");
+                                                                                    window.location.href = "././confirm-order.html";
+                                                                                })
+                                                                                .catch((error) => {
+                                                                                    alert(error);
+                                                                                });
+                                                                        })
+                                                                        .catch((error) => {
+                                                                            alert(error);
+                                                                        });
+                                                                })
+                                                                .catch((error) => {
+                                                                    alert(error);
+                                                                });
                                                         })
                                                         .catch((error) => {
                                                             alert(error);
@@ -296,11 +332,11 @@ function storeOrderDetails(paymentResponse) {
                                                 });
                                         })
                                         .catch((error) => {
-                                            alert(error);
+                                            alert(error)
                                         });
                                 })
                                 .catch((error) => {
-                                    alert(error)
+                                    alert(error);
                                 });
                         })
                         .catch((error) => {
@@ -311,9 +347,6 @@ function storeOrderDetails(paymentResponse) {
                     alert(error);
                 });
         })
-        .catch((error) => {
-            alert(error);
-        });
 }
 
 
