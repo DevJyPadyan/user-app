@@ -127,7 +127,7 @@ function loadDetailsInModal(event) {
     clearingExistingValue()//Before adding the data , if i do not empty the existing , again n again the loop run and it gets redudantly added with the existing li's.
     // so i will be removing the existing li's and add the li's again, since im looping from the begining no data will be missed.
 
-    const dbref2 = ref(db, "User details/" + userUid + '/Bookings/' + orderDetails.dataset.hostelName + '/RoomDetails/extras');
+    const dbref2 = ref(db, "User details/" + userUid + '/Bookings/' + orderDetails.dataset.key + '/RoomDetails/extras');
     onValue(dbref2, (snapshot) => {
         let ulContainer = document.getElementById("modal-ul-bill-list");
         const elem = document.createElement('li');

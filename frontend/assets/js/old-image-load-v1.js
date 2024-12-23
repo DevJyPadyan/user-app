@@ -22,7 +22,6 @@ let roomTypeFilterValue = [];
 let airConditionFilterValue = [];
 let bathroomFilterValue = [];
 let hosteFloorCount = 0;
-let hostelRoomCount = 0;
 
 /**********Loading Image data in - Photos Section - starts***************/
 const loadImagesDataFromDB = () => {
@@ -101,11 +100,9 @@ const loadDataFromDB = () => {
 
 }
 
-const postContainer = document.getElementById('item-1');
 const iterateAllRecords = () => {
     console.log("...inside iterating records")
     let i = 0;
-    postContainer.innerHTML = '';//erasing the previous loaded cards, so that redudant cards wont be added.
     //iterating thro the hostle obj fetched from DB.
     hostelist.forEach(iterator => {
         let imageArray = [];//initializing images array for every iteration, then only images for that particular rooms will display.
@@ -116,8 +113,8 @@ const iterateAllRecords = () => {
             })
         }
         i++;
-        console.log(iterator.rooms)
-        addHostelRoomCard(iterator.ac, iterator.amenities, iterator.bathroom, iterator.floor, iterator.price, iterator.roomType, iterator.bedsAvailable, imageArray[0], i, iterator.rooms)
+        addHostelRoomCard(iterator.ac, iterator.amenities, iterator.bathroom, iterator.floor,
+            iterator.roomNumber, iterator.price, iterator.roomCount, iterator.roomType, imageArray[0], i)
     });
     localStorage.setItem("total_rooms_length", hostelist.length);
     if (hostelist.length == 0) {
@@ -131,16 +128,9 @@ const iterateAllRecords = () => {
 
 }
 
+const postContainer = document.getElementById('item-3');
+const addHostelRoomCard = (ac, amenities, bathroom, floor, roomNumber, roomprice, roomcount, roomtype, imgURL, card_number) => {
 
-const addHostelRoomCard = (ac, amenities, bathroom, floor, roomprice, roomtype, bedsAvailable, imgURL, card_number, roomsArray) => {
-
-    let roomNumber;
-    console.log(roomsArray)
-    for (let key in roomsArray) {
-        let val = roomsArray[key];
-        roomNumber = val.roomNumber;
-
-    }
     const elem = document.createElement('div');
     elem.setAttribute('id', card_number);
     elem.classList.add('vertical-product-box-img');
@@ -155,147 +145,19 @@ const addHostelRoomCard = (ac, amenities, bathroom, floor, roomprice, roomtype, 
                                                                     <div>
                                                                         <div class="d-flex align-items-center gap-2">
                                                                             <h6 class="product-name">
-                                                                                Floor No: ${floor},<br> Room Type : ${roomtype} 
+                                                                                Floor No: ${floor} ,  
+                                                                                Room No: ${roomNumber}
                                                                             </h6>
                                                                         </div>
-                                                                        <h6 class="customized">${bedsAvailable} beds available </h6>
-                                                                        <!--<p>
+                                                                        <h6 class="customized">${roomcount} beds available </h6>
+                                                                        <p>
                                                                             Air Condition : ${ac}
                                                                         </p>
                                                                         <p>
                                                                             Bathroom : ${bathroom}
                                                                         </p>
                                                                         <p>
-                                                                            Amenities : ${amenities}
-                                                                        </p>-->
-                                                                        <p>
-                                                                            Room Description : ${roomtype}, with A/C and Non A/C occupation.
-                                                                        </p>
-                                                                    </div>
-                                                                    <div class="product-box-price">
-                                                                        <!--<h2 class="theme-color fw-semibold">
-                                                                            Rs.${roomprice}
-                                                                        </h2>-->
-                                                                        <a 
-                                                                            class="btn theme-outline add-btn mt-0"
-                                                                            >Details</a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>`;
-
-    // To add click event to the card
-    elem.dataset.roomType = roomtype;
-    elem.dataset.roomPrice = roomprice;
-    elem.dataset.ac = ac;
-    elem.dataset.bedsAvailable = bedsAvailable;
-    elem.dataset.roomFloor = floor;
-    elem.dataset.roomNumber = roomNumber;
-    // elem.addEventListener('click', handleCardClick);
-    elem.addEventListener('click', showRoomDetails);
-
-    postContainer.appendChild(elem);
-}
-function showRoomDetails(event) {
-    document.getElementById("floorDiv").style.display = "none";
-    document.getElementById("transition_loader").style.display = "flex";
-    setTimeout(() => {
-        document.getElementById("roomDiv").style.display = "block";
-        document.getElementById("roomDivFilters").style.display = "block";
-        document.getElementById("transition_loader").style.display = "none";
-    }, 1000);
-    const card = event.currentTarget;
-    var checkboxes = document.getElementsByName("floorCheckBox");
-    for (var i = 0; i < checkboxes.length; i++) {
-        checkboxes[i].disabled = true;
-        //without using filter, directly if user selects the room , clicked type n floor numb will get auto-checked n disabled.
-        if(checkboxes[i].value == card.dataset.roomFloor){
-            checkboxes[i].checked = true;
-        }
-    }
-    var checkboxes = document.getElementsByName("sharingCheckBox");
-    for (var i = 0; i < checkboxes.length; i++) {
-        checkboxes[i].disabled = true;
-        //without using filter, directly if user selects the room , clicked type n floor numb will get auto-checked n disabled.
-        if(checkboxes[i].value == card.dataset.roomType){
-            checkboxes[i].checked = true;
-        }
-    }
-    loadRoomCards(card.dataset.roomFloor, card.dataset.roomType,card.dataset.bedsAvailable );
-}
-
-let acRooms;
-let nonAcRooms;
-let global_floor_number;
-let global_room_type;
-let global_total_room_bedsAvailable;
-const postContainerRoom = document.getElementById('item-5');
-function loadRoomCards(floorNumber, roomType, total_room_bedsAvailable){
-    if(document.getElementById("no_bed_msg").style.display == 'flex'){
-        document.getElementById("no_bed_msg").style.display = "none";
-    }
-    global_floor_number = floorNumber;
-    global_room_type = roomType;
-    global_total_room_bedsAvailable = total_room_bedsAvailable;
-    const dbref = ref(db, 'Hostel details/' + hostelName + "/rooms/floor"+floorNumber+'/'+roomType+'/');
-    onValue(dbref, (snapshot) => {
-        acRooms = snapshot.val().rooms.ac;
-        nonAcRooms = snapshot.val().rooms.non_ac;
-    })
-    console.log(acRooms, nonAcRooms)
-    postContainerRoom.innerHTML='';//erasing the previous cards, and loading all from first.
-    for (let key in acRooms){
-        let room = acRooms[key];
-        let beds = room.beds;
-        let imageArray = [];//initializing images array for every iteration, then only images for that particular rooms will display.
-        if (room.imagesLink != undefined) {
-            room.imagesLink.forEach(j => {
-                imageArray.push(j);
-                addImageCard(j);
-            })
-        }
-        loadBedCard(floorNumber,roomType,key,imageArray[0],room.price,room.ac,room.bathroom,room.amenities,room.bedsAvailable,beds);
-    }
-    for (let key in nonAcRooms){
-        let room = nonAcRooms[key];
-        let beds = room.beds;
-        if (room.imagesLink != undefined) {
-            room.imagesLink.forEach(j => {
-                imageArray.push(j);
-                addImageCard(j);
-            })
-        }
-        loadBedCard(floorNumber,roomType,key,imageArray[0],room.price,room.ac,room.bathroom,room.amenities,room.bedsAvailable,beds);
-    }
-    // fetchRoomCards('Hostel details/' + hostelName + "/rooms/floor"+floorNumber+'/'+roomType+'/');
-}
-
-
-
-function loadBedCard(floorNumber,roomType,key,imgURL,roomprice,ac,bathroom,amenities,bedsAvailable,beds){
-    const elem = document.createElement('div');
-    elem.setAttribute('id', key);
-    elem.classList.add('vertical-product-box-img');
-    elem.innerHTML = `<div class="product-details-box">
-                                                            <div class="product-img">
-                                                                <img class="img-fluid img"
-                                                                    src="${imgURL}" alt="no_room_img">
-                                                            </div>
-                                                            <div class="product-content">
-                                                                <div
-                                                                    class="description d-flex align-items-center justify-content-between gap-1">
-                                                                    <div>
-                                                                        <div class="d-flex align-items-center gap-2">
-                                                                            <h6 class="product-name">
-                                                                             Floor:${floorNumber}, Room No: ${key}
-                                                                            </h6>
-                                                                        </div>
-                                                                        <h6 class="customized">${bedsAvailable} beds available </h6>
-                                                                        <p>
-                                                                            Room Detail: ${ac}, ${roomType}
-                                                                        </p>
-                                                                        <p>
-                                                                            Bathroom : ${bathroom}
+                                                                            Sharing : ${roomtype} 
                                                                         </p>
                                                                         <p>
                                                                             Amenities : ${amenities}
@@ -314,15 +176,15 @@ function loadBedCard(floorNumber,roomType,key,imgURL,roomprice,ac,bathroom,ameni
                                                         </div>`;
 
     // To add click event to the card
-    elem.dataset.roomType = roomType;
+    elem.dataset.roomType = roomtype;
     elem.dataset.roomPrice = roomprice;
     elem.dataset.ac = ac;
-    elem.dataset.bedsAvailable = bedsAvailable;
-    elem.dataset.roomFloor = floorNumber;
-    elem.dataset.roomNumber = key;
+    elem.dataset.roomCount = roomcount;
+    elem.dataset.roomFloor = floor;
+    elem.dataset.roomNumber = roomNumber;
     elem.addEventListener('click', handleCardClick);
 
-    postContainerRoom.appendChild(elem);
+    postContainer.appendChild(elem);
 }
 
 /**
@@ -330,30 +192,15 @@ function loadBedCard(floorNumber,roomType,key,imgURL,roomprice,ac,bathroom,ameni
  * @param {*} event - click event on room card
  * function gets triggered when room card is clicked. 
  */
-async function handleCardClick(event) {
+function handleCardClick(event) {
     const card = event.currentTarget;
     const hostelRoomType = card.dataset.roomType;
-    let roomDetails = card.dataset.roomType + "-" + card.dataset.roomPrice + "-" + card.dataset.bedsAvailable + "-" + card.dataset.roomFloor + "-" + card.dataset.roomNumber + "-" + card.dataset.ac+'-'+global_total_room_bedsAvailable;
+    let roomDetails = card.dataset.roomType + "-" + card.dataset.roomPrice + "-" + card.dataset.roomCount + "-" + card.dataset.roomFloor + "-" + card.dataset.roomNumber + "-" + card.dataset.ac;
     localStorage.setItem("room-details", roomDetails);
-    let ac = card.dataset.ac == 'ac' ? 'ac' : 'non_ac';
-    const dbref = ref(db, 'Hostel details/' + hostelName + '/rooms/' + "floor" + card.dataset.roomFloor + '/' + card.dataset.roomType+'/rooms/'+ac+'/'+card.dataset.roomNumber);
-    let availableCount = 0;
-    let room;
-    await onValue(dbref, (snapshot) => {
-        console.log(JSON.stringify(snapshot))
-        console.log(snapshot.val().bedsAvailable)
-        availableCount = snapshot.val().bedsAvailable;
-        room = snapshot.val();
-    })
-    if (availableCount > 0) {
+    if (card.dataset.roomCount > 0) {
         document.getElementById("no-bed-msg").style.display = 'none';
-        if (localStorage.getItem('bedCount') != 0) {
-            for (i = 1; i <= localStorage.getItem('bedCount'); i++) {
-                let cardId = 'bed ' + i;
-                document.getElementById(cardId).remove();
-            }
-            localStorage.setItem('bedCount', 0);
-        }
+        const parentContainer = document.getElementById('bedParent');
+        parentContainer.innerHTML = '';
 
         // Using match with regEx
 
@@ -382,7 +229,7 @@ async function handleCardClick(event) {
  */
 function addBed(i, roomDetails) {
     roomDetails = roomDetails.split('-')
-    const dbref = ref(db, 'Hostel details/' + hostelName + '/rooms/' + "floor" + roomDetails[3] + '/' + roomDetails[0] + '/rooms/' + roomDetails[5] + '/' + roomDetails[4] + '/beds/');
+    const dbref = ref(db, 'Hostel details/' + hostelName + '/rooms/' + "floor" + roomDetails[3] + '/' + "room" + roomDetails[4] + '/beds');
     let hostelBedAvailability = []
     onValue(dbref, (snapshot) => {
         hostelBedAvailability = [];
@@ -458,162 +305,6 @@ function bedSelection(event) {
     }
 
 }
-/**
- * 
- * @param {*} event - click event on room card
- * function gets triggered when room card is clicked. 
- */
-async function handleCardClick2(event) {
-    const card = event.currentTarget;
-    const hostelRoomType = card.dataset.roomType;
-    let roomDetails = card.dataset.roomType + "-" + card.dataset.roomPrice + "-" + card.dataset.bedsAvailable + "-" + card.dataset.roomFloor + "-" + card.dataset.roomNumber + "-" + card.dataset.ac;
-    localStorage.setItem("room-details", roomDetails);
-    const dbref = ref(db, 'Hostel details/' + hostelName + '/rooms/' + "floor" + card.dataset.roomFloor + '/' + card.dataset.roomType);
-    let clickedCardRoomDetails;
-    let availableCount = 0;
-    await onValue(dbref, (snapshot) => {
-        clickedCardRoomDetails = snapshot.val().rooms;
-        availableCount = snapshot.val().bedsAvailable;
-    })
-    if (availableCount > 0) {
-        document.getElementById("no-bed-msg").style.display = 'none';
-        const parentContainer = document.getElementById('bedParent');
-        parentContainer.innerHTML = '';
-        // if (localStorage.getItem('bedCount') != 0) {
-        //     for (i = 1; i <= localStorage.getItem('bedCount'); i++) {
-        //         let cardId = 'bed ' + i;
-        //         document.getElementById(cardId).remove();
-        //     }
-        //     localStorage.setItem('bedCount', 0);
-        // }
-
-        // Using match with regEx
-
-        //need for regex since when user clicks on room , 
-        //the room type is "2 Sharing","3 Sharing","10 Sharing" to extract the number from the string we use REGEX.
-        let matches = hostelRoomType.match(/(\d+)/);
-        // Display output if number extracted
-        if (matches) {
-            let bedCount = parseInt(matches[0]);
-            localStorage.setItem("bedCount", bedCount);
-            hostelRoomCount = card.dataset.roomCount
-            for (let key in clickedCardRoomDetails) {
-
-                const roomParentDiv = document.createElement("div");
-                roomParentDiv.id = "room - " + key[(key.length) - 1];
-                const heading = document.createElement("h5");
-                heading.innerHTML = "Room - " + key[(key.length) - 1];
-                heading.style = "padding-bottom:5px;"
-                roomParentDiv.appendChild(heading);
-
-                const roomDiv = document.createElement("div");
-                roomDiv.style = "display: grid;gap: 20px;grid-template-columns:1fr 1fr 1fr;"
-                for (i = 1; i <= bedCount; i++) {
-                    const cardDiv = addBed2(key[(key.length) - 1], i, roomDetails, roomDiv);
-                    roomDiv.appendChild(cardDiv);
-                }
-                roomParentDiv.appendChild(roomDiv);
-                parentContainer.appendChild(roomParentDiv);
-            }
-        }
-    }
-    else {
-        document.getElementById("no-bed-msg").style.display = 'block';
-        alert("Sorry, No beds available");
-    }
-}
-
-/**
- * 
- * @param {*} i - counter of the bed
- * Bed card is added dynamically based on the Room's bed count clicked by user.
- */
-function addBed2(roomNumber, i, roomDetails) {
-    roomDetails = roomDetails.split('-')
-    const dbref = ref(db, 'Hostel details/' + hostelName + '/rooms/' + "floor" + roomDetails[3] + '/' + roomDetails[0] + '/rooms/room' + roomNumber + '/beds/');
-    let hostelBedAvailability = []
-    onValue(dbref, (snapshot) => {
-        hostelBedAvailability = [];
-        snapshot.forEach(iterator => {
-            hostelBedAvailability.push(iterator.val());
-        })
-    })
-    // const parentContainer = document.getElementById('bedParent');
-    const elem = document.createElement('div');
-    elem.classList.add('card');
-    elem.style.cursor = "pointer";
-    elem.style.backgroundColor = "white";
-
-    //if room is already booked, then blocking the user not to select the room.
-    if (hostelBedAvailability[i - 1] == 'booked') {
-        elem.style.backgroundColor = "#FF7F7F";
-        elem.style.pointerEvents = "none";
-    }
-
-    let bedId = 'room' + roomNumber + '-bed' + i;
-    elem.setAttribute("id", bedId);
-    elem.innerHTML = `<div class="card-body">Bed ${i}</div>`;
-    elem.dataset.bedId = bedId;
-    elem.addEventListener('click', bedSelection2);
-    return elem;
-    // roomDiv.appendChild(elem);
-    // const parentContainer = document.getElementById('room'+roomNumber);
-    // parentContainer.appendChild(roomDiv);
-
-}
-
-/**
- * 
- * @param {*} event
- * WHen user selects a bed , this function is triggered. 
- */
-function bedSelection2(event) {
-    const bed = event.currentTarget;
-    let bedId;
-    bedId = bed.dataset.bedId;
-    console.log("inside bed click")
-    for (let ro = 1; ro <= hostelRoomCount; ro++) {
-        for (i = 1; i <= localStorage.getItem('bedCount'); i++) {
-            let bedId2 = 'room' + ro + 'bed' + i;
-            console.log("inside for color - " + document.getElementById(bedId2).style.backgroundColor);
-            if (bedId != bedId2) {
-                if (document.getElementById(bedId2).style.backgroundColor != "red" && document.getElementById(bedId2).style.backgroundColor == "lightgreen") {
-                    document.getElementById(bedId2).style.backgroundColor = "white";
-                    // localStorage.setItem("room-details", "");
-                    document.getElementById("cart-title").innerHTML = "Empty Cart";
-                    document.getElementById("cart-room-price").innerHTML = '';
-                    document.getElementById("cart-room-floor").innerHTML = "";
-                    document.getElementById("cart-bed-number").innerHTML = "";
-                }
-            }
-        }
-    }
-    if (document.getElementById(bedId).style.backgroundColor != "red") {
-        if (document.getElementById(bedId).style.backgroundColor == "white") {
-            document.getElementById(bedId).style.backgroundColor = "lightgreen";
-            localStorage.setItem("bedId", bedId);
-            let text = localStorage.getItem("room-details");
-            let roomDetails = text.split("-");
-            document.getElementById("cart-title").innerHTML = "Room Rate";
-            document.getElementById("cart-room-price").innerHTML = roomDetails[1];
-            // document.getElementById("cart-room-floor").innerHTML = "Floor - " + roomDetails[3] + " Room - " + roomDetails[2];
-            document.getElementById("cart-room-floor").innerHTML = "Floor - " + roomDetails[3];
-            bedId = bedId.split('-');
-            document.getElementById("cart-bed-number").innerHTML = "Room- " + bedId[0] + "<br> Bed- " + bedId[1];
-        }
-        else {
-            console.log("inside elseee " + document.getElementById(bedId).style.backgroundColor)
-            document.getElementById(bedId).style.backgroundColor = "white";
-            localStorage.setItem("bedId", 0);
-            document.getElementById("cart-title").innerHTML = "Empty Cart";
-            document.getElementById("cart-room-price").innerHTML = '';
-            document.getElementById("cart-room-floor").innerHTML = "";
-            document.getElementById("cart-bed-number").innerHTML = "";
-        }
-    }
-
-}
-
 function clearCartItems() {
     console.log("yess inside close")
     // localStorage.setItem("bedId", 0);
@@ -648,8 +339,6 @@ proceedPaymentBtn.addEventListener('click', (e) => {
 })
 
 window.addEventListener('load', loadDataFromDB);
-window.addEventListener('load', clearCheckboxes);
-
 /**********Loading Rooms in Book Online Section data end***************/
 
 
@@ -779,20 +468,45 @@ commonBx.addEventListener('click', (e) => {
 
 function roomTypeFilters() {
     roomTypeFilterValue = [];
-    var checkboxes = document.getElementsByName("sharingCheckBox");
-    // loop over them all
-    for (var i = 0; i < checkboxes.length; i++) {
-        if(checkboxes[i].checked){
-            roomTypeFilterValue.push(checkboxes[i].value);
-        }
+    var twoSharingFlag = twoSharingBx.checked;
+    var threeSharingFlag = threeSharingBx.checked;
+    var fourSharingFlag = fourSharingBx.checked;
+    if (twoSharingFlag == true && threeSharingFlag == false && fourSharingFlag == false) {
+        roomTypeFilterValue.push(twoSharingBx.value);
+        applyFilters();
     }
-    console.log(roomTypeFilterValue)
-    if(roomTypeFilterValue.length>0){
-        applyMainRoomFilters();
+    else if (twoSharingFlag == false && threeSharingFlag == true && fourSharingFlag == false) {
+        roomTypeFilterValue.push(threeSharingBx.value);
+        applyFilters();
+    }
+    else if (twoSharingFlag == false && threeSharingFlag == false && fourSharingFlag == true) {
+        roomTypeFilterValue.push(fourSharingBx.value);
+        applyFilters();
+    }
+    else if (twoSharingFlag == true && threeSharingFlag == false && fourSharingFlag == true) {
+        roomTypeFilterValue.push(twoSharingBx.value);
+        roomTypeFilterValue.push(fourSharingBx.value);
+        applyFilters();
+    }
+    else if (twoSharingFlag == true && threeSharingFlag == true && fourSharingFlag == false) {
+        roomTypeFilterValue.push(twoSharingBx.value);
+        roomTypeFilterValue.push(threeSharingBx.value);
+        applyFilters();
+    }
+    else if (twoSharingFlag == false && threeSharingFlag == true && fourSharingFlag == true) {
+        roomTypeFilterValue.push(threeSharingBx.value);
+        roomTypeFilterValue.push(fourSharingBx.value);
+        applyFilters();
+    }
+    else if (twoSharingFlag == true && threeSharingFlag == true && fourSharingFlag == true) {
+        roomTypeFilterValue.push(twoSharingBx.value);
+        roomTypeFilterValue.push(threeSharingBx.value);
+        roomTypeFilterValue.push(fourSharingBx.value);
+        applyFilters();
     }
     else {
         console.log("No Filter");
-        applyMainRoomFilters();
+        applyFilters();
     }
 }
 
@@ -843,18 +557,17 @@ function bathroomFilters() {
 }
 
 filtersClrBtn.addEventListener('click', (e) => {
+    clearFloorFilters();
 
-    clearCheckboxes();
+    twoSharingBx.checked = false;
+    threeSharingBx.checked = false;
+    fourSharingBx.checked = false;
 
-    document.getElementById("roomDiv").style.display = "none";
-    document.getElementById("floorDiv").style.display = "none";
-    document.getElementById("transition_loader").style.display = "flex";
-    setTimeout(() => {
-        document.getElementById("floorDiv").style.display = "block";
-        document.getElementById("transition_loader").style.display = "none";
-        document.getElementById("roomDivFilters").style.display = "none";
+    acBx.checked = false;
+    nonacBx.checked = false;
 
-    }, 1000);
+    attachedBx.checked = false;
+    commonBx.checked = false;
 
     roomFloorFilterValue = [];
     roomTypeFilterValue = [];
@@ -863,57 +576,43 @@ filtersClrBtn.addEventListener('click', (e) => {
 
     applyFilters();
 });
-function clearCheckboxes(){
-    console.log('..inside clearing checkbox')
-    var checkboxes = document.getElementsByName("floorCheckBox");
-    // loop over them all
-    for (var i = 0; i < checkboxes.length; i++) {
-        checkboxes[i].checked = false;
-        checkboxes[i].disabled = false;
-    }
 
-    var checkboxes = document.getElementsByName("sharingCheckBox");
-    // loop over them all
-    for (var i = 0; i < checkboxes.length; i++) {
-        checkboxes[i].checked = false;
-        checkboxes[i].disabled = false;
-    }
-
-    var checkboxes = document.getElementsByName("acCheckBox");
-    // loop over them all
-    for (var i = 0; i < checkboxes.length; i++) {
-        checkboxes[i].checked = false;
-    }
-
-    var checkboxes = document.getElementsByName("bathroomCheckBox");
-    // loop over them all
-    for (var i = 0; i < checkboxes.length; i++) {
-        checkboxes[i].checked = false;
-    }
-}
 function applyFilters() {
     var data_filter = [];
     console.log("Room Floor Filters - " + roomFloorFilterValue.length + " Room Type Filters - " + roomTypeFilterValue.length + " AC filters - " + airConditionFilterValue.length + " Bathroom filter - " + bathroomFilterValue.length);
-    if (airConditionFilterValue.length == 0 && bathroomFilterValue.length == 0) {
-        loadRoomCards(global_floor_number,global_room_type);
+    if (roomFloorFilterValue.length == 0 && roomTypeFilterValue.length == 0 && airConditionFilterValue.length == 0 && bathroomFilterValue.length == 0) {
+        if (localStorage.getItem("total_filter_length") != 0) {
+            removeCards(localStorage.getItem("total_filter_length"));
+            localStorage.setItem("total_filter_length", 0);
+        }
+        if (localStorage.getItem("total_rooms_length") == 0) {
+            if (localStorage.getItem('bedCount') != 0) {
+                //while applying filters, we recieved duplicates beds adding, so we again empty the no.of bed container.
+                for (i = 1; i <= localStorage.getItem('bedCount'); i++) {
+                    let cardId = 'bed ' + i;
+                    document.getElementById(cardId).remove();
+                }
+                localStorage.setItem('bedCount', 0);
+            }
+            loadDataFromDB();
+        }
     }
     else {
-        data_filter = [];
-        //iterating ac rooms and pushing it to data_filter array.
-        if(acRooms!=null && acRooms!= undefined){
-            for(let key in acRooms){
-                console.log(acRooms[key])
-                data_filter.push(acRooms[key])
-            }
+        data_filter = hostelist;
+        if (roomFloorFilterValue.length != 0) {
+            roomFloorFilterValue.forEach(filterValue => {
+                data_filter = data_filter.filter(element =>
+                    element.floor.toLowerCase() == filterValue.toLowerCase()
+                );
+            });
         }
-         //iterating ac rooms and pushing it to data_filter array.
-        if(nonAcRooms!=null && nonAcRooms!= undefined){
-            for(let key in nonAcRooms){
-                console.log(nonAcRooms[key])
-                data_filter.push(nonAcRooms[key])
-            }
+        if (roomTypeFilterValue.length != 0) {
+            roomTypeFilterValue.forEach(filterValue => {
+                data_filter = data_filter.filter(element =>
+                    element.roomType.toLowerCase() == filterValue.toLowerCase()
+                );
+            });
         }
-        console.log(data_filter);
         if (airConditionFilterValue.length != 0) {
             airConditionFilterValue.forEach(filterValue => {
                 data_filter = data_filter.filter(element =>
@@ -928,10 +627,17 @@ function applyFilters() {
                 );
             });
         }
-        if (airConditionFilterValue.length != 0 || bathroomFilterValue.length != 0) {
+        if (roomFloorFilterValue.length != 0 || roomTypeFilterValue.length != 0 || airConditionFilterValue.length != 0 || bathroomFilterValue.length != 0) {
+            if (localStorage.getItem("total_rooms_length") != 0) {
+                removeCards(localStorage.getItem("total_rooms_length"));
+                localStorage.setItem("total_rooms_length", 0);
+            }
+            if (localStorage.getItem("total_filter_length") != 0) {
+                removeCards(localStorage.getItem("total_filter_length"));
+                localStorage.setItem("total_filter_length", 0);
+            }
             //Adding fitler relevant room cards data.
             var i = 0;
-            postContainerRoom.innerHTML='';
             data_filter.forEach(iterator => {
                 let imageArray = [];//initializing images array for every iteration, then only images for that particular rooms will display.
                 i++;
@@ -941,24 +647,22 @@ function applyFilters() {
                         // addImageCard(i);
                     })
                 }
-                loadBedCard(iterator.floor,iterator.roomType,'room'+iterator.roomNumber,imageArray[0],iterator.price,iterator.ac,iterator.bathroom,iterator.amenities,iterator.bedsAvailable,iterator.beds);
-
+                addHostelRoomCard(iterator.ac, iterator.amenities, iterator.bathroom, iterator.floor,
+                    iterator.roomNumber, iterator.price, iterator.roomCount, iterator.roomType, imageArray[0], i)
             });
             localStorage.setItem("total_filter_length", i);
             if (data_filter.length == 0) {
-                document.getElementById("no_bed_msg").style.display = "flex";
-                document.getElementById("no_bed_msg").style.justifyContent = "center";
-                document.getElementById("no_bed_msg").style.alignItems = "center";
+                document.getElementById("no_room_msg").style.display = "flex";
+                document.getElementById("no_room_msg").style.justifyContent = "center";
+                document.getElementById("no_room_msg").style.alignItems = "center";
             }
             else {
-                if(document.getElementById("no_bed_msg").style.display == 'flex'){
-                    document.getElementById("no_bed_msg").style.display = "none";
-                }
+                document.getElementById("no_room_msg").style.display = "none";
             }
 
         }
         else {
-            loadRoomCards(global_floor_number,global_room_type);
+            loadDataFromDB();
         }
     }
 }
@@ -977,85 +681,16 @@ function removeCards(length) {
 }
 /**Applying Filters Section ends here for - Book Online Section */
 
-// /** Dynamic Checkboxes are loaded based on the HosteFloor count for paritcular hostel - starts here */
-// function clearFloorFilters() {
-//     roomFloorFilterValue = [];
-//     var checkboxes = document.getElementsByName("floorCheckBox");
-//     // loop over them all
-//     for (var i = 0; i < checkboxes.length; i++) {
-//         // And stick the checked ones onto an array...
-//         if (checkboxes[i].checked) {
-//             checkboxes[i].checked = false;
-//         }
-//         checkboxes[i].disabled = false;
-//     }
-
-//     var checkboxes = document.getElementsByName("sharingCheckBox");
-//     // loop over them all
-//     for (var i = 0; i < checkboxes.length; i++) {
-//         // And stick the checked ones onto an array...
-//         if (checkboxes[i].checked) {
-//             checkboxes[i].checked = false;
-//         }
-//         checkboxes[i].disabled = false;
-//     }
-
-// }
-
-function applyMainRoomFilters() {
-    var data_filter = [];
-    console.log("Room Floor Filters - " + roomFloorFilterValue.length + " Room Type Filters - " + roomTypeFilterValue.length + " AC filters - " + airConditionFilterValue.length + " Bathroom filter - " + bathroomFilterValue.length);
-    if (roomFloorFilterValue.length == 0 && roomTypeFilterValue.length == 0) {
-        loadDataFromDB();
-    }
-    else {
-        data_filter = hostelist;
-        console.log(data_filter)
-        if (roomFloorFilterValue.length != 0) {
-            roomFloorFilterValue.forEach(filterValue => {
-                data_filter = data_filter.filter(element =>
-                    element.floor == filterValue
-                );
-            });
-        }
-        if (roomTypeFilterValue.length != 0) {
-            roomTypeFilterValue.forEach(filterValue => {
-                data_filter = data_filter.filter(element =>
-                    element.roomType.toLowerCase() == filterValue.toLowerCase()
-                );
-            });
-        }
-        if (roomFloorFilterValue.length != 0 || roomTypeFilterValue.length != 0) {
-            //Adding fitler relevant room cards data.
-            var i = 0;
-            postContainer.innerHTML='';
-            data_filter.forEach(iterator => {
-                let imageArray = [];//initializing images array for every iteration, then only images for that particular rooms will display.
-                i++;
-                if (iterator.imagesLink != undefined) {
-                    iterator.imagesLink.forEach(j => {
-                        imageArray.push(j);
-                        // addImageCard(i);
-                    })
-                }
-                addHostelRoomCard(iterator.ac, iterator.amenities, iterator.bathroom, iterator.floor, iterator.price, iterator.roomType, iterator.bedsAvailable, imageArray[0], i, iterator.rooms)
-            });
-            localStorage.setItem("total_filter_length", i);
-            console.log('nnnnn')
-            if (data_filter.length == 0) {
-                console.log("uesssss")
-                document.getElementById("no_room_msg").style.display = "flex";
-                document.getElementById("no_room_msg").style.justifyContent = "center";
-                document.getElementById("no_room_msg").style.alignItems = "center";
-            }
-            else {
-                console.log('nooo')
-                document.getElementById("no_room_msg").style.display = "none";
-            }
-
-        }
-        else {
-            loadDataFromDB();
+/** Dynamic Checkboxes are loaded based on the HosteFloor count for paritcular hostel - starts here */
+function clearFloorFilters() {
+    roomFloorFilterValue = [];
+    var checkboxes = document.getElementsByName("floorCheckBox");
+    var checkboxesChecked = [];
+    // loop over them all
+    for (var i = 0; i < checkboxes.length; i++) {
+        // And stick the checked ones onto an array...
+        if (checkboxes[i].checked) {
+            checkboxes[i].checked = false;
         }
     }
 }
@@ -1077,7 +712,7 @@ function getCheckedBoxes() {
             roomFloorFilterValue.push(checkboxes[i].value);
         }
     }
-    applyMainRoomFilters();//calls the filter method , for the selected checkboxes in floor filters.
+    applyFilters();//calls the filter method , for the selected checkboxes in floor filters.
     // Return the array if it is non-empty, or null
     return checkboxesChecked.length > 0 ? checkboxesChecked : null;
 }
@@ -1095,7 +730,7 @@ function loadCheckboxesForFilter(floorCount) {
             //creating li element
             let libox = document.createElement('li');
             libox.style.display = "flex";
-            libox.style.gap = "8px";
+            libox.style.gap = "4px";
 
             // creating checkbox element
             let checkbox = document.createElement('input');
@@ -1112,7 +747,6 @@ function loadCheckboxesForFilter(floorCount) {
 
             // assigning attributes for the created label tag 
             label.htmlFor = checkbox.id;
-            label.style.color = "rgba(var(--content-color), 0.9)";
 
             // appending the created text to 
             // the created label tag 

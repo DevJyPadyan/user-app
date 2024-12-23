@@ -216,31 +216,38 @@ function storeOrderDetails(paymentResponse) {
         roomType: roomDetails[0],
         floor: roomDetails[3],
         ac: roomDetails[5],
-        room:roomDetails[4],
+        room: roomDetails[4],
         paymentComplete: "yes",
         totalAmount: total,
         roomRent: roomDetails[1],
         paymentDate: date,
         paymenttransId: paymentResponse.razorpay_payment_id,
-        hostelName:hostelName,
+        hostelName: hostelName,
         extras: extrasMenu,
-        status:'Booked'
+        status: 'Booked'
         // paymentOrderId:paymentResponse.razorpay_order_id
     })
         .then(() => {
             alert("Click to continue");
-            update(ref(db, "Hostel details/" + hostelName + '/rooms/' + "floor" + roomDetails[3] + '/' + "room" + roomDetails[4] + '/'), {
-                roomCount: (Number(roomDetails[2]) - 1)
+            update(ref(db, 'Hostel details/' + hostelName + '/rooms/' + "floor" + roomDetails[3] + '/' + roomDetails[0] + '/rooms/' + roomDetails[5] + '/' + roomDetails[4]), {
+                bedsAvailable: (Number(roomDetails[2]) - 1)
             })
                 .then(() => {
-                    console.log(db, 'Hostel details/' + hostelName + '/rooms/' + "floor" + roomDetails[3] + '/' + "room" + roomDetails[4] + '/beds/');
                     alert("Click to place booking");
-                    update(ref(db, 'Hostel details/' + hostelName + '/rooms/' + "floor" + roomDetails[3] + '/' + "room" + roomDetails[4] + '/beds/'), {
+                    update(ref(db, 'Hostel details/' + hostelName + '/rooms/' + "floor" + roomDetails[3] + '/' + roomDetails[0] + '/rooms/' + roomDetails[5] + '/' + roomDetails[4] + '/beds/'), {
                         [bedId]: "booked"
                     })
                         .then(() => {
-                            alert("Room Booked Successfully");
-                            window.location.href = "././confirm-order.html";
+                            update(ref(db, 'Hostel details/' + hostelName + '/rooms/' + "floor" + roomDetails[3] + '/' + roomDetails[0]), {
+                                bedsAvailable: (Number(roomDetails[6]) - 1)
+                            })
+                                .then(() => {
+                                    alert("Room Booked Successfully");
+                                    window.location.href = "././confirm-order.html";
+                                })
+                                .catch((error) => {
+                                    alert(error);
+                                });
                         })
                         .catch((error) => {
                             alert(error);
