@@ -155,6 +155,7 @@ async function loadExtrasCheckBoxes() {
         if (snapshot.exists()) {
             document.getElementById('noExtrasMsg').style.display = "none";
             let ulContainer = document.getElementById("extrasUl");
+            ulContainer.innerHTML='';
             foodList = snapshot.val();
             foodList.forEach(element => {
                 //checks the availability of the extras menu

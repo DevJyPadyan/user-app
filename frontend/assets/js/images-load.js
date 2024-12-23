@@ -95,6 +95,15 @@ const loadDataFromDB = () => {
                 });
             });
         }
+        //clearing the sharing checkbox, because if we maintain this code, after using navigation back from checkout page, 
+        //sharing checkbox is checked , fix for it.
+        var checkboxes = document.getElementsByName("sharingCheckBox");
+        // loop over them all
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = false;
+            checkboxes[i].disabled = false;
+        }
+
 
         iterateAllRecords();
     })
@@ -209,7 +218,7 @@ function showRoomDetails(event) {
     for (var i = 0; i < checkboxes.length; i++) {
         checkboxes[i].disabled = true;
         //without using filter, directly if user selects the room , clicked type n floor numb will get auto-checked n disabled.
-        if(checkboxes[i].value == card.dataset.roomFloor){
+        if (checkboxes[i].value == card.dataset.roomFloor) {
             checkboxes[i].checked = true;
         }
     }
@@ -217,11 +226,11 @@ function showRoomDetails(event) {
     for (var i = 0; i < checkboxes.length; i++) {
         checkboxes[i].disabled = true;
         //without using filter, directly if user selects the room , clicked type n floor numb will get auto-checked n disabled.
-        if(checkboxes[i].value == card.dataset.roomType){
+        if (checkboxes[i].value == card.dataset.roomType) {
             checkboxes[i].checked = true;
         }
     }
-    loadRoomCards(card.dataset.roomFloor, card.dataset.roomType,card.dataset.bedsAvailable );
+    loadRoomCards(card.dataset.roomFloor, card.dataset.roomType, card.dataset.bedsAvailable);
 }
 
 let acRooms;
@@ -230,21 +239,21 @@ let global_floor_number;
 let global_room_type;
 let global_total_room_bedsAvailable;
 const postContainerRoom = document.getElementById('item-5');
-function loadRoomCards(floorNumber, roomType, total_room_bedsAvailable){
-    if(document.getElementById("no_bed_msg").style.display == 'flex'){
+function loadRoomCards(floorNumber, roomType, total_room_bedsAvailable) {
+    if (document.getElementById("no_bed_msg").style.display == 'flex') {
         document.getElementById("no_bed_msg").style.display = "none";
     }
     global_floor_number = floorNumber;
     global_room_type = roomType;
     global_total_room_bedsAvailable = total_room_bedsAvailable;
-    const dbref = ref(db, 'Hostel details/' + hostelName + "/rooms/floor"+floorNumber+'/'+roomType+'/');
+    const dbref = ref(db, 'Hostel details/' + hostelName + "/rooms/floor" + floorNumber + '/' + roomType + '/');
     onValue(dbref, (snapshot) => {
         acRooms = snapshot.val().rooms.ac;
         nonAcRooms = snapshot.val().rooms.non_ac;
     })
     console.log(acRooms, nonAcRooms)
-    postContainerRoom.innerHTML='';//erasing the previous cards, and loading all from first.
-    for (let key in acRooms){
+    postContainerRoom.innerHTML = '';//erasing the previous cards, and loading all from first.
+    for (let key in acRooms) {
         let room = acRooms[key];
         let beds = room.beds;
         let imageArray = [];//initializing images array for every iteration, then only images for that particular rooms will display.
@@ -254,9 +263,9 @@ function loadRoomCards(floorNumber, roomType, total_room_bedsAvailable){
                 addImageCard(j);
             })
         }
-        loadBedCard(floorNumber,roomType,key,imageArray[0],room.price,room.ac,room.bathroom,room.amenities,room.bedsAvailable,beds);
+        loadBedCard(floorNumber, roomType, key, imageArray[0], room.price, room.ac, room.bathroom, room.amenities, room.bedsAvailable, beds);
     }
-    for (let key in nonAcRooms){
+    for (let key in nonAcRooms) {
         let room = nonAcRooms[key];
         let beds = room.beds;
         if (room.imagesLink != undefined) {
@@ -265,14 +274,14 @@ function loadRoomCards(floorNumber, roomType, total_room_bedsAvailable){
                 addImageCard(j);
             })
         }
-        loadBedCard(floorNumber,roomType,key,imageArray[0],room.price,room.ac,room.bathroom,room.amenities,room.bedsAvailable,beds);
+        loadBedCard(floorNumber, roomType, key, imageArray[0], room.price, room.ac, room.bathroom, room.amenities, room.bedsAvailable, beds);
     }
     // fetchRoomCards('Hostel details/' + hostelName + "/rooms/floor"+floorNumber+'/'+roomType+'/');
 }
 
 
 
-function loadBedCard(floorNumber,roomType,key,imgURL,roomprice,ac,bathroom,amenities,bedsAvailable,beds){
+function loadBedCard(floorNumber, roomType, key, imgURL, roomprice, ac, bathroom, amenities, bedsAvailable, beds) {
     const elem = document.createElement('div');
     elem.setAttribute('id', key);
     elem.classList.add('vertical-product-box-img');
@@ -333,10 +342,10 @@ function loadBedCard(floorNumber,roomType,key,imgURL,roomprice,ac,bathroom,ameni
 async function handleCardClick(event) {
     const card = event.currentTarget;
     const hostelRoomType = card.dataset.roomType;
-    let roomDetails = card.dataset.roomType + "-" + card.dataset.roomPrice + "-" + card.dataset.bedsAvailable + "-" + card.dataset.roomFloor + "-" + card.dataset.roomNumber + "-" + card.dataset.ac+'-'+global_total_room_bedsAvailable;
+    let roomDetails = card.dataset.roomType + "-" + card.dataset.roomPrice + "-" + card.dataset.bedsAvailable + "-" + card.dataset.roomFloor + "-" + card.dataset.roomNumber + "-" + card.dataset.ac + '-' + global_total_room_bedsAvailable;
     localStorage.setItem("room-details", roomDetails);
     let ac = card.dataset.ac == 'ac' ? 'ac' : 'non_ac';
-    const dbref = ref(db, 'Hostel details/' + hostelName + '/rooms/' + "floor" + card.dataset.roomFloor + '/' + card.dataset.roomType+'/rooms/'+ac+'/'+card.dataset.roomNumber);
+    const dbref = ref(db, 'Hostel details/' + hostelName + '/rooms/' + "floor" + card.dataset.roomFloor + '/' + card.dataset.roomType + '/rooms/' + ac + '/' + card.dataset.roomNumber);
     let availableCount = 0;
     let room;
     await onValue(dbref, (snapshot) => {
@@ -782,12 +791,12 @@ function roomTypeFilters() {
     var checkboxes = document.getElementsByName("sharingCheckBox");
     // loop over them all
     for (var i = 0; i < checkboxes.length; i++) {
-        if(checkboxes[i].checked){
+        if (checkboxes[i].checked) {
             roomTypeFilterValue.push(checkboxes[i].value);
         }
     }
     console.log(roomTypeFilterValue)
-    if(roomTypeFilterValue.length>0){
+    if (roomTypeFilterValue.length > 0) {
         applyMainRoomFilters();
     }
     else {
@@ -863,7 +872,7 @@ filtersClrBtn.addEventListener('click', (e) => {
 
     applyFilters();
 });
-function clearCheckboxes(){
+function clearCheckboxes() {
     console.log('..inside clearing checkbox')
     var checkboxes = document.getElementsByName("floorCheckBox");
     // loop over them all
@@ -895,20 +904,20 @@ function applyFilters() {
     var data_filter = [];
     console.log("Room Floor Filters - " + roomFloorFilterValue.length + " Room Type Filters - " + roomTypeFilterValue.length + " AC filters - " + airConditionFilterValue.length + " Bathroom filter - " + bathroomFilterValue.length);
     if (airConditionFilterValue.length == 0 && bathroomFilterValue.length == 0) {
-        loadRoomCards(global_floor_number,global_room_type);
+        loadRoomCards(global_floor_number, global_room_type);
     }
     else {
         data_filter = [];
         //iterating ac rooms and pushing it to data_filter array.
-        if(acRooms!=null && acRooms!= undefined){
-            for(let key in acRooms){
+        if (acRooms != null && acRooms != undefined) {
+            for (let key in acRooms) {
                 console.log(acRooms[key])
                 data_filter.push(acRooms[key])
             }
         }
-         //iterating ac rooms and pushing it to data_filter array.
-        if(nonAcRooms!=null && nonAcRooms!= undefined){
-            for(let key in nonAcRooms){
+        //iterating ac rooms and pushing it to data_filter array.
+        if (nonAcRooms != null && nonAcRooms != undefined) {
+            for (let key in nonAcRooms) {
                 console.log(nonAcRooms[key])
                 data_filter.push(nonAcRooms[key])
             }
@@ -931,7 +940,7 @@ function applyFilters() {
         if (airConditionFilterValue.length != 0 || bathroomFilterValue.length != 0) {
             //Adding fitler relevant room cards data.
             var i = 0;
-            postContainerRoom.innerHTML='';
+            postContainerRoom.innerHTML = '';
             data_filter.forEach(iterator => {
                 let imageArray = [];//initializing images array for every iteration, then only images for that particular rooms will display.
                 i++;
@@ -941,7 +950,7 @@ function applyFilters() {
                         // addImageCard(i);
                     })
                 }
-                loadBedCard(iterator.floor,iterator.roomType,'room'+iterator.roomNumber,imageArray[0],iterator.price,iterator.ac,iterator.bathroom,iterator.amenities,iterator.bedsAvailable,iterator.beds);
+                loadBedCard(iterator.floor, iterator.roomType, 'room' + iterator.roomNumber, imageArray[0], iterator.price, iterator.ac, iterator.bathroom, iterator.amenities, iterator.bedsAvailable, iterator.beds);
 
             });
             localStorage.setItem("total_filter_length", i);
@@ -951,14 +960,14 @@ function applyFilters() {
                 document.getElementById("no_bed_msg").style.alignItems = "center";
             }
             else {
-                if(document.getElementById("no_bed_msg").style.display == 'flex'){
+                if (document.getElementById("no_bed_msg").style.display == 'flex') {
                     document.getElementById("no_bed_msg").style.display = "none";
                 }
             }
 
         }
         else {
-            loadRoomCards(global_floor_number,global_room_type);
+            loadRoomCards(global_floor_number, global_room_type);
         }
     }
 }
@@ -1028,7 +1037,7 @@ function applyMainRoomFilters() {
         if (roomFloorFilterValue.length != 0 || roomTypeFilterValue.length != 0) {
             //Adding fitler relevant room cards data.
             var i = 0;
-            postContainer.innerHTML='';
+            postContainer.innerHTML = '';
             data_filter.forEach(iterator => {
                 let imageArray = [];//initializing images array for every iteration, then only images for that particular rooms will display.
                 i++;
