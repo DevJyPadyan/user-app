@@ -2,6 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { getDatabase, ref, get, set, child, update, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"
 import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"
 import { firebaseConfig } from "./firebase-config.js";
+import { currentDate } from "./date-generator.js";
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase();
@@ -30,38 +31,53 @@ login.addEventListener('click', (e) => {
         signInWithEmailAndPassword(auth, email, passwd)
             .then((userCredential) => {
                 // Signed in 
-                get(child(dbref, "User details/" + userCredential.user.uid + '/'))
-                    .then((snapshot) => {
-                        if (snapshot.exists()) {
+                //checking whether the userEmail is verified., else ask them to go verify their email verification link sent to their mail address at the time of registration.
+                if (userCredential.user.emailVerified) {
+                    get(child(dbref, "User details/" + userCredential.user.uid + '/'))
+                        .then((snapshot) => {
+                            if (snapshot.exists()) {
 
-                            let usname = snapshot.val().userName;
-                            let email = snapshot.val().userEmail;
-                            let userUid = userCredential.user.uid;
-                            let phone = snapshot.val().userPhone;
+                                let usname = snapshot.val().userName;
+                                let email = snapshot.val().userEmail;
+                                let userUid = userCredential.user.uid;
+                                let phone = snapshot.val().userPhone;
 
-                            //storing the user details data in an array list
-                            const userdetailList = [userUid,usname,email, phone];
-                            //converting array to string(for setting in localstorage).
-                            let userdetails = JSON.stringify(userdetailList);
+                                //storing the user details data in an array list
+                                const userdetailList = [userUid, usname, email, phone];
+                                //converting array to string(for setting in localstorage).
+                                let userdetails = JSON.stringify(userdetailList);
 
-                            localStorage.setItem("userDetails", userdetails);
-                            if (localStorage.getItem('purposeToLogin') == 'checkout') {
-                                window.location.href = "././checkout.html";
+                                //updating the login date for session purpose
+                                update(ref(db, "User details/" + userUid), {
+                                    lastLogin: currentDate
+                                })
+                                    .then(() => {
+                                        localStorage.setItem("userDetails", userdetails);
+                                        if (localStorage.getItem('purposeToLogin') == 'checkout') {
+                                            window.location.href = "././checkout.html";
+                                        }
+                                        else {
+                                            window.location.href = "././index.html";
+                                        }
+                                    })
+                                    .catch((error) => {
+                                        alert(error);
+                                    });
+
                             }
-                            else {
-                                window.location.href = "././index.html";
-                            }
-
-                        }
-                    })
-                    .catch((error) => {
-                        alert(error);
-                    });
+                        })
+                        .catch((error) => {
+                            alert(error);
+                        });
+                }
+                else{
+                    alert("Please, Complete Email Verification Sent to your Registered Mail at the time of registration.")
+                }
             })
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
-                alert("Please check Useremail and Password - "+errorCode);
+                alert("Please check Useremail and Password - " + errorCode);
             });
     }
     else {
