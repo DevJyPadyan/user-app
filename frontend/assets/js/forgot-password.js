@@ -14,6 +14,7 @@ forgotPasswordBtn.addEventListener('click', (e) => {
         sendPasswordResetEmail(auth, email)
             .then(() => {
                 alert("Email Sent, Check mail and reset password");
+                window.location.href = "././signin.html";
             })
             .catch((error) => {
                 const errorCode = error.code;

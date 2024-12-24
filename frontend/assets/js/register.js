@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getDatabase, ref, get, set, child, update, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"
-import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"
 import { firebaseConfig } from "./firebase-config.js";
 
 const app = initializeApp(firebaseConfig);
@@ -49,16 +49,19 @@ register.addEventListener('click', (e) => {
                     // gaurdianName: gaurdianName,
                     // gaurdianPhone: gaurdianPhone
                 })
-                    .then(() => {
+                    .then(async () => {
                         //const userReg = [user,phone,pwd];
                         //converting array to string(for setting in localstorage).
                         //let signIn = JSON.stringify(userReg);
                         //localStorage.setItem("userDetails", signIn);
+                        await sendEmailVerification(userCredential.user);
+                        alert(`A verification email has been sent to your email address!. Please verify your email to login.`);
                         alert("User Registered.");
                         window.location.href = "././signin.html";
                     })
                     .catch((error) => {
-                        alert(error);
+                        // alert("hellooo-",error.message);
+                        console.log(error)
                     });
             })
             .catch((error) => {

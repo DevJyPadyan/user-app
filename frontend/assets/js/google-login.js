@@ -2,7 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { firebaseConfig } from "./firebase-config.js";
 import { getDatabase, ref, get, set, child, update, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"
-
+import { currentDate } from "./date-generator.js";
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const db = getDatabase();
@@ -33,7 +33,8 @@ googleLogin.addEventListener('click', (e) => {
                             userEmail: userDetailsArray[2],
                             proofSubmission: "no",
                             userUid:userDetailsArray[0],
-                            guardianDetails:"no"
+                            guardianDetails:"no",
+                            lastLogin:currentDate
                         })
                             .catch((error) => {
                                 alert(error);
