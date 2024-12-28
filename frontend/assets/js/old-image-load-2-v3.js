@@ -94,15 +94,7 @@ const loadDataFromDB = () => {
                     hostelist.push(roomData);
                 });
             });
-
-            document.getElementById("transition_loader").style.display = "flex";
-            setTimeout(() => {
-                document.getElementById("transition_loader").style.display = "none";
-                loadRoom(roomsData);
-            }, 800);
         }
-        //clearing the sharing checkbox, because if we maintain this code, after using navigation back from checkout page, 
-        //sharing checkbox is checked , fix for it.
         var checkboxes = document.getElementsByName("sharingCheckBox");
         // loop over them all
         for (var i = 0; i < checkboxes.length; i++) {
@@ -111,7 +103,7 @@ const loadDataFromDB = () => {
         }
 
 
-        // iterateAllRecords();
+        iterateAllRecords();
     })
 
 }
@@ -132,8 +124,7 @@ const iterateAllRecords = () => {
         }
         i++;
         console.log(iterator.rooms)
-        loadRoom(hostelist);
-        // addHostelRoomCard(iterator.ac, iterator.amenities, iterator.bathroom, iterator.floor, iterator.price, iterator.roomType, iterator.bedsAvailable, imageArray[0], i, iterator.rooms)
+        addHostelRoomCard(iterator.ac, iterator.amenities, iterator.bathroom, iterator.floor, iterator.price, iterator.roomType, iterator.bedsAvailable, imageArray[0], i, iterator.rooms)
     });
     localStorage.setItem("total_rooms_length", hostelist.length);
     if (hostelist.length == 0) {
@@ -212,292 +203,6 @@ const addHostelRoomCard = (ac, amenities, bathroom, floor, roomprice, roomtype, 
 
     postContainer.appendChild(elem);
 }
-
-document.getElementById('applyFilters').addEventListener('click', applyFilters2);
-
-    function applyFilters2() {
-        postContainer.innerHTML='';
-        document.getElementById("no_room_msg").style.display = "none";
-      /*const filterSelectFloor = document.getElementById('floorFilter');
-      const filterSelectSharing = document.getElementById('sharingTypeFilter');
-      const filterSelectAC = document.getElementById('acFilter');
-      const filterSelectBathroom = document.getElementById('bathroomFilter');
-      const filterInputPrice = document.getElementById('priceSlider');*/
-
-      if (filters.floor.value == '' && filters.sharing.value == '' && filters.ac.value == '' && filters.bathroom.value == '') {
-        document.getElementById("clearFiltersBtn").style.display = "none";
-      }
-      else{
-        document.getElementById("clearFiltersBtn").style.display = "inline";
-      }
-      // } else {
-        const dbref = ref(db, 'Hostel details/' + hostelName + "/rooms/");
-        onValue(dbref, (snapshot) => {
-                let roomsData = snapshot.val();
-    
-            if (roomsData != undefined || roomsData != null) {
-                const filteredData = filterRooms(roomsData);
-                console.log('Filtered data ', filteredData);
-                document.getElementById("transition_loader").style.display = "flex";
-                setTimeout(() => {
-                    document.getElementById("transition_loader").style.display = "none";
-                    loadRoom(filteredData);
-                }, 800);
-            }
-        })    
-
-      //}
-
-    }
-    const filters = {
-        floor: document.getElementById('floorFilter'),
-        sharing: document.getElementById('sharingTypeFilter'),
-        ac: document.getElementById('acFilter'),
-        bathroom: document.getElementById('bathroomFilter'),
-        // price: document.getElementById('priceSlider'),
-      };
-
-    function filterRooms(data) {
-      let filteredData = {};
-      Object.keys(data).forEach(floorKey => {
-        const floor = data[floorKey];
-        let filteredSharing = {};
-        Object.keys(floor).forEach(sharingKey => {
-          const sharing = floor[sharingKey];
-        //   const sliderValue = filters.price.value ? parseInt(filters.price.value, 15000) : 15000;
-
-          const passesFilters = (
-            (!filters.floor.value || filters.floor.value === floorKey) &&
-            (!filters.sharing.value || filters.sharing.value === sharingKey) &&
-            (!filters.ac.value || sharing.rooms[filters.ac.value]) &&
-            (!filters.bathroom.value || Object.values(sharing.rooms).some(room => {
-              return Object.values(room).some(details => details.bathroom === filters.bathroom.value);
-            })) 
-          );
-
-          if (passesFilters) {
-            filteredSharing[sharingKey] = sharing;
-          }
-        });
-
-        if (Object.keys(filteredSharing).length > 0) {
-          filteredData[floorKey] = filteredSharing;
-        }
-      });
-      return filteredData;
-    }
-    document.getElementById('clearFiltersBtn').addEventListener('click',()=>{
-        clearFilters();
-    })
-function loadRoom(data){
-    if(JSON.stringify(data) != '{}'){
-        document.getElementById("no_room_msg").style.display = "none";
-        postContainer.innerHTML = '';
-     Object.keys(data).forEach(floorKey => {
-        const floor = data[floorKey];
-        Object.keys(floor).forEach(sharingKey => {
-          const sharing = floor[sharingKey];
-          console.log(JSON.stringify(sharing))
-          const listItem = document.createElement('div');
-          listItem.className = 'list-item';
-          let collapsable_id = 'floor'+sharing.floor+"-"+(sharing.roomType.replace(' ','-'))+"-collapse"
-          listItem.innerHTML = `
-                                <div class="product-details-box">
-                                  <div class="product-img">
-                                      <img class="img-fluid img"
-                                          src="${ sharing.imagesLink ? sharing.imagesLink[0] : ''  }" alt="no_room_img">
-                                  </div>
-                                  <div class="product-content">
-                                      <div
-                                          class="description d-flex align-items-center justify-content-between gap-1">
-                                          <div>
-                                              <div class="d-flex align-items-center gap-2">
-                                                  <h6 class="product-name">
-                                                      Floor No: ${sharing.floor},<br> Room Type : ${sharing.roomType} 
-                                                  </h6>
-                                              </div>
-                                              <h6 class="customized">${sharing.bedsAvailable} beds available </h6>
-                                              <!--<p>
-                                                  Air Condition : ${sharing.ac}
-                                              </p>
-                                              <p>
-                                                  Bathroom : ${sharing.bathroom}
-                                              </p>
-                                              <p>
-                                                  Amenities : ${sharing.amenities}
-                                              </p>-->
-                                              <p>
-                                                  Room Description : ${sharing.roomType}, with A/C and Non A/C occupation.
-                                              </p>
-                                          </div>
-                                          <div class="product-box-price">
-                                              <button type='button' data-bs-toggle="collapse" data-bs-target="#${collapsable_id}" 
-                                                  aria-expanded="false"
-                                                  class="btn theme-outline add-btn mt-0"
-                                                  >Details</button>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div>
-            
-                        <div class="collapse" id="${collapsable_id}">
-                          <div class="rooms">
-                            <div class="room-grid">
-                                ${Object.keys(sharing.rooms).map(roomKey => {
-                                const room = sharing.rooms[roomKey];
-                                return Object.keys(room).map(roomNumber => {
-                                  const roomDetails = room[roomNumber];
-                                  return `
-                                            <div class="room">
-                                                <h5 style="display: inline-block; padding: 10px 20px; background-color: #fec495; color: black; border-radius: 8px; font-weight: bold; text-align: center;">
-                                                  Room ${roomDetails.roomNumber}
-                                                </h5>
-                                                <img src="${roomDetails.imagesLink ? roomDetails.imagesLink[0] : ''}" alt="Room Image">
-                                                <p>
-                                                  ${roomDetails.ac === 'ac'
-                                                      ? ` <svg width="16px" height="16px" viewBox="0 0 1024 1024" fill="#FC8019" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M383.2 941.6c-4 0-6.4-0.8-9.6-2.4-14.4-9.6-82.4-60-25.6-160 15.2-27.2 19.2-48.8 13.6-66.4-6.4-20-27.2-28-27.2-28-9.6-4-14.4-15.2-10.4-24.8 3.2-8 9.6-12.8 17.6-12.8 2.4 0 4.8 0.8 7.2 1.6 3.2 0 36.8 14.4 50.4 50.4 10.4 28.8 4.8 62.4-16.8 100-40 70.4 2.4 101.6 11.2 107.2 8.8 4.8 12 16.8 7.2 26.4-4.8 6.4-12 8.8-17.6 8.8z m129.6-42.4c-4 0-6.4-0.8-9.6-2.4-28.8-16.8-69.6-68.8-24-150.4 13.6-24.8 17.6-44.8 12-60-5.6-17.6-24-24.8-24-24.8-10.4-4-15.2-14.4-11.2-24.8 3.2-8 9.6-12.8 17.6-12.8 2.4 0 4.8 0.8 7.2 1.6 8 3.2 36 16 47.2 48 9.6 27.2 4.8 58.4-15.2 92.8-38.4 68.8 8 96.8 10.4 97.6 4 2.4 7.2 6.4 8.8 11.2 1.6 4.8 0.8 10.4-1.6 15.2-4.8 6.4-12 8.8-17.6 8.8z m-265.6 0c-4 0-6.4-0.8-9.6-2.4-28.8-16.8-69.6-68.8-24-150.4 13.6-24.8 17.6-44.8 12-60-5.6-17.6-24-24.8-24-24.8-10.4-4-15.2-14.4-11.2-24.8 3.2-8 9.6-12.8 17.6-12.8 2.4 0 4.8 0.8 7.2 1.6 8 3.2 36 16.8 47.2 48 9.6 27.2 4 58.4-15.2 93.6-38.4 68.8 8 96.8 10.4 97.6 4 2.4 7.2 6.4 8.8 11.2 1.6 4.8 0.8 10.4-1.6 15.2-4 5.6-12 8-17.6 8z m487.2-71.2c-6.4 0-11.2-2.4-15.2-6.4s-6.4-9.6-6.4-15.2c0-8.8 5.6-16.8 13.6-20.8h0.8v-43.2l-40.8 23.2v0.8c0 6.4-2.4 14.4-10.4 18.4-3.2 2.4-7.2 3.2-11.2 3.2-8 0-15.2-4-18.4-10.4-3.2-5.6-4-11.2-2.4-16.8 1.6-5.6 4.8-10.4 10.4-12.8 3.2-2.4 7.2-3.2 10.4-3.2 4 0 8 0.8 11.2 3.2l36.8-20.8-36-20.8c-4.8 1.6-8.8 2.4-12 2.4-4 0-7.2-0.8-10.4-2.4-9.6-6.4-13.6-20-8-29.6 4-6.4 11.2-10.4 19.2-10.4 4 0 8 0.8 11.2 3.2 6.4 4 10.4 10.4 10.4 18.4v0.8L728 712v-43.2h-0.8c-8-4-13.6-12-13.6-20.8 0-12 9.6-21.6 21.6-21.6 6.4 0 12 2.4 16 6.4s6.4 9.6 6.4 15.2c0 7.2-4 14.4-11.2 18.4H744v41.6l35.2-20v-0.8c0-6.4 2.4-14.4 10.4-18.4 3.2-2.4 7.2-3.2 11.2-3.2 8 0 15.2 4 18.4 10.4 3.2 5.6 4 11.2 2.4 16.8-1.6 5.6-4.8 10.4-10.4 12.8-3.2 2.4-7.2 3.2-10.4 3.2-4 0-8-0.8-11.2-3.2l-36.8 20.8 36 20.8c4.8-1.6 8.8-2.4 12-2.4 4 0 7.2 0.8 10.4 2.4 9.6 6.4 13.6 20 8 29.6-4 6.4-11.2 10.4-19.2 10.4-4 0-8-0.8-11.2-3.2-6.4-4-10.4-10.4-10.4-18.4v-0.8L744 745.6v41.6h0.8c7.2 3.2 11.2 10.4 11.2 18.4 0 12.8-9.6 22.4-21.6 22.4zM152 575.2c-60.8 0-109.6-48.8-109.6-109.6V204.8c0-60.8 48.8-109.6 109.6-109.6h721.6c60.8 0 109.6 48.8 109.6 109.6v260.8c0 60.8-48.8 109.6-109.6 109.6H152z m-11.2-432c-28.8 0-52 24-52 54.4v278.4c0 29.6 23.2 54.4 52 54.4h743.2c28.8 0 52-24 52-54.4V197.6c0-29.6-23.2-54.4-52-54.4H140.8z m21.6 312c-10.4 0-19.2-8.8-19.2-19.2 0-10.4 8.8-19.2 19.2-19.2h682.4c10.4 0 19.2 8.8 19.2 19.2 0 10.4-8.8 19.2-19.2 19.2H162.4z m0-80.8c-10.4 0-19.2-8.8-19.2-19.2S152 336 162.4 336h682.4c10.4 0 19.2 8.8 19.2 19.2 0 10.4-8.8 19.2-19.2 19.2H162.4z" fill=""></path></g></svg>`
-                                                      : ` <svg fill="#FC8019" height="16px" width="16px" version="1.1" id="XMLID_108_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="fan"> <g> <path d="M5.4,22.8L5.4,22.8c-0.9,0-1.7-0.4-2.3-1c-0.7-0.7-1.3-1.5-1.8-2.4c-0.4-0.8-0.8-1.6-1-2.4c-0.3-0.9-0.2-1.9,0.3-2.6 C1,13.7,1.7,13.2,2.4,13c1.1-0.3,2.1-0.5,3.1-0.8l1.8-0.5c0.2-0.5,0.5-1,0.9-1.5L6.8,5.3C6.6,4.5,6.7,3.7,7.1,3 c0.4-0.7,1.2-1.3,2-1.5c0.9-0.2,1.9-0.4,3-0.3c0.9,0,1.8,0.1,2.6,0.3c0.9,0.2,1.7,0.8,2.1,1.5c0.4,0.7,0.5,1.5,0.3,2.3l-1.4,4.9 c0.4,0.4,0.7,0.9,0.9,1.5l4.9,1.3c0.8,0.2,1.5,0.7,1.9,1.4c0.4,0.8,0.5,1.6,0.3,2.5c-0.3,1-0.7,1.9-1.2,2.7s-1,1.5-1.6,2.1 c-0.6,0.7-1.5,1.1-2.4,1.1c0,0,0,0-0.1,0c-0.8,0-1.6-0.3-2.1-0.9l-3.6-3.7c-0.5,0.1-1.1,0.1-1.6,0l-3.6,3.7 C7,22.5,6.2,22.8,5.4,22.8z M7,13.7L6,14c-1,0.3-2.1,0.5-3.1,0.8c-0.3,0.1-0.5,0.3-0.6,0.5c-0.2,0.3-0.2,0.7-0.1,1.1 c0.2,0.7,0.5,1.4,0.9,2c0.4,0.7,0.9,1.4,1.5,2c0.3,0.3,0.6,0.4,0.9,0.4c0.2,0,0.5-0.1,0.7-0.3l3.1-3.1C8,16.6,7.2,15.3,7,13.7z M14.8,17.4l3,3.1c0.2,0.2,0.5,0.3,0.7,0.3c0.3,0,0.7-0.2,1-0.5c0.5-0.5,1-1.1,1.3-1.8c0.4-0.7,0.7-1.5,1-2.3 c0.1-0.3,0.1-0.7-0.1-1c-0.1-0.2-0.4-0.4-0.6-0.5l-4.1-1C16.8,15.3,16,16.6,14.8,17.4z M12,10.3c-1.7,0-3,1.3-3,3s1.3,3,3,3 s3-1.3,3-3S13.7,10.3,12,10.3z M12,3c-0.8,0-1.6,0.1-2.4,0.3C9.2,3.4,9,3.6,8.8,3.9C8.7,4.1,8.6,4.4,8.7,4.7l1.1,4.1 c1.3-0.6,3-0.6,4.3,0l1.1-4.1c0.1-0.3,0-0.6-0.1-0.8c-0.1-0.3-0.4-0.5-0.8-0.6C13.6,3.1,12.9,3,12.1,3H12z"></path> </g> </g> </g></svg>`}
-                                                    ${roomDetails.ac.replace('non-ac', 'Non-AC').replace('ac', 'AC')} <br>    
-                                                    ${roomDetails.bathroom === 'attached' ?
-                                                    `<svg version="1.1" id="Icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32" xml:space="preserve" width="16px" height="16px" fill="#FC8019" stroke="#FC8019"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <style type="text/css"> .st0{fill:none;stroke:#FC8019;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;} </style> <path class="st0" d="M25,18H7c-1.1,0-2-0.9-2-2v0c0-1.1,0.9-2,2-2h18c1.1,0,2,0.9,2,2v0C27,17.1,26.1,18,25,18z"></path> <path class="st0" d="M25,18c0,5-4,9-9,9s-9-4-9-9"></path> <polyline class="st0" points="21.7,25 23,31 9,31 10.3,25 "></polyline> <path class="st0" d="M24,14H8V5c0-2.2,1.8-4,4-4h8c2.2,0,4,1.8,4,4V14z"></path> <line class="st0" x1="12" y1="5" x2="14" y2="5"></line> </g></svg>
-                                                    `: `<svg version="1.1" id="Icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32" xml:space="preserve" width="16px" height="16px" fill="#FC8019" stroke="#FC8019">
-                                                          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                                          <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                                          <g id="SVGRepo_iconCarrier"> 
-                                                            <style type="text/css"> .st0{fill:none;stroke:#FC8019;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;} </style> 
-                                                            <path class="st0" d="M25,18H7c-1.1,0-2-0.9-2-2v0c0-1.1,0.9-2,2-2h18c1.1,0,2,0.9,2,2v0C27,17.1,26.1,18,25,18z"></path> 
-                                                            <path class="st0" d="M25,18c0,5-4,9-9,9s-9-4-9-9"></path> 
-                                                            <polyline class="st0" points="21.7,25 23,31 9,31 10.3,25 "></polyline> 
-                                                            <path class="st0" d="M24,14H8V5c0-2.2,1.8-4,4-4h8c2.2,0,4,1.8,4,4V14z"></path> 
-                                                            <line class="st0" x1="30" y1="10" x2="30" y2="10"></line> 
-                                                            <line x1="8" y1="10" x2="30" y2="30" stroke="red" stroke-width="2" stroke-linecap="round"/>
-                                                            <line x1="30" y1="10" x2="10" y2="30" stroke="red" stroke-width="2" stroke-linecap="round"/>
-                                                          </g>
-                                                        </svg>
-                                                        `}${roomDetails.bathroom}
-                                                        <br>
-                                                        <svg fill="#FC8019" height="16px" width="16px" viewBox="-4.5 0 24 24" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="m15.307 5.83v1.738.021c0 .29-.235.525-.525.525-.007 0-.015 0-.022 0h.001-2.864c-.23 1.609-1.032 2.998-2.19 3.981l-.009.008c-1.288 1.041-2.904 1.723-4.673 1.873l-.032.002q2.846 3.034 7.824 9.136c.086.085.139.202.139.332 0 .092-.026.177-.072.249l.001-.002c-.076.182-.252.308-.459.308-.013 0-.025 0-.037-.001h.002-3.324c-.006 0-.014 0-.021 0-.166 0-.313-.08-.404-.204l-.001-.001q-5.216-6.256-8.489-9.733c-.095-.093-.154-.222-.154-.365 0-.004 0-.007 0-.011v.001-2.167c.004-.3.246-.542.545-.546h1.909c.099.005.214.007.33.007 1.196 0 2.328-.273 3.338-.76l-.046.02c.855-.428 1.49-1.188 1.742-2.107l.005-.023h-7.28c-.006 0-.014 0-.021 0-.29 0-.525-.235-.525-.525 0-.007 0-.015 0-.022v.001-1.738c0-.006 0-.014 0-.021 0-.29.235-.525.525-.525h.022-.001 7.04q-.971-1.926-4.568-1.926h-2.471c-.3-.004-.542-.246-.546-.545v-2.268c0-.006 0-.014 0-.021 0-.29.235-.525.525-.525h.022-.001 14.182.021c.29 0 .525.235.525.525v.022-.001 1.738.021c0 .29-.235.525-.525.525-.007 0-.015 0-.022 0h.001-3.971c.526.689.908 1.516 1.085 2.417l.006.037h2.914.021c.29 0 .525.235.525.525v.022-.001z"></path></g></svg>
-                                                        ${roomDetails.price}
-                                                        <br>
-                                                         <svg fill="#FC8019" height="16px" width="16px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <path d="M469.333,174.321V64c0-35.355-28.645-64-64-64H106.667c-35.355,0-64,28.645-64,64v110.321 C17.808,183.105,0,206.794,0,234.667V320v149.333C0,492.891,19.109,512,42.667,512h42.667C108.891,512,128,492.891,128,469.333 V448h256v21.333C384,492.891,403.109,512,426.667,512h42.667C492.891,512,512,492.891,512,469.333V320v-85.333 C512,206.794,494.192,183.105,469.333,174.321z M85.333,64c0-11.791,9.542-21.333,21.333-21.333h298.667 c11.791,0,21.333,9.542,21.333,21.333v106.667H382.23C372.071,110.135,319.415,64,256,64s-116.071,46.135-126.23,106.667H85.333 V64z M338.643,170.667H173.357c9.476-36.8,42.89-64,82.643-64S329.168,133.867,338.643,170.667z M42.667,234.667 c0-11.791,9.542-21.333,21.333-21.333h85.333h213.333H448c11.791,0,21.333,9.542,21.333,21.333v64H42.667V234.667z M426.667,469.333v-42.667c0-11.782-9.551-21.333-21.333-21.333H106.667c-11.782,0-21.333,9.551-21.333,21.333v42.667H42.667v-128 h426.667v128H426.667z"></path> </g> </g> </g></svg>
-                                                            available: ${roomDetails.bedsAvailable}
-                                                         </p>
-                                                <div class="beds">
-                                                    ${Object.keys(roomDetails.beds).map(bedKey => {
-                                                    const bedStatus = roomDetails.beds[bedKey];
-                                                    let roomNo = "room"+roomDetails.roomNumber;
-                                                    return `<div class="${bedStatus === 'booked' ? 'booked' : 'not-booked'}" 
-                                                                    data-floor="${floorKey}" 
-                                                                    data-sharing="${sharingKey}" 
-                                                                    data-ac="${roomDetails.ac}" 
-                                                                    data-bathroom="${roomDetails.bathroom}" 
-                                                                    data-price="${roomDetails.price}" 
-                                                                    data-bed-id="${bedKey}"
-                                                                    data-beds-available = "${roomDetails.bedsAvailable}" 
-                                                                    data-total-beds-available = "${sharing.bedsAvailable}"
-                                                                    data-room-number="${roomNo}">
-                                                                    ${bedKey}
-                                                            </div>`;
-                                                     }).join('')}
-                                                </div>
-                                            </div>`;
-                                  }).join('');
-                                }).join('')}
-                            </div>
-                        </div>
-                      </div>`;
-
-        //   const expandBtn = listItem.querySelector('.expand-btn button');
-        //   const roomsDiv = listItem.querySelector('.rooms');
-
-        //   expandBtn.addEventListener('click', () => {
-        //     // roomsDiv.style.display = roomsDiv.style.display === 'block' ? 'none' : 'block';
-        //     const isExpanded = roomsDiv.style.display === 'block';
-        //     roomsDiv.style.display = isExpanded ? 'none' : 'block';
-        //     expandBtn.textContent = isExpanded ? 'Select Rooms' : 'Hide Rooms';
-        //   });
-
-          const bedDivs = listItem.querySelectorAll('.beds div');
-          bedDivs.forEach(bedDiv => {
-            if (!bedDiv.classList.contains('booked')) {
-              bedDiv.addEventListener('click', () => {
-                document.getElementById("cart-title").innerHTML = "Empty Cart";
-                document.getElementById("cart-room-price").innerHTML = '';
-                document.getElementById("cart-room-floor").innerHTML = "";
-                document.getElementById("cart-bed-number").innerHTML = "";
-                //removing selected class from all the beds
-                bedDivs.forEach(bedDiv=>{
-                    bedDiv.classList.remove('selected');
-                })
-
-                
-                bedDiv.classList.toggle('selected');
-                const floor = bedDiv.dataset.floor;
-                const sharing = bedDiv.dataset.sharing;
-                const ac = bedDiv.dataset.ac;
-                const bathroom = bedDiv.dataset.bathroom;
-                const price = bedDiv.dataset.price;
-                const bedId = bedDiv.dataset.bedId;
-                const roomNumber = bedDiv.dataset.roomNumber;
-
-                let roomDetails = sharing + "-" + price + "-" + bedDiv.dataset.bedsAvailable + "-" + floor + "-" + roomNumber + "-" + ac + '-' + bedDiv.dataset.totalBedsAvailable;
-                console.log(roomDetails);
-                localStorage.setItem("room-details", roomDetails);
-                localStorage.setItem("bedId", bedId);
-
-                document.getElementById("cart-title").innerHTML = "Room Rate";
-                document.getElementById("cart-room-price").innerHTML = price;
-                // document.getElementById("cart-room-floor").innerHTML = "Floor - " + roomDetails[3] + " Room - " + roomDetails[2];
-                document.getElementById("cart-room-floor").innerHTML = "Floor - " + floor;
-                document.getElementById("cart-bed-number").innerHTML = "Selected Bed - " + bedId;
-                document.getElementById("proceedPaymentBtn").style.display = 'block';//proceed to pay btn in web view
-                document.getElementById("viewCart").style.display = 'block';//view cart btn in mobile view
-
-                
-
-                // const confirmation = confirm(`Selected Bed Details:
-                //                 Floor: ${floor}
-                //                 Sharing: ${sharing}
-                //                 ${ac.replace('non-ac', 'Non-AC').replace('ac', 'AC')}
-                //                 Bathroom: ${bathroom}
-                //                 Price: ${price}
-                //                 Bed ID: ${bedId}
-                //                 Room Number: ${roomNumber}
-                                
-                //                 Confirm selection?`);
-
-                // if (confirmation) {
-                //   clearFilters();
-                // }
-              });
-            }
-          });
-
-          postContainer.appendChild(listItem);
-        });
-      });
-    }
-    else{
-        postContainer.innerHTML = '';
-        document.getElementById("no_room_msg").style.display = "flex";
-        document.getElementById("no_room_msg").style.justifyContent = "center";
-        document.getElementById("no_room_msg").style.alignItems = "center";
-    }
-}
-function clearFilters() {
-    filters.floor.value = '';
-    filters.sharing.value = '';
-    filters.ac.value = '';
-    filters.bathroom.value = '';
-    // filters.price.value = '';
-    if (filters.floor.value == '' && filters.sharing.value == '' && filters.ac.value == '' && filters.bathroom.value == '') {
-        document.getElementById("clearFiltersBtn").style.display = "none";
-      }
-      else{
-        document.getElementById("clearFiltersBtn").style.display = "inline";
-      }
-      applyFilters2();
-  }
 function showRoomDetails(event) {
     document.getElementById("floorDiv").style.display = "none";
     document.getElementById("transition_loader").style.display = "flex";
@@ -934,7 +639,7 @@ customized.addEventListener('hide.bs.modal', function () {
 bookNowBtn.addEventListener('click', (e) => {
     console.log(localStorage.getItem("bedId"));
     if (localStorage.getItem("bedId") != 0) {
-        window.location.href = "././checkout.html";
+        window.location.href = "././checkout-2.html";
     }
     else {
         alert("select an bed to book");
@@ -942,10 +647,10 @@ bookNowBtn.addEventListener('click', (e) => {
 })
 proceedPaymentBtn.addEventListener('click', (e) => {
     if (localStorage.getItem("bedId") != 0) {
-        window.location.href = "././checkout.html";
+        window.location.href = "././checkout-2.html";
     }
     else {
-        alert("select an bed to book");
+        alert("select an bed to proceed payment");
     }
 })
 

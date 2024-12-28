@@ -255,34 +255,34 @@ function storeOrderDetails(paymentResponse) {
         .then(() => {
             alert("Click to continue");
             //decreasing the count of vaccancy for the new place opted by the user by editing the previous booking.
-            update(ref(db, 'Hostel details/' + hostelName + '/rooms/' + "floor" + roomDetails[3] + '/' + roomDetails[0] + '/rooms/' + roomDetails[5] + '/' + roomDetails[4]), {
+            update(ref(db, 'Hostel details/' + hostelName + '/rooms/' + roomDetails[3] + '/' + roomDetails[0] + '/rooms/' + roomDetails[5] + '/' + roomDetails[4]), {
                 bedsAvailable: (Number(roomDetails[2]) - 1)
             })
                 .then(() => {
                     alert("Click to edit booking");
                     //Changing the newly selected bed/room as booked 
-                    update(ref(db, 'Hostel details/' + hostelName + '/rooms/' + "floor" + roomDetails[3] + '/' + roomDetails[0] + '/rooms/' + roomDetails[5] + '/' + roomDetails[4] + '/beds/'), {
+                    update(ref(db, 'Hostel details/' + hostelName + '/rooms/' + roomDetails[3] + '/' + roomDetails[0] + '/rooms/' + roomDetails[5] + '/' + roomDetails[4] + '/beds/'), {
                         [bedId]: "booked"
                     })
                         .then(() => {
                             alert("Updating..")
 
-                            console.log("Hostel details/" + hostelName + '/rooms/' + "floor" + previousFloor + '/' + previousRoomType + '/rooms/' + previousRoomAc + "/" + previousRoomNo + '/')
+                            console.log("Hostel details/" + hostelName + '/rooms/' + previousFloor + '/' + previousRoomType + '/rooms/' + previousRoomAc + "/" + previousRoomNo + '/')
                             //fetching the current room count status for the user booked room previously and adding +1 with that live count
-                            get(child(dbref, "Hostel details/" + hostelName + '/rooms/' + "floor" + previousFloor + '/' + previousRoomType + '/rooms/' + previousRoomAc + "/" + previousRoomNo + '/'))
+                            get(child(dbref, "Hostel details/" + hostelName + '/rooms/' + previousFloor + '/' + previousRoomType + '/rooms/' + previousRoomAc + "/" + previousRoomNo + '/'))
                                 .then((snapshot) => {
                                     alert("continue..")
                                     if (snapshot.exists()) {
                                         previousbedsAvailable = snapshot.val().bedsAvailable;
                                     }
                                     //increasing the bedsavailable for the room which user blocked and now, is changing to different room/bed
-                                    update(ref(db, "Hostel details/" + hostelName + '/rooms/' + "floor" + previousFloor + '/' + previousRoomType + '/rooms/' + previousRoomAc + "/" + previousRoomNo + '/'), {
+                                    update(ref(db, "Hostel details/" + hostelName + '/rooms/' + previousFloor + '/' + previousRoomType + '/rooms/' + previousRoomAc + "/" + previousRoomNo + '/'), {
                                         bedsAvailable: (Number(previousbedsAvailable) + 1)
                                     })
                                         .then(() => {
                                             alert("Click continue to update");
                                             //changing the previous bedId to not booked, when user edits
-                                            update(ref(db, "Hostel details/" + hostelName + '/rooms/' + "floor" + previousFloor + '/' + previousRoomType + '/rooms/' + previousRoomAc + "/" + previousRoomNo + '/beds/'), {
+                                            update(ref(db, "Hostel details/" + hostelName + '/rooms/' + previousFloor + '/' + previousRoomType + '/rooms/' + previousRoomAc + "/" + previousRoomNo + '/beds/'), {
                                                 [previousBedId]: "not booked"
                                             })
                                                 .then(() => {
@@ -292,19 +292,19 @@ function storeOrderDetails(paymentResponse) {
                                                     })
                                                         .then(() => {
                                                             //setting the bedsavailable -1 inside type(sharing node) bedsAvailable
-                                                            update(ref(db, 'Hostel details/' + hostelName + '/rooms/' + "floor" + roomDetails[3] + '/' + roomDetails[0]), {
+                                                            update(ref(db, 'Hostel details/' + hostelName + '/rooms/' + roomDetails[3] + '/' + roomDetails[0]), {
                                                                 bedsAvailable: (Number(roomDetails[6]) - 1)
                                                             })
                                                                 .then(() => {
                                                                     //getting the bedsavialable in the sharing node to +1 it of the previous booking
-                                                                    get(child(dbref, "Hostel details/" + hostelName + '/rooms/' + "floor" + previousFloor + '/' + previousRoomType))
+                                                                    get(child(dbref, "Hostel details/" + hostelName + '/rooms/' + previousFloor + '/' + previousRoomType))
                                                                         .then((snapshot) => {
                                                                             alert("continue..")
                                                                             if (snapshot.exists()) {
                                                                                 previousTotalbedsAvailable = snapshot.val().bedsAvailable;
                                                                             }
                                                                             //increasing the bedavailable for the room which user blocked and now, is changing to different room/bed
-                                                                            update(ref(db, "Hostel details/" + hostelName + '/rooms/' + "floor" + previousFloor + '/' + previousRoomType), {
+                                                                            update(ref(db, "Hostel details/" + hostelName + '/rooms/' + previousFloor + '/' + previousRoomType), {
                                                                                 bedsAvailable: (Number(previousTotalbedsAvailable) + 1)
                                                                             })
                                                                                 .then(() => {
