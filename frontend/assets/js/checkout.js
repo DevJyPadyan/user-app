@@ -230,16 +230,16 @@ function storeOrderDetails(paymentResponse) {
     })
         .then(() => {
             alert("Click to continue");
-            update(ref(db, 'Hostel details/' + hostelName + '/rooms/' + "floor" + roomDetails[3] + '/' + roomDetails[0] + '/rooms/' + roomDetails[5] + '/' + roomDetails[4]), {
+            update(ref(db, 'Hostel details/' + hostelName + '/rooms/' + roomDetails[3] + '/' + roomDetails[0] + '/rooms/' + roomDetails[5] + '/' + roomDetails[4]), {
                 bedsAvailable: (Number(roomDetails[2]) - 1)
             })
                 .then(() => {
                     alert("Click to place booking");
-                    update(ref(db, 'Hostel details/' + hostelName + '/rooms/' + "floor" + roomDetails[3] + '/' + roomDetails[0] + '/rooms/' + roomDetails[5] + '/' + roomDetails[4] + '/beds/'), {
+                    update(ref(db, 'Hostel details/' + hostelName + '/rooms/' + roomDetails[3] + '/' + roomDetails[0] + '/rooms/' + roomDetails[5] + '/' + roomDetails[4] + '/beds/'), {
                         [bedId]: "booked"
                     })
                         .then(() => {
-                            update(ref(db, 'Hostel details/' + hostelName + '/rooms/' + "floor" + roomDetails[3] + '/' + roomDetails[0]), {
+                            update(ref(db, 'Hostel details/' + hostelName + '/rooms/' + roomDetails[3] + '/' + roomDetails[0]), {
                                 bedsAvailable: (Number(roomDetails[6]) - 1)
                             })
                                 .then(() => {
