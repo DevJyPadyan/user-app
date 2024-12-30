@@ -77,6 +77,14 @@ const loadDataFromDB = () => {
     localStorage.setItem('bedCount', 0);//number of bed in room selected.
     localStorage.setItem("bedId", 0);//selected Bed ID by the user.
     const dbref = ref(db, 'Hostel details/' + hostelName + "/rooms/");
+    const slider = document.getElementById('priceSlider');
+    const priceDisplay = document.getElementById('price');
+    priceDisplay.innerHTML = 15000;
+
+    // Update the displayed price whenever the slider value changes
+    slider.addEventListener('input', function () {
+        priceDisplay.innerHTML = slider.value;
+    });
     onValue(dbref, (snapshot) => {
 
         hostelist = [];
@@ -224,7 +232,7 @@ document.getElementById('applyFilters').addEventListener('click', applyFilters2)
       const filterSelectBathroom = document.getElementById('bathroomFilter');
       const filterInputPrice = document.getElementById('priceSlider');*/
 
-      if (filters.floor.value == '' && filters.sharing.value == '' && filters.ac.value == '' && filters.bathroom.value == '') {
+      if (filters.floor.value == '' && filters.sharing.value == '' && filters.ac.value == '' && filters.bathroom.value == '' && Number(filters.price.value) == 15000) {
         document.getElementById("clearFiltersBtn").style.display = "none";
       }
       else{
@@ -249,43 +257,73 @@ document.getElementById('applyFilters').addEventListener('click', applyFilters2)
       //}
 
     }
-    const filters = {
-        floor: document.getElementById('floorFilter'),
-        sharing: document.getElementById('sharingTypeFilter'),
-        ac: document.getElementById('acFilter'),
-        bathroom: document.getElementById('bathroomFilter'),
-        // price: document.getElementById('priceSlider'),
-      };
 
-    function filterRooms(data) {
-      let filteredData = {};
-      Object.keys(data).forEach(floorKey => {
+const filters = {
+    floor: document.getElementById('floorFilter'),
+    sharing: document.getElementById('sharingTypeFilter'),
+    ac: document.getElementById('acFilter'),
+    bathroom: document.getElementById('bathroomFilter'),
+    price: document.getElementById('priceSlider'),
+};
+
+function filterRooms(data) {
+    let filteredData = {};
+    Object.keys(data).forEach(floorKey => {
         const floor = data[floorKey];
         let filteredSharing = {};
         Object.keys(floor).forEach(sharingKey => {
-          const sharing = floor[sharingKey];
-        //   const sliderValue = filters.price.value ? parseInt(filters.price.value, 15000) : 15000;
+            const sharing = floor[sharingKey];
+            //   const sliderValue = filters.price.value ? parseInt(filters.price.value, 15000) : 15000;
 
-          const passesFilters = (
-            (!filters.floor.value || filters.floor.value === floorKey) &&
-            (!filters.sharing.value || filters.sharing.value === sharingKey) &&
-            (!filters.ac.value || sharing.rooms[filters.ac.value]) &&
-            (!filters.bathroom.value || Object.values(sharing.rooms).some(room => {
-              return Object.values(room).some(details => details.bathroom === filters.bathroom.value);
-            })) 
-          );
+            let passesFilters = (
+                (!filters.floor.value || filters.floor.value === floorKey) &&
+                (!filters.sharing.value || filters.sharing.value === sharingKey) &&
+                (!filters.ac.value || sharing.rooms[filters.ac.value]) &&
+                (!filters.bathroom.value || Object.values(sharing.rooms).some(room => {
+                    return Object.values(room).some(details => details.bathroom === filters.bathroom.value);
+                }))
+            );
 
-          if (passesFilters) {
-            filteredSharing[sharingKey] = sharing;
-          }
+            console.log(passesFilters,filters.price.value)
+
+                if(passesFilters){
+                    if(sharing.rooms.ac != undefined){
+                        Object.keys(sharing.rooms.ac).forEach(roomKey => {
+                            let room = sharing.rooms.ac[roomKey];
+                            console.log(room.price)
+                                if (Number(room.price) <= Number(filters.price.value)) {
+                                    passesFilters = true;
+                                }
+                                else {
+                                    passesFilters = false;
+                                }
+                        })
+                    }
+                    if(sharing.rooms.non_ac != undefined){
+                       Object.keys(sharing.rooms.non_ac).forEach(roomKey => {
+                            let room = sharing.rooms.non_ac[roomKey];
+                                if (Number(room.price) <= Number(filters.price.value)) {
+                                    passesFilters = true;
+                                }
+                                else {
+                                    passesFilters = false;
+                                }
+                        })
+                    }
+                }
+                
+
+            if (passesFilters) {
+                filteredSharing[sharingKey] = sharing;
+            }
         });
 
         if (Object.keys(filteredSharing).length > 0) {
-          filteredData[floorKey] = filteredSharing;
+            filteredData[floorKey] = filteredSharing;
         }
-      });
-      return filteredData;
-    }
+    });
+    return filteredData;
+}
     document.getElementById('clearFiltersBtn').addEventListener('click',()=>{
         clearFilters();
     })
@@ -297,7 +335,6 @@ function loadRoom(data){
         const floor = data[floorKey];
         Object.keys(floor).forEach(sharingKey => {
           const sharing = floor[sharingKey];
-          console.log(JSON.stringify(sharing))
           const listItem = document.createElement('div');
           listItem.className = 'list-item';
           let collapsable_id = 'floor'+sharing.floor+"-"+(sharing.roomType.replace(' ','-'))+"-collapse"
@@ -331,6 +368,9 @@ function loadRoom(data){
                                               </p>
                                           </div>
                                           <div class="product-box-price">
+                                          <h6 class="theme-color fw-semibold">
+                                                                        Rs.${sharing.nonAcPrice}-Rs.${sharing.acPrice} 
+                                                                        </h6>
                                               <button type='button' data-bs-toggle="collapse" data-bs-target="#${collapsable_id}" 
                                                   aria-expanded="false"
                                                   class="btn theme-outline add-btn mt-0"
@@ -489,8 +529,10 @@ function clearFilters() {
     filters.sharing.value = '';
     filters.ac.value = '';
     filters.bathroom.value = '';
-    // filters.price.value = '';
-    if (filters.floor.value == '' && filters.sharing.value == '' && filters.ac.value == '' && filters.bathroom.value == '') {
+    filters.price.value = 15000;
+    const priceDisplay = document.getElementById('price');
+    priceDisplay.innerHTML = 15000;
+    if (filters.floor.value == '' && filters.sharing.value == '' && filters.ac.value == '' && filters.bathroom.value == ''&& Number(filters.price.value) == 15000) {
         document.getElementById("clearFiltersBtn").style.display = "none";
       }
       else{
