@@ -369,7 +369,7 @@ function loadRoom(data){
                                           </div>
                                           <div class="product-box-price">
                                           <h6 class="theme-color fw-semibold">
-                                                                        Rs.${sharing.nonAcPrice}-Rs.${sharing.acPrice} 
+                                                                        Rs.${sharing.nonacPrice}-Rs.${sharing.acPrice} 
                                                                         </h6>
                                               <button type='button' data-bs-toggle="collapse" data-bs-target="#${collapsable_id}" 
                                                   aria-expanded="false"
@@ -1029,18 +1029,38 @@ function addFoodMealCard(weekNumber, day, dayData) {
                                 <br>`;
 
     const mainELem = document.createElement('div');
-    mainELem.setAttribute("style", "display: grid;gap: 20px;grid-template-columns:1fr 1fr 1fr;");
-    ['morning', 'afternoon', 'night'].forEach(mealTime => {
+    mainELem.setAttribute("style", "display: grid;gap: 20px;grid-template-columns:1fr 1fr;");
+    ['Breakfast', 'Lunch','Dinner','Snacks'].forEach(mealTime => {
         const mealData = dayData[mealTime] || {};
+        let dishdata = {};
+        if('{}' != JSON.stringify(mealData)){
+             dishdata = mealData.dishes[0] || {};
+        }
+        // console.log(JSON.stringify(mealData),dishdata)
         const elem = document.createElement('div');
         elem.classList.add('card');
+        elem.classList.add('bg-white');
+        elem.classList.add('shadow-lg');
         elem.style.backgroundColor = "white";
-        elem.innerHTML = `  <h6> ${mealTime} </h6>
+        elem.innerHTML = `  <h6>
+                                ${mealTime}
+                                <br>
+                                <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#FC8019"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="#FC8019" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M12 6V12" stroke="#FC8019" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M16.24 16.24L12 12" stroke="#FC8019" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                                 ${mealData.dishTimings} 
+                            </h6>
                             <div class="card-body">
+                            <img alt='food_img' src = '${dishdata.image}' width='80' height='80px'>
                                 <ul>
-                                    <li>Main Dish: ${mealData.mainDish || 'N/A'}</li>
-                                    <li>Side Dish: ${mealData.sideDish || 'N/A'}</li>
-                                    <li>Timings: ${mealData.timing || 'N/A'}</li>
+                                    <li>
+                                        <svg fill="#FC8019" height="16px" width="16px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 511.999 511.999" xml:space="preserve" stroke="#FC8019"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <path d="M324.799,68.799c-103.222,0-187.2,83.978-187.2,187.2s83.978,187.2,187.2,187.2s187.2-83.978,187.2-187.2 S428.022,68.799,324.799,68.799z M324.799,407.169c-83.354,0-151.168-67.814-151.168-151.168s67.814-151.17,151.168-151.17 s151.168,67.814,151.168,151.168S408.154,407.169,324.799,407.169z"></path> </g> </g> <g> <g> <path d="M324.799,148.019c-59.541,0-107.981,48.44-107.981,107.981s48.44,107.981,107.981,107.981S432.78,315.54,432.78,255.999 S384.34,148.019,324.799,148.019z M324.799,327.95c-39.673,0-71.949-32.276-71.949-71.949s32.276-71.949,71.949-71.949 c39.673,0,71.949,32.276,71.949,71.949S364.472,327.95,324.799,327.95z"></path> </g> </g> <g> <g> <path d="M110.491,68.799c-9.95,0-18.016,8.066-18.016,18.016v96.161H81.959V86.815c0-9.95-8.066-18.016-18.016-18.016 c-9.95,0-18.016,8.066-18.016,18.016v96.161h-9.896V86.815c0-9.95-8.066-18.016-18.016-18.016S0,76.866,0,86.815v99.764 c0,17.881,14.547,32.428,32.428,32.428h12.298v206.175c0,9.95,8.066,18.016,18.016,18.016s18.016-8.066,18.016-18.016V219.009 h15.321c17.881,0,32.428-14.547,32.428-32.428V86.815C128.507,76.866,120.441,68.799,110.491,68.799z"></path> </g> </g> </g></svg>
+                                        ${dishdata.name || 'N/A'}
+                                    </li>
+                                    <li>and ${dishdata.special_dish || 'N/A'}</li>
+                                    <br>
+                                    <li> 
+                                        <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M6.25 10H17.75M9.26556 20H14.7344C15.7431 20 16.5939 19.2489 16.719 18.2481L18.3595 5.12403C18.4341 4.52718 17.9687 4 17.3672 4H6.63278C6.03128 4 5.5659 4.52718 5.6405 5.12403L7.28101 18.2481C7.40612 19.2489 8.25692 20 9.26556 20Z" stroke="#FC8019" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>                              
+                                        ${dishdata.beverage || 'N/A'}
+                                    </li>
                                 </ul>
                             </div>`;
         mainELem.appendChild(elem);
