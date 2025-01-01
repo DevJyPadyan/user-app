@@ -17,4 +17,4 @@ setTimeout(() => {
   if (userDeatilObj.name == undefined) {
     document.getElementById("logoutBtn").innerHTML = "Sign In";
   }
-}, 4000);
+}, 2500);

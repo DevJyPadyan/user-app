@@ -690,7 +690,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title fw-medium" id="exampleModalToggleLabel">
-                        Order details
+                        Booking details
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -705,9 +705,12 @@
                         </div>
                     </div>
                     <div class="delivery-address">
-                        <div class="d-flex align-items-center gap-2 mt-2">
-                            <i class="ri-map-pin-fill theme-color"></i>
-                            <p id="modal-hostelAddress"></p>
+                        <div class="d-flex align-items-center gap-2 mt-2" style="justify-content: space-between;">
+                            <span  class="d-flex gap-2 ">
+                                <i class="ri-map-pin-fill theme-color"></i>
+                                <p id="modal-hostelAddress"></p>
+                            </span>
+                            <p id="admin-approval-msg" style="display: none;">Admin Approval:&nbsp;<span id="admin-approval-msg-status" style="font-weight: bolder;"></span></p>
                         </div>
                     </div>
                     <div class="delivery-on-going">

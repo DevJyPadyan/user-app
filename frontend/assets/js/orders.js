@@ -37,13 +37,14 @@ function iterateOrderDetails() {
         console.log(h.key)//in key:value, it gives the key of the object
         h.forEach(r => {
             addOrderDetailsCard(r.val().hostelName, r.val().bedId, r.val().floor, r.val().roomType, 
-                                r.val().paymenttransId, r.val().totalAmount, r.val().paymentDate, r.val().roomRent,h.key,r.val().status);
+                                r.val().paymenttransId, r.val().totalAmount, r.val().paymentDate, 
+                                r.val().roomRent,h.key,r.val().status,r.val().room,r.val().adminApprovalForCheckout);
 
         });
     });
 }
 const postContainer = document.getElementById('ul-orders');
-function addOrderDetailsCard(hostelName, bedId, floor, roomType, paymentId, totalAmount, paymentDate, roomRent, key,status) {
+function addOrderDetailsCard(hostelName, bedId, floor, roomType, paymentId, totalAmount, paymentDate, roomRent, key,status,roomNumber,adminApprovalForCheckout) {
     const elem = document.createElement('li');
     let date = paymentDate.split('T');
     let time = date[1].split('Z');
@@ -99,6 +100,8 @@ function addOrderDetailsCard(hostelName, bedId, floor, roomType, paymentId, tota
     elem.dataset.roomRent = roomRent;
     elem.dataset.key=key;
     elem.dataset.status=status;
+    elem.dataset.roomNumber=roomNumber;
+    elem.dataset.adminApprovalForCheckout=adminApprovalForCheckout;
     elem.addEventListener('click', loadDetailsInModal);
     postContainer.appendChild(elem);
 }
@@ -112,7 +115,8 @@ function loadDetailsInModal(event) {
     document.getElementById('modal-grandTotal').innerHTML = orderDetails.dataset.totalAmount;
     document.getElementById('modal-transId').innerHTML = orderDetails.dataset.paymentId;
     document.getElementById('modal-transDate').innerHTML = orderDetails.dataset.paymentDate + " & " + orderDetails.dataset.paymentTime;
-    document.getElementById('modal-roomDetails').innerHTML = "Floor - " + orderDetails.dataset.floor + " <br> Room Type - " + orderDetails.dataset.roomType;
+    document.getElementById('modal-roomDetails').innerHTML = "Floor - " + orderDetails.dataset.floor + " <br> Room Type - " + orderDetails.dataset.roomType
+                                                            + " <br> Room - " + orderDetails.dataset.roomNumber+ " <br> BED ID - " + orderDetails.dataset.bedId;
     const dbref = ref(db, "Hostel details/" + orderDetails.dataset.hostelName);
     onValue(dbref, (snapshot) => {
         document.getElementById('modal-hostelAddress').innerHTML = snapshot.val().hostelAddress1 + " , " + snapshot.val().hostelCity;
@@ -122,6 +126,15 @@ function loadDetailsInModal(event) {
         document.getElementById('editBookingBtn').style.display='none';
     }else{
         document.getElementById('editBookingBtn').style.display='block';
+
+    }
+    //if room is vacated status, then we need to show whether the admin has approved that request.
+    if(orderDetails.dataset.status.toLowerCase() == 'vacated'){
+        document.getElementById('admin-approval-msg').style.display='flex';
+        document.getElementById('admin-approval-msg-status').innerHTML = orderDetails.dataset.adminApprovalForCheckout == 'no' ? 'Pending':'Approved';
+
+    }else{
+        document.getElementById('admin-approval-msg').style.display='none';
 
     }
     clearingExistingValue()//Before adding the data , if i do not empty the existing , again n again the loop run and it gets redudantly added with the existing li's.

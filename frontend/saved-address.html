@@ -395,6 +395,7 @@
                                         </div>
                                         <a href="#vacation-room" id="vacation-title-btn" class="edit-btn" data-bs-toggle="modal">Vacation</a>
                                         <a href="#edit-room-booking" class="edit-btn" data-bs-toggle="modal">Edit</a>
+                                        <a href="#Check-out-room-booking" id="room_check_out_btn" data-bs-toggle="modal"> <svg width="20px" height="20px" viewBox="0 -0.5 21 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#FC8019"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>delete [#FC8019]</title> <desc>Created with Sketch.</desc> <defs> </defs> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="Dribbble-Light-Preview" transform="translate(-179.000000, -360.000000)" fill="#FC8019"> <g id="icons" transform="translate(56.000000, 160.000000)"> <path d="M130.35,216 L132.45,216 L132.45,208 L130.35,208 L130.35,216 Z M134.55,216 L136.65,216 L136.65,208 L134.55,208 L134.55,216 Z M128.25,218 L138.75,218 L138.75,206 L128.25,206 L128.25,218 Z M130.35,204 L136.65,204 L136.65,202 L130.35,202 L130.35,204 Z M138.75,204 L138.75,200 L128.25,200 L128.25,204 L123,204 L123,206 L126.15,206 L126.15,220 L140.85,220 L140.85,206 L144,206 L144,204 L138.75,204 Z" id="delete-[#FC8019]"> </path> </g> </g> </g> </g></svg> </a>
                                     </div>
                                     <div class="address-details">
                                         <h6 id="hostelDetails"></h6>
@@ -789,6 +790,30 @@
         </div>
     </div>
     <!-- edit address modal end -->
+
+    <!-- Check out room bookings modal starts -->
+    <div class="modal address-details-modal fade" id="Check-out-room-booking" tabindex="-1" aria-labelledby="exampleModalAdress"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalAdress">
+                        Check out Room
+                    </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure?. <br>
+                         Once Checkout is done Same room slot cannot be booked again</p>
+                </div>
+                <div class="modal-footer">
+                    <a  class="btn gray-btn mt-0" data-bs-dismiss="modal">CANCEL</a>
+                    <a id="checkoutRoomBtn" class="btn theme-btn mt-0">Checkout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Check out room bookings modal end -->
 
     <!-- edit room bookings modal starts -->
     <div class="modal address-details-modal fade" id="edit-room-booking" tabindex="-1" aria-labelledby="exampleModalAdress"
