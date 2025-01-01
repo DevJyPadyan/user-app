@@ -60,7 +60,7 @@ const addSwiperSlideCard = (Hostelname, Hosteltype, Hosteladd1,
     const elem1 = document.createElement('div');
     elem1.classList.add('vertical-product-body');
     elem1.innerHTML = `<div class="d-flex align-items-center justify-content-between">
-                                    <a href="menu-listing.html">
+                                    <a href="menu-listing.html" data-bs-toggle="modal" data-bs-target="#location">
                                         <h4 class="vertical-product-title">
                                             ${Hostelname}
                                         </h4>
@@ -69,7 +69,7 @@ const addSwiperSlideCard = (Hostelname, Hosteltype, Hosteladd1,
                                         <span class="star"><i class="ri-star-s-fill"></i></span>
                                     </h6>
                                 </div>
-                                <ul class="details-list">
+                                <ul class="details-list" data-bs-toggle="modal" data-bs-target="#location">
                                     <li>
                                         <i class="ri-map-pin-line"></i> ${Hosteladd1},${Hostelcity}
                                     </li>
@@ -114,9 +114,18 @@ function handleCardClick(event) {
     console.log(`Clicked Card ID: ${cardHostelName}, Card Name: ${cardHostelAddress}`);
     localStorage.setItem("hostel-name", cardHostelName);
     localStorage.setItem("hostel-address", cardHostelAddress);
-    window.location.href = "menu-listing.html";
+    // window.location.href = "menu-listing.html";
 }
+checkin_modal_btn.addEventListener('click', () => {
+    localStorage.setItem("checkIn-date",document.getElementById('checkin_modal_date').value);
+    if(document.getElementById('checkin_modal_date').value != ''){
+        window.location.href = "menu-listing.html";
+    }
+    else{
+        alert('Pick a date to check room')
+    }
 
+})
 const iterateAllRecords = () => {
     var i = 0;
     //iterating thro the hostle obj fetched from DB

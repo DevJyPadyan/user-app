@@ -251,9 +251,38 @@ updateExtrasBtn.addEventListener('click', () => {
 })
 
 updateRoomBtn.addEventListener('click', () => {
-    localStorage.setItem('hostel-name',hostelName);
+    localStorage.setItem('hostel-name', hostelName);
     window.location.href = "././menu-listing-2.html";
 });
+
+checkoutRoomBtn.addEventListener('click', () => {
+    storeCheckoutDetails();
+
+});
+
+//storing all the checkout details
+function storeCheckoutDetails() {
+
+    var date = new Date();
+    //from here the status is changed to vacated and the request wil be sent to admin
+    //then in admin side will approve it and set the bed status as not booked from admin side will be correct flow.
+    //here for user , adminapproval will be shown pending/approved.
+    alert("Vacation updation is on process, click ok");
+    update(ref(db, "User details/" + userUid + '/Bookings/' + bookingkey + '/RoomDetails/'), {
+        roomVacatedDate: date,
+        status: 'vacated',
+        adminApprovalForCheckout:'pending',
+    })
+        .then(() => {
+            alert("Checkout updated and request is sent to Admin.");
+            window.location.href = "././my-order.html";
+        })
+
+        .catch((error) => {
+            alert(error);
+        });
+
+}
 
 /**
  * Vacation room button click event
@@ -282,7 +311,7 @@ function storeVacationDetails(fromDate, toDate) {
         roomType: roomDetails[3],
         roomRent: roomDetails[4],
         ac: roomDetails[6],
-        vacationstatus: 'yes vacation'+'/'+userUid+'/'+fromDate+'/'+toDate,
+        vacationstatus: 'yes vacation' + '/' + userUid + '/' + fromDate + '/' + toDate,
         fromDate: fromDate,
         toDate: toDate
     })
@@ -305,11 +334,11 @@ function storeVacationDetails(fromDate, toDate) {
             update(ref(db, "User details/" + userUid + '/Bookings/' + bookingkey + '/RoomDetails/Vacation/'), {
                 fromDate: fromDate,
                 toDate: toDate,
-                vacationstatus: 'yes vacation'+'/'+userUid+'/'+fromDate+'/'+toDate,
+                vacationstatus: 'yes vacation' + '/' + userUid + '/' + fromDate + '/' + toDate,
             })
                 .then(() => {
                     update(ref(db, "Hostel details/" + hostelName + '/Rooms on Vacation/' + 'floor' + roomDetails[1] + '/room' + roomDetails[2] + '/beds/'), {
-                        [bedId]: 'yes vacation'+'/'+userUid+'/'+fromDate+'/'+toDate,
+                        [bedId]: 'yes vacation' + '/' + userUid + '/' + fromDate + '/' + toDate,
                     })
                         .then(() => {
                             alert("Vacation updated");
@@ -370,7 +399,7 @@ function editVacationDetails(fromDate, toDate, status) {
     let bedId = roomDetails[5];
 
     update(ref(db, "Hostel details/" + hostelName + '/Rooms on Vacation/' + 'floor' + roomDetails[1] + '/room' + roomDetails[2] + '/'), {
-        vacationstatus: status+'/'+userUid+'/'+fromDate+'/'+toDate,
+        vacationstatus: status + '/' + userUid + '/' + fromDate + '/' + toDate,
         fromDate: fromDate,
         toDate: toDate
     })
@@ -392,11 +421,11 @@ function editVacationDetails(fromDate, toDate, status) {
             update(ref(db, "User details/" + userUid + '/Bookings/' + bookingkey + '/RoomDetails/Vacation/'), {
                 fromDate: fromDate,
                 toDate: toDate,
-                vacationstatus: status+'/'+userUid+'/'+fromDate+'/'+toDate,
+                vacationstatus: status + '/' + userUid + '/' + fromDate + '/' + toDate,
             })
                 .then(() => {
                     update(ref(db, "Hostel details/" + hostelName + '/Rooms on Vacation/' + 'floor' + roomDetails[1] + '/room' + roomDetails[2] + '/beds/'), {
-                        [bedId]: status+'/'+userUid+'/'+fromDate+'/'+toDate,
+                        [bedId]: status + '/' + userUid + '/' + fromDate + '/' + toDate,
                     })
                         .then(() => {
                             alert("Vacation updated");
