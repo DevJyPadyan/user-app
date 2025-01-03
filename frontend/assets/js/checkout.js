@@ -155,7 +155,7 @@ async function loadExtrasCheckBoxes() {
         if (snapshot.exists()) {
             document.getElementById('noExtrasMsg').style.display = "none";
             let ulContainer = document.getElementById("extrasUl");
-            ulContainer.innerHTML='';
+            ulContainer.innerHTML = '';
             foodList = snapshot.val();
             foodList.forEach(element => {
                 //checks the availability of the extras menu
@@ -212,6 +212,7 @@ function storeOrderDetails(paymentResponse) {
             foodPrice: extrasSelectedMenuCost[i]
         };
     }
+
     update(ref(db, "User details/" + userUid + '/Bookings/' + date + '/RoomDetails/'), {
         bedId: bedId,
         roomType: roomDetails[0],
@@ -223,7 +224,7 @@ function storeOrderDetails(paymentResponse) {
         roomRent: roomDetails[1],
         paymentDate: date,
         roomBookedDate: date,
-        roomVacatedDate:"",
+        roomVacatedDate: "",
         paymenttransId: paymentResponse.razorpay_payment_id,
         hostelName: hostelName,
         extras: extrasMenu,
@@ -245,8 +246,19 @@ function storeOrderDetails(paymentResponse) {
                                 bedsAvailable: (Number(roomDetails[6]) - 1)
                             })
                                 .then(() => {
-                                    alert("Room Booked Successfully");
-                                    window.location.href = "././confirm-order.html";
+                                    update(ref(db, "User details/" + userUid + '/Bookings/' + date + '/RoomDetails/PaymentDetails/' + date + '/'), {
+                                        paymentDate: date,
+                                        paymentMode: 'Online',
+                                        paymentAmount: total,
+                                        paymenttransId: paymentResponse.razorpay_payment_id,
+                                    })
+                                        .then(() => {
+                                            alert("Room Booked Successfully");
+                                            window.location.href = "././confirm-order.html";
+                                        })
+                                        .catch((error) => {
+                                            alert(error);
+                                        });
                                 })
                                 .catch((error) => {
                                     alert(error);
