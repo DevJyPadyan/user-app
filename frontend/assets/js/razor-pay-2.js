@@ -37,10 +37,6 @@ document.getElementById('rzp-button1').onclick = function (e) {
         && document.getElementById("showRegistrationDiv").style.display == "none") {
         rzp1.open();
         e.preventDefault();
-        document.getElementById("account-li").classList.remove("active");
-        document.getElementById("payment-li").classList.add("active");
-        document.getElementById("payment-li").classList.remove("active");
-        document.getElementById("confirm-li").classList.add("active");
         document.getElementById("showAccountInfoDiv").style.display = "none";
         // setTimeout(()=>{
         //     window.location.href = "././confirm-order.html"

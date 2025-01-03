@@ -176,7 +176,7 @@ async function loadExtrasCheckBoxes() {
         if (snapshot.exists()) {
             document.getElementById('noExtrasMsg').style.display = "none";
             let ulContainer = document.getElementById("extrasUl");
-            ulContainer.innerHTML='';
+            ulContainer.innerHTML = '';
             foodList = snapshot.val();
             foodList.forEach(element => {
                 //checks the availability of the extras menu
@@ -308,8 +308,19 @@ function storeOrderDetails(paymentResponse) {
                                                                                 bedsAvailable: (Number(previousTotalbedsAvailable) + 1)
                                                                             })
                                                                                 .then(() => {
-                                                                                    alert("Room Updated Successfully");
-                                                                                    window.location.href = "././confirm-order.html";
+                                                                                    update(ref(db, "User details/" + userUid + '/Bookings/' + date + '/RoomDetails/PaymentDetails/' + date + '/'), {
+                                                                                        paymentDate: date,
+                                                                                        paymentMode: 'Online',
+                                                                                        paymentAmount: total,
+                                                                                        paymenttransId: paymentResponse.razorpay_payment_id,
+                                                                                    })
+                                                                                        .then(() => {
+                                                                                            alert("Room Updated Successfully");
+                                                                                            window.location.href = "././confirm-order.html";
+                                                                                        })
+                                                                                        .catch((error) => {
+                                                                                            alert(error);
+                                                                                        });
                                                                                 })
                                                                                 .catch((error) => {
                                                                                     alert(error);
