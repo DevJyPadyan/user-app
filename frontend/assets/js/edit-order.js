@@ -241,7 +241,7 @@ updateExtrasBtn.addEventListener('click', () => {
             foodPrice: extrasSelectedMenuCost[i]
         };
     }
-    update(ref(db, "User details/" + userUid + '/Bookings/' + hostelName + '/RoomDetails/'), {
+    update(ref(db, "User details/" + userUid + '/Bookings/' + bookingkey + '/RoomDetails/'), {
         extras: extrasMenu
     })
         .then(() => {
