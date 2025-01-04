@@ -36,6 +36,7 @@ async function loadOrderDetails() {
             roomDetails.push(h.val().roomRent);
             roomDetails.push(h.val().bedId);
             roomDetails.push(h.val().ac);
+            // console.log(roomDetails)
         } catch (error) {
             console.error('Error fetching floor:', error);
         }
@@ -267,15 +268,26 @@ function storeCheckoutDetails() {
     //from here the status is changed to vacated and the request wil be sent to admin
     //then in admin side will approve it and set the bed status as not booked from admin side will be correct flow.
     //here for user , adminapproval will be shown pending/approved.
-    alert("Vacation updation is on process, click ok");
     update(ref(db, "User details/" + userUid + '/Bookings/' + bookingkey + '/RoomDetails/'), {
         roomVacatedDate: date,
         status: 'vacated',
-        adminApprovalForCheckout:'pending',
+        adminApprovalForCheckout: 'pending',
     })
         .then(() => {
-            alert("Checkout updated and request is sent to Admin.");
-            window.location.href = "././my-order.html";
+            console.log("Hostel details/" + hostelName + '/rooms/' + roomDetails[1] + '/'+roomDetails[3]+'/rooms/'+roomDetails[6]+'/'+ roomDetails[2] + '/beds/'+roomDetails[5])
+            update(ref(db, "Hostel details/" + hostelName + '/rooms/' + roomDetails[1] + '/'+roomDetails[3]+'/rooms/'+roomDetails[6]+'/'+ roomDetails[2] + '/beds/'+roomDetails[5]), {
+                checkoutDate: "",
+                adminApprovalForCheckout: 'pending',
+                checkoutRequestedUserId:userUid
+            })
+                .then(() => {
+                    alert("Checkout updated and request is sent to Admin.");
+                    window.location.href = "././my-order.html";
+                })
+
+                .catch((error) => {
+                    alert(error);
+                });
         })
 
         .catch((error) => {
@@ -304,7 +316,7 @@ function storeVacationDetails(fromDate, toDate) {
     let bedId = roomDetails[5];
 
     //storing it in hostel details side
-    update(ref(db, "Hostel details/" + hostelName + '/Rooms on Vacation/' + 'floor' + roomDetails[1] + '/room' + roomDetails[2] + '/'), {
+    update(ref(db, "Hostel details/" + hostelName + '/Rooms on Vacation/' + roomDetails[1] + '/' + roomDetails[2] + '/'), {
         hostelName: roomDetails[0],
         floor: roomDetails[1],
         room: roomDetails[2],
@@ -424,7 +436,7 @@ function editVacationDetails(fromDate, toDate, status) {
                 vacationstatus: status + '/' + userUid + '/' + fromDate + '/' + toDate,
             })
                 .then(() => {
-                    update(ref(db, "Hostel details/" + hostelName + '/Rooms on Vacation/' + 'floor' + roomDetails[1] + '/room' + roomDetails[2] + '/beds/'), {
+                    update(ref(db, "Hostel details/" + hostelName + '/Rooms on Vacation/' + roomDetails[1] + '/' + roomDetails[2] + '/beds/'), {
                         [bedId]: status + '/' + userUid + '/' + fromDate + '/' + toDate,
                     })
                         .then(() => {

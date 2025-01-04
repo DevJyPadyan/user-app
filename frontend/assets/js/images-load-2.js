@@ -342,7 +342,7 @@ function loadRoom(data){
                                 <div class="product-details-box">
                                   <div class="product-img">
                                       <img class="img-fluid img"
-                                          src="${ sharing.imagesLink ? sharing.imagesLink[0] : ''  }" alt="no_room_img">
+                                          src="${ sharing.imageLink ? sharing.imageLink[0] : ''  }" alt="no_room_img">
                                   </div>
                                   <div class="product-content">
                                       <div
@@ -369,7 +369,7 @@ function loadRoom(data){
                                           </div>
                                           <div class="product-box-price">
                                           <h6 class="theme-color fw-semibold">
-                                                                        Rs.${sharing.nonacPrice}-Rs.${sharing.acPrice} 
+                                                                        ${sharing.nonacPrice=='' ? '':"Rs."+sharing.nonacPrice}${sharing.acPrice== '' ? '':"Rs."+sharing.acPrice } 
                                                                         </h6>
                                               <button type='button' data-bs-toggle="collapse" data-bs-target="#${collapsable_id}" 
                                                   aria-expanded="false"
@@ -426,7 +426,7 @@ function loadRoom(data){
                                                     ${Object.keys(roomDetails.beds).map(bedKey => {
                                                     const bedStatus = roomDetails.beds[bedKey];
                                                     let roomNo = "room"+roomDetails.roomNumber;
-                                                    return `<div class="${bedStatus === 'booked' ? 'booked' : 'not-booked'}" 
+                                                    return `<div class="${bedStatus.status === 'booked' ? 'booked' : 'not-booked'}" 
                                                                     data-floor="${floorKey}" 
                                                                     data-sharing="${sharingKey}" 
                                                                     data-ac="${roomDetails.ac}" 
@@ -1098,6 +1098,7 @@ nav_week5.addEventListener('click', (e) => {
     showHideFoodWeek(5);
 })
 window.addEventListener('load', loadMenuDataFromDB);
+
 
 /**********Loading Food Menu Section data ends***************/
 
