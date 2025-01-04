@@ -238,8 +238,8 @@ function storeOrderDetails(paymentResponse) {
             })
                 .then(() => {
                     alert("Click to place booking");
-                    update(ref(db, 'Hostel details/' + hostelName + '/rooms/' + roomDetails[3] + '/' + roomDetails[0] + '/rooms/' + roomDetails[5] + '/' + roomDetails[4] + '/beds/'), {
-                        [bedId]: "booked"
+                    update(ref(db, 'Hostel details/' + hostelName + '/rooms/' + roomDetails[3] + '/' + roomDetails[0] + '/rooms/' + roomDetails[5] + '/' + roomDetails[4] + '/beds/'+bedId), {
+                        status: "booked"
                     })
                         .then(() => {
                             update(ref(db, 'Hostel details/' + hostelName + '/rooms/' + roomDetails[3] + '/' + roomDetails[0]), {

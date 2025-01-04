@@ -261,12 +261,10 @@ function storeOrderDetails(paymentResponse) {
                 .then(() => {
                     alert("Click to edit booking");
                     //Changing the newly selected bed/room as booked 
-                    update(ref(db, 'Hostel details/' + hostelName + '/rooms/' + roomDetails[3] + '/' + roomDetails[0] + '/rooms/' + roomDetails[5] + '/' + roomDetails[4] + '/beds/'), {
-                        [bedId]: "booked"
+                    update(ref(db, 'Hostel details/' + hostelName + '/rooms/' + roomDetails[3] + '/' + roomDetails[0] + '/rooms/' + roomDetails[5] + '/' + roomDetails[4] + '/beds/'+bedId), {
+                        status: "booked"
                     })
                         .then(() => {
-                            alert("Updating..")
-
                             console.log("Hostel details/" + hostelName + '/rooms/' + previousFloor + '/' + previousRoomType + '/rooms/' + previousRoomAc + "/" + previousRoomNo + '/')
                             //fetching the current room count status for the user booked room previously and adding +1 with that live count
                             get(child(dbref, "Hostel details/" + hostelName + '/rooms/' + previousFloor + '/' + previousRoomType + '/rooms/' + previousRoomAc + "/" + previousRoomNo + '/'))
@@ -280,10 +278,9 @@ function storeOrderDetails(paymentResponse) {
                                         bedsAvailable: (Number(previousbedsAvailable) + 1)
                                     })
                                         .then(() => {
-                                            alert("Click continue to update");
                                             //changing the previous bedId to not booked, when user edits
-                                            update(ref(db, "Hostel details/" + hostelName + '/rooms/' + previousFloor + '/' + previousRoomType + '/rooms/' + previousRoomAc + "/" + previousRoomNo + '/beds/'), {
-                                                [previousBedId]: "not booked"
+                                            update(ref(db, "Hostel details/" + hostelName + '/rooms/' + previousFloor + '/' + previousRoomType + '/rooms/' + previousRoomAc + "/" + previousRoomNo + '/beds/'+previousBedId), {
+                                                status: "not booked"
                                             })
                                                 .then(() => {
                                                     //setting the previous booking record as updated, so that 'updated' status bookings cannot be again re-edited.
@@ -299,7 +296,6 @@ function storeOrderDetails(paymentResponse) {
                                                                     //getting the bedsavialable in the sharing node to +1 it of the previous booking
                                                                     get(child(dbref, "Hostel details/" + hostelName + '/rooms/' + previousFloor + '/' + previousRoomType))
                                                                         .then((snapshot) => {
-                                                                            alert("continue..")
                                                                             if (snapshot.exists()) {
                                                                                 previousTotalbedsAvailable = snapshot.val().bedsAvailable;
                                                                             }

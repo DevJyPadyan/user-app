@@ -135,7 +135,7 @@ function loadDetailsInModal(event) {
     //if room is vacated status, then we need to show whether the admin has approved that request.
     if (orderDetails.dataset.status.toLowerCase() == 'vacated') {
         document.getElementById('admin-approval-msg').style.display = 'flex';
-        document.getElementById('admin-approval-msg-status').innerHTML = orderDetails.dataset.adminApprovalForCheckout == 'no' ? 'Pending' : 'Approved';
+        document.getElementById('admin-approval-msg-status').innerHTML = orderDetails.dataset.adminApprovalForCheckout == 'pending' ? 'Pending' : 'Approved';
 
     } else {
         document.getElementById('admin-approval-msg').style.display = 'none';
