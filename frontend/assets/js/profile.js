@@ -41,6 +41,7 @@ async function setUserProfileDetails(snapshot) {
     console.log("inside setting profile details");
     document.getElementById("username").value = snapshot.val().userName;
     document.getElementById("usermail").value = snapshot.val().userEmail;
+    document.getElementById("usergender").value = snapshot.val().userGender || 'Men';
     document.getElementById("userphone").value = snapshot.val().userPhone;
     document.getElementById("userfullname").value = snapshot.val().userFullName || '';
     document.getElementById("useradd1").value = snapshot.val().userAddress1 || '';

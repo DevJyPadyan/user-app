@@ -59,7 +59,7 @@ function addImageCard(imageUrl) {
     const parentContainer = document.getElementById('ul-image');
     const elem = document.createElement('li');
     elem.innerHTML = `<a href="${imageUrl}" data-fancybox="images"data-type="image">
-                                    <img class=""img-fluid bg-img""
+                                    <img class="img-fluid bg-img"
                                         src="${imageUrl}" alt="room_img">
                                 </a>`;
     parentContainer.appendChild(elem);
@@ -426,7 +426,28 @@ function loadRoom(data){
                                                     ${Object.keys(roomDetails.beds).map(bedKey => {
                                                     const bedStatus = roomDetails.beds[bedKey];
                                                     let roomNo = "room"+roomDetails.roomNumber;
-                                                    return `<div class="${bedStatus.status === 'booked' ? 'booked' : 'not-booked'}" 
+                                                    let bedClass = "not-booked";
+                                                    let bedCheckOutDate = bedStatus.checkoutDate;
+                                                    
+                                                    if(bedStatus.status == "booked"){
+                                                        bedClass = "booked";
+                                                    }
+                                                    else if(bedStatus.status == "not booked"){
+                                                        bedClass = "not-booked"
+                                                    }
+                                                    let bedCheckoutMsg = "no msg"
+                                                    if(bedCheckOutDate != "" && bedCheckOutDate != undefined){
+                                                        let fromDateArray = new Date(bedCheckOutDate);
+                                                        let toDateArray = new Date();
+                                                        console.log(fromDateArray,toDateArray)
+                                                        let Difference_In_Time = fromDateArray.getTime() - toDateArray.getTime();
+                                                        let Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24));
+                                                        if(Difference_In_Days > 0){
+                                                            bedClass = "checkOut"
+                                                            bedCheckoutMsg = "Bed will be Available withtin - "+Difference_In_Days+" days."
+                                                        }
+                                                    }
+                                                    return `<div class="${bedClass}" 
                                                                     data-floor="${floorKey}" 
                                                                     data-sharing="${sharingKey}" 
                                                                     data-ac="${roomDetails.ac}" 
@@ -435,6 +456,7 @@ function loadRoom(data){
                                                                     data-bed-id="${bedKey}"
                                                                     data-beds-available = "${roomDetails.bedsAvailable}" 
                                                                     data-total-beds-available = "${sharing.bedsAvailable}"
+                                                                    data-checkout-msg="${bedCheckoutMsg}"
                                                                     data-room-number="${roomNo}">
                                                                     ${bedKey}
                                                             </div>`;
@@ -461,7 +483,11 @@ function loadRoom(data){
           bedDivs.forEach(bedDiv => {
             if (!bedDiv.classList.contains('booked')) {
               bedDiv.addEventListener('click', () => {
-                document.getElementById("cart-title").innerHTML = "Empty Cart";
+                if(bedDiv.classList.contains('checkOut')){
+                    alert(bedDiv.dataset.checkoutMsg)
+                }
+                else{
+                    document.getElementById("cart-title").innerHTML = "Empty Cart";
                 document.getElementById("cart-room-price").innerHTML = '';
                 document.getElementById("cart-room-floor").innerHTML = "";
                 document.getElementById("cart-bed-number").innerHTML = "";
@@ -509,6 +535,7 @@ function loadRoom(data){
                 // if (confirmation) {
                 //   clearFilters();
                 // }
+                }
               });
             }
           });
@@ -1049,7 +1076,7 @@ function addFoodMealCard(weekNumber, day, dayData) {
                                  ${mealData.dishTimings} 
                             </h6>
                             <div class="card-body">
-                            <img alt='food_img' src = '${dishdata.image}' width='80' height='80px'>
+                            <img alt='food_img' src = '${dishdata.image}' width='80px' height='80px'>
                                 <ul>
                                     <li>
                                         <svg fill="#FC8019" height="16px" width="16px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 511.999 511.999" xml:space="preserve" stroke="#FC8019"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <path d="M324.799,68.799c-103.222,0-187.2,83.978-187.2,187.2s83.978,187.2,187.2,187.2s187.2-83.978,187.2-187.2 S428.022,68.799,324.799,68.799z M324.799,407.169c-83.354,0-151.168-67.814-151.168-151.168s67.814-151.17,151.168-151.17 s151.168,67.814,151.168,151.168S408.154,407.169,324.799,407.169z"></path> </g> </g> <g> <g> <path d="M324.799,148.019c-59.541,0-107.981,48.44-107.981,107.981s48.44,107.981,107.981,107.981S432.78,315.54,432.78,255.999 S384.34,148.019,324.799,148.019z M324.799,327.95c-39.673,0-71.949-32.276-71.949-71.949s32.276-71.949,71.949-71.949 c39.673,0,71.949,32.276,71.949,71.949S364.472,327.95,324.799,327.95z"></path> </g> </g> <g> <g> <path d="M110.491,68.799c-9.95,0-18.016,8.066-18.016,18.016v96.161H81.959V86.815c0-9.95-8.066-18.016-18.016-18.016 c-9.95,0-18.016,8.066-18.016,18.016v96.161h-9.896V86.815c0-9.95-8.066-18.016-18.016-18.016S0,76.866,0,86.815v99.764 c0,17.881,14.547,32.428,32.428,32.428h12.298v206.175c0,9.95,8.066,18.016,18.016,18.016s18.016-8.066,18.016-18.016V219.009 h15.321c17.881,0,32.428-14.547,32.428-32.428V86.815C128.507,76.866,120.441,68.799,110.491,68.799z"></path> </g> </g> </g></svg>
