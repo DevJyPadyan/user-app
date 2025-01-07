@@ -59,7 +59,7 @@ function addImageCard(imageUrl) {
     const parentContainer = document.getElementById('ul-image');
     const elem = document.createElement('li');
     elem.innerHTML = `<a href="${imageUrl}" data-fancybox="images"data-type="image">
-                                    <img class=""img-fluid bg-img""
+                                    <img class="img-fluid bg-img"
                                         src="${imageUrl}" alt="room_img">
                                 </a>`;
     parentContainer.appendChild(elem);
@@ -426,7 +426,28 @@ function loadRoom(data){
                                                     ${Object.keys(roomDetails.beds).map(bedKey => {
                                                     const bedStatus = roomDetails.beds[bedKey];
                                                     let roomNo = "room"+roomDetails.roomNumber;
-                                                    return `<div class="${bedStatus.status === 'booked' ? 'booked' : 'not-booked'}" 
+                                                    let bedClass = "not-booked";
+                                                    let bedCheckOutDate = bedStatus.checkoutDate;
+                                                    
+                                                    if(bedStatus.status == "booked"){
+                                                        bedClass = "booked";
+                                                    }
+                                                    else if(bedStatus.status == "not booked"){
+                                                        bedClass = "not-booked"
+                                                    }
+                                                    let bedCheckoutMsg = "no msg"
+                                                    if(bedCheckOutDate != "" && bedCheckOutDate != undefined){
+                                                        let fromDateArray = new Date(bedCheckOutDate);
+                                                        let toDateArray = new Date();
+                                                        console.log(fromDateArray,toDateArray)
+                                                        let Difference_In_Time = fromDateArray.getTime() - toDateArray.getTime();
+                                                        let Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24));
+                                                        if(Difference_In_Days > 0){
+                                                            bedClass = "checkOut"
+                                                            bedCheckoutMsg = "Bed will be Available withtin - "+Difference_In_Days+" days."
+                                                        }
+                                                    }
+                                                    return `<div class="${bedClass}" 
                                                                     data-floor="${floorKey}" 
                                                                     data-sharing="${sharingKey}" 
                                                                     data-ac="${roomDetails.ac}" 
@@ -435,6 +456,7 @@ function loadRoom(data){
                                                                     data-bed-id="${bedKey}"
                                                                     data-beds-available = "${roomDetails.bedsAvailable}" 
                                                                     data-total-beds-available = "${sharing.bedsAvailable}"
+                                                                    data-checkout-msg="${bedCheckoutMsg}"
                                                                     data-room-number="${roomNo}">
                                                                     ${bedKey}
                                                             </div>`;
@@ -461,7 +483,11 @@ function loadRoom(data){
           bedDivs.forEach(bedDiv => {
             if (!bedDiv.classList.contains('booked')) {
               bedDiv.addEventListener('click', () => {
-                document.getElementById("cart-title").innerHTML = "Empty Cart";
+                if(bedDiv.classList.contains('checkOut')){
+                    alert(bedDiv.dataset.checkoutMsg)
+                }
+                else{
+                    document.getElementById("cart-title").innerHTML = "Empty Cart";
                 document.getElementById("cart-room-price").innerHTML = '';
                 document.getElementById("cart-room-floor").innerHTML = "";
                 document.getElementById("cart-bed-number").innerHTML = "";
@@ -509,6 +535,7 @@ function loadRoom(data){
                 // if (confirmation) {
                 //   clearFilters();
                 // }
+                }
               });
             }
           });

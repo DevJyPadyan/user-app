@@ -269,7 +269,8 @@ function storeCheckoutDetails() {
     //then in admin side will approve it and set the bed status as not booked from admin side will be correct flow.
     //here for user , adminapproval will be shown pending/approved.
     update(ref(db, "User details/" + userUid + '/Bookings/' + bookingkey + '/RoomDetails/'), {
-        roomVacatedDate: date,
+        roomCheckoutDateByUser: date,
+        roomCheckoutDateByAdmin:  "",
         status: 'vacated',
         adminApprovalForCheckout: 'pending',
     })
@@ -323,9 +324,6 @@ function storeVacationDetails(fromDate, toDate) {
         roomType: roomDetails[3],
         roomRent: roomDetails[4],
         ac: roomDetails[6],
-        vacationstatus: 'yes vacation' + '/' + userUid + '/' + fromDate + '/' + toDate,
-        fromDate: fromDate,
-        toDate: toDate
     })
         // .then(() => {
         //     alert("Vacation updation is on process, click ok");
@@ -349,7 +347,7 @@ function storeVacationDetails(fromDate, toDate) {
                 vacationstatus: 'yes vacation' + '/' + userUid + '/' + fromDate + '/' + toDate,
             })
                 .then(() => {
-                    update(ref(db, "Hostel details/" + hostelName + '/Rooms on Vacation/' + 'floor' + roomDetails[1] + '/room' + roomDetails[2] + '/beds/'), {
+                    update(ref(db, "Hostel details/" + hostelName + '/Rooms on Vacation/' + roomDetails[1] + '/' + roomDetails[2] + '/beds/'), {
                         [bedId]: 'yes vacation' + '/' + userUid + '/' + fromDate + '/' + toDate,
                     })
                         .then(() => {
@@ -410,7 +408,7 @@ vacationRoomCancelBtn.addEventListener('click', () => {
 function editVacationDetails(fromDate, toDate, status) {
     let bedId = roomDetails[5];
 
-    update(ref(db, "Hostel details/" + hostelName + '/Rooms on Vacation/' + 'floor' + roomDetails[1] + '/room' + roomDetails[2] + '/'), {
+    update(ref(db, "Hostel details/" + hostelName + '/Rooms on Vacation/' + roomDetails[1] + '/' + roomDetails[2] + '/'), {
         vacationstatus: status + '/' + userUid + '/' + fromDate + '/' + toDate,
         fromDate: fromDate,
         toDate: toDate
