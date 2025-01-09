@@ -23,6 +23,7 @@ let airConditionFilterValue = [];
 let bathroomFilterValue = [];
 let hosteFloorCount = 0;
 let hostelRoomCount = 0;
+let checkinDate = localStorage.getItem("checkIn-date");
 
 /**********Loading Image data in - Photos Section - starts***************/
 const loadImagesDataFromDB = () => {
@@ -369,7 +370,7 @@ function loadRoom(data){
                                           </div>
                                           <div class="product-box-price">
                                           <h6 class="theme-color fw-semibold">
-                                                                        ${sharing.nonacPrice=='' ? '':"Rs."+sharing.nonacPrice}${sharing.acPrice== '' ? '':"Rs."+sharing.acPrice } 
+                                                                        ${sharing.nonacPrice=='' || sharing.nonacPrice==undefined ? '':"Rs."+sharing.nonacPrice}${sharing.acPrice== '' || sharing.acPrice==undefined? '':"-Rs."+sharing.acPrice } 
                                                                         </h6>
                                               <button type='button' data-bs-toggle="collapse" data-bs-target="#${collapsable_id}" 
                                                   aria-expanded="false"
@@ -438,10 +439,11 @@ function loadRoom(data){
                                                     let bedCheckoutMsg = "no msg"
                                                     if(bedCheckOutDate != "" && bedCheckOutDate != undefined){
                                                         let fromDateArray = new Date(bedCheckOutDate);
-                                                        let toDateArray = new Date();
+                                                        let toDateArray = new Date(checkinDate);
                                                         console.log(fromDateArray,toDateArray)
                                                         let Difference_In_Time = fromDateArray.getTime() - toDateArray.getTime();
                                                         let Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24));
+                                                        console.log(fromDateArray,toDateArray,Difference_In_Days)
                                                         if(Difference_In_Days > 0){
                                                             bedClass = "checkOut"
                                                             bedCheckoutMsg = "Bed will be Available withtin - "+Difference_In_Days+" days."

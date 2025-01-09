@@ -224,8 +224,6 @@ function storeOrderDetails(paymentResponse) {
         roomRent: roomDetails[1],
         paymentDate: date,
         roomBookedDate: date,
-        roomCheckoutDateByUser: "",
-        roomCheckoutDateByAdmin: "",
         paymenttransId: paymentResponse.razorpay_payment_id,
         hostelName: hostelName,
         extras: extrasMenu,
