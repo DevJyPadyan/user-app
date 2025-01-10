@@ -343,7 +343,7 @@ function loadRoom(data){
                                 <div class="product-details-box">
                                   <div class="product-img">
                                       <img class="img-fluid img"
-                                          src="${ sharing.imageLink ? sharing.imageLink[0] : ''  }" alt="no_room_img">
+                                          src="${sharing.imagesLink ? sharing.imagesLink[0] : ''}" alt="no_room_img">
                                   </div>
                                   <div class="product-content">
                                       <div
@@ -370,7 +370,7 @@ function loadRoom(data){
                                           </div>
                                           <div class="product-box-price">
                                           <h6 class="theme-color fw-semibold">
-                                                                        ${sharing.nonacPrice=='' || sharing.nonacPrice==undefined ? '':"Rs."+sharing.nonacPrice}${sharing.acPrice== '' || sharing.acPrice==undefined? '':"-Rs."+sharing.acPrice } 
+                                                                        ${sharing.nonacPrice=='' || sharing.nonacPrice==undefined ? '':"Rs."+sharing.nonacPrice}${((sharing.acPrice!= '' && sharing.acPrice!=undefined) && (sharing.nonacPrice!='' && sharing.nonacPrice!=undefined)) ? '-':""} ${sharing.acPrice== '' || sharing.acPrice==undefined? '':"Rs."+sharing.acPrice } 
                                                                         </h6>
                                               <button type='button' data-bs-toggle="collapse" data-bs-target="#${collapsable_id}" 
                                                   aria-expanded="false"
@@ -1497,7 +1497,7 @@ function loadCheckboxesForFilter(floorCount) {
             // Assigning the attributes and click event for the created checkbox
             checkbox.type = "checkbox";
             checkbox.name = "floorCheckBox";
-            checkbox.value = String(i);
+            checkbox.value = "floor"+String(i);
             checkbox.id = "item_1_" + String(i) + "_checkbx";
             checkbox.addEventListener('click', getCheckedBoxes);
 
@@ -1532,7 +1532,8 @@ async function loadFloorCountForCheckBoxes() {
         const snapshot = await get(dbref);
         if (snapshot.exists()) {
             hosteFloorCount = snapshot.val().hostelFloors;
-            loadCheckboxesForFilter(hosteFloorCount);//function is called to dynamically create the checkbox.
+            // loadCheckboxesForFilter(hosteFloorCount);//function is called to dynamically create the checkbox.
+            loadFloorSelect(hosteFloorCount);//function is called to dynamically create the checkbox.
         } else {
             console.log('No floor count.');
         }
@@ -1543,3 +1544,25 @@ async function loadFloorCountForCheckBoxes() {
 
 window.addEventListener('load', loadFloorCountForCheckBoxes);
 /** Dynamic Checkboxes are loaded based on the HosteFloor count for paritcular hostel - ends here */
+
+function loadFloorSelect(floorCount) {
+    if (floorCount > 0) {
+        // let sel = document.createElement("Select");
+        // sel.setAttribute("id", "floorFilter");
+        // document.body.appendChild(sel);
+        for (var i = 1; i <= floorCount; i++) {
+
+            let opt = document.createElement("option");
+            opt.setAttribute("value",  "floor" + String(i));
+            let nod = document.createTextNode( "Floor " + String(i));
+            opt.appendChild(nod);
+            document.getElementById("floorFilter").appendChild(opt);
+          
+            // ulContainer.appendChild(libox);
+        }
+    }
+    else {
+        //when there is no floor count, empty message will be displayed.
+        // document.getElementById('noFloorFilterMsg').style.display = "block";
+    }
+}
