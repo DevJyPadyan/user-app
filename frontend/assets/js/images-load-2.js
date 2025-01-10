@@ -23,7 +23,8 @@ let airConditionFilterValue = [];
 let bathroomFilterValue = [];
 let hosteFloorCount = 0;
 let hostelRoomCount = 0;
-// let checkinDate = localStorage.getItem("checkIn-date");
+let availableSharingTypes = [];
+let checkinDate = localStorage.getItem("checkIn-date");
 
 /**********Loading Image data in - Photos Section - starts***************/
 const loadImagesDataFromDB = () => {
@@ -1533,6 +1534,7 @@ async function loadFloorCountForCheckBoxes() {
             hosteFloorCount = snapshot.val().hostelFloors;
             // loadCheckboxesForFilter(hosteFloorCount);//function is called to dynamically create the checkbox.
             loadFloorSelect(hosteFloorCount);//function is called to dynamically create the checkbox.
+            loadSharingTypeFilter(snapshot.val().rooms);//function is calledto dyncmically load the sharing type options
         } else {
             console.log('No floor count.');
         }
@@ -1564,4 +1566,30 @@ function loadFloorSelect(floorCount) {
         //when there is no floor count, empty message will be displayed.
         // document.getElementById('noFloorFilterMsg').style.display = "block";
     }
+}
+//Dynamically loading sharing vales in the select box
+function loadSharingTypeFilter(data){
+    availableSharingTypes = [];
+    Object.keys(data).forEach(floorKey => {
+        const floor = data[floorKey];
+        Object.keys(floor).forEach(sharingKey => {
+            availableSharingTypes.push(sharingKey)
+        })
+    })
+
+    // console.log(availableSharingTypes)//before filter
+     availableSharingTypes = availableSharingTypes.filter((val,index)=> availableSharingTypes.indexOf(val) === index)
+    // console.log(availableSharingTypes)//after filter
+
+    for (var i = 0; i < availableSharingTypes.length; i++) {
+
+        console.log(availableSharingTypes[i])
+        let opt = document.createElement("option");
+        opt.setAttribute("value",  availableSharingTypes[i]);
+        let nod = document.createTextNode( availableSharingTypes[i]);
+        opt.appendChild(nod);
+        document.getElementById("sharingTypeFilter").appendChild(opt);
+
+    }
+
 }
