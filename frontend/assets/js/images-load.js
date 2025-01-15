@@ -269,24 +269,21 @@ const filters = {
 };
 
 function filterRooms(data) {
-    let filteredData = {};
+    let filteredData = {};//common filtered object which contains all the relevant values based on the filters.
+
+    //floor and sharing based filters are handled here
     Object.keys(data).forEach(floorKey => {
         const floor = data[floorKey];
         let filteredSharing = {};
         Object.keys(floor).forEach(sharingKey => {
             const sharing = floor[sharingKey];
-            //   const sliderValue = filters.price.value ? parseInt(filters.price.value, 15000) : 15000;
 
             let passesFilters = (
                 (!filters.floor.value || filters.floor.value === floorKey) &&
-                (!filters.sharing.value || filters.sharing.value === sharingKey) &&
-                (!filters.ac.value || sharing.rooms[filters.ac.value]) &&
-                (!filters.bathroom.value || Object.values(sharing.rooms).some(room => {
-                    return Object.values(room).some(details => details.bathroom === filters.bathroom.value);
-                }))
+                (!filters.sharing.value || filters.sharing.value === sharingKey) 
             );
 
-            console.log(passesFilters,filters.price.value)
+            // console.log(passesFilters,filters.price.value)
 
                 if(passesFilters){
                     if(sharing.rooms.ac != undefined){
@@ -314,16 +311,61 @@ function filterRooms(data) {
                     }
                 }
                 
-
             if (passesFilters) {
                 filteredSharing[sharingKey] = sharing;
             }
         });
-
         if (Object.keys(filteredSharing).length > 0) {
             filteredData[floorKey] = filteredSharing;
         }
     });
+
+    console.log(Object.keys(filteredData).length);
+    let emptySet = 0;
+    //room based filters are done here, eg:bathroom, ac options filters are handled here.
+    Object.keys(filteredData).forEach(floorKey => {
+        const floor = data[floorKey];
+         emptySet = 0;
+        Object.keys(floor).forEach(sharingKey => {  
+            const sharing = floor[sharingKey];
+            // console.log(sharing.rooms)
+            Object.keys(sharing.rooms).forEach(key => {
+                const rooms = sharing.rooms[key];
+                const roomData = {rooms:{ac:{},non_ac:{}}};
+                let bedsAvailableforFilterEachFloor = 0;
+                Object.keys(rooms).forEach(roomkey => {
+                    console.log(bedsAvailableforFilterEachFloor)
+                    const room = sharing.rooms[key][roomkey];
+                    let passFilter = (!filters.ac.value || room.ac.toLowerCase() == filters.ac.value.toLowerCase()) &&
+                        (!filters.bathroom.value || room.bathroom.toLowerCase() == filters.bathroom.value.toLowerCase());
+                    if (passFilter) {
+                        roomData.rooms[key][roomkey] = room;
+                        // console.log(room.bedsAvailable);
+
+                        //variable used to calculate the beds available value shown in the sharing card level
+                        bedsAvailableforFilterEachFloor += Number(room.bedsAvailable);
+                        //that value is updated inside the filtered obj, so that dynamically the beds available count wll be mapped.
+                        filteredData[floorKey][sharingKey].bedsAvailable = bedsAvailableforFilterEachFloor;
+                    }
+                });
+                filteredData[floorKey][sharingKey].rooms[key] = roomData.rooms[key];
+            });
+
+            //condition to calculate the emptyset of the rooms if available inside ac and non_ac parents
+            //this emptyset variable will be checked if there is no rooms or rooms present inside the ac & non_ac parents.
+            if (Object.keys(filteredData[floorKey][sharingKey].rooms.ac).length == 0
+                && Object.keys(filteredData[floorKey][sharingKey].rooms.non_ac).length == 0) {
+                emptySet++;
+            }
+        });
+    });
+
+    //if the emptyset variable is exactly same as the length of the floor, it seems to be no rooms 
+    //matched the given filter condition, so we will be setting the entire filteredobj to empty.
+    if (Object.keys(filteredData).length == emptySet) {
+        filteredData = {};
+    }
+    console.log(filteredData);
     return filteredData;
 }
     document.getElementById('clearFiltersBtn').addEventListener('click',()=>{
@@ -1535,7 +1577,7 @@ async function loadFloorCountForCheckBoxes() {
             hosteFloorCount = snapshot.val().hostelFloors;
             // loadCheckboxesForFilter(hosteFloorCount);//function is called to dynamically create the checkbox.
             loadFloorSelect(hosteFloorCount);//function is called to dynamically create the checkbox.
-            loadSharingTypeFilter(snapshot.val().rooms);
+            loadSharingTypeFilter(snapshot.val().rooms);//function is calledto dyncmically load the sharing type options
         } else {
             console.log('No floor count.');
         }
@@ -1568,7 +1610,7 @@ function loadFloorSelect(floorCount) {
         // document.getElementById('noFloorFilterMsg').style.display = "block";
     }
 }
-
+//Dynamically loading sharing vales in the select box
 function loadSharingTypeFilter(data){
     availableSharingTypes = [];
     Object.keys(data).forEach(floorKey => {
