@@ -287,7 +287,7 @@ function storeOrderDetails(paymentResponse) {
                                                 .then(() => {
                                                     //setting the previous booking record as updated, so that 'updated' status bookings cannot be again re-edited.
                                                     update(ref(db, "User details/" + userDeatilObj.userUid + '/Bookings/' + editOrderKey + '/RoomDetails/'), {
-                                                        status: "Updated"
+                                                        status: "updated"
                                                     })
                                                         .then(() => {
                                                             //setting the bedsavailable -1 inside type(sharing node) bedsAvailable
