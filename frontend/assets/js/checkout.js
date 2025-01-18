@@ -227,7 +227,7 @@ function storeOrderDetails(paymentResponse) {
         paymenttransId: paymentResponse.razorpay_payment_id,
         hostelName: hostelName,
         extras: extrasMenu,
-        status: 'Booked'
+        status: 'booked'
         // paymentOrderId:paymentResponse.razorpay_order_id
     })
         .then(() => {
